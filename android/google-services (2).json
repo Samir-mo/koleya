@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1022361933821",
+    "project_id": "gatebuddy-a916a",
+    "storage_bucket": "gatebuddy-a916a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022361933821:android:9c5404354458f72abeeb94",
+        "android_client_info": {
+          "package_name": "com.example.koleya"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI8wB2h9OYIwT7Cf2YHf6r6-zh9osPMzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
