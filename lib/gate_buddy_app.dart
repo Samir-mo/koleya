@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:koleya/features/main_navigation/ui/main_scaffold.dart';
 
 import 'core/config/app_config.dart';
 import 'core/router/app_router.dart';
-import 'core/router/routes.dart';
 import 'core/settings/cubit/app_settings_cubit.dart';
 import 'core/settings/cubit/app_settings_state.dart';
 import 'core/themes/theme_data/theme_data_dark.dart';
@@ -30,7 +30,7 @@ class GateBuddyApp extends StatelessWidget {
                 supportedLocales: context.supportedLocales,
                 locale: settings.locale, // driven by cubit
                 debugShowCheckedModeBanner: false,
-                initialRoute: Routes.mainScaffold,
+                home: MainScaffold(),
                 onGenerateRoute: AppRouter.generateRoute,
                 title: AppConfig.appName,
                 theme: getLightTheme().copyWith(
