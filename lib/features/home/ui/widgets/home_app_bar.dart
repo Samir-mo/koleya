@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/routes/app_routes.dart';
+import 'package:koleya/core/router/routes.dart';
 import 'package:koleya/ui/screens/profile_screen.dart';
 
 class HomeAppBar extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/features/home/ui/home_screen.dart';
+import 'package:koleya/features/home/data/model/service_item.dart';
 import 'package:koleya/features/home/ui/widgets/service_card.dart';
 import 'package:koleya/ui/screens/accessibility_screen.dart';
 import 'package:koleya/ui/screens/financial_services_screen.dart';

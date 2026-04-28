@@ -1,115 +1,139 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:koleya/cubit/home_cubit.dart';
-import 'package:koleya/features/home/ui/widgets/home_dashboard.dart';
+import 'package:koleya/cubit/home_state.dart';
+import 'package:koleya/features/home/ui/widgets/airport_services_grid.dart';
+import 'package:koleya/features/home/ui/widgets/airport_services_icon.dart';
+import 'package:koleya/features/home/ui/widgets/home_app_bar.dart';
+import 'package:koleya/features/home/ui/widgets/section_title.dart';
+import 'package:koleya/features/home/ui/widgets/tracked_flight_big_card.dart';
+import 'package:koleya/features/home/ui/widgets/tracked_flight_icon.dart';
+import 'package:koleya/features/home/ui/widgets/updated_flights_section.dart';
 
-import '../../../data/repositories/dashboard_repository.dart';
-// الشاشات التانية
-import '../../../ui/screens/assistant_screen.dart';
-import '../../../ui/screens/flights_screen.dart';
-import '../../../ui/screens/profile_screen.dart';
-import '../../../ui/screens/services_screen.dart';
+class HomeScreen extends StatelessWidget {
+  final ScrollController scrollController;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.scrollController});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int currentIndex = 2;
-
-  final ScrollController _homeScrollController = ScrollController();
-
-  late final List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = [
-      const Placeholder(), // 0
-      const AssistantScreen(), // 1
-      HomeDashboard(scrollController: _homeScrollController), // 2 (Home)
-      const FlightsScreen(), // 3
-      const ServicesScreen(), // 4
-      const ProfileScreen(), // 5
-    ];
-  }
-
-  @override
-  void dispose() {
-    _homeScrollController.dispose();
-    super.dispose();
-  }
+  static const Color primaryBlue = Color(0xFF013F82);
+  static const Color accentOrange = Color(0xFFF3A623);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeCubit(DashboardRepository())..loadDashboard(),
-      child: Scaffold(
-        body: IndexedStack(index: currentIndex, children: _pages),
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, state) {
+        if (state is HomeLoading) {
+          return _loadingView();
+        }
 
-        // ---------------- Bottom Bar ----------------
-        bottomNavigationBar: SafeArea(
-          top: false,
-          child: Container(
-            color: Colors.white,
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(5, (i) {
-                final indexMap = [0, 3, 2, 4, 1];
-                final realIndex = indexMap[i];
-                final bool isActive = currentIndex == realIndex;
+        if (state is HomeError) {
+          return _errorView(state.error);
+        }
 
-                const List<IconData> icons = [
-                  Icons.accessibility_new_outlined, // 0
-                  Icons.flight_takeoff_outlined, // 3
-                  Icons.home, // 2
-                  Icons.storefront_outlined, // 4
-                  Icons.smart_toy_outlined, // 1
-                ];
+        if (state is HomeLoaded) {
+          return _loadedView(state);
+        }
 
-                return Expanded(
-                  child: IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onPressed: () {
-                      setState(() {
-                        if (currentIndex == realIndex &&
-                            realIndex == 2 &&
-                            _homeScrollController.hasClients) {
-                          _homeScrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 400),
-                            curve: Curves.easeOut,
-                          );
-                        } else {
-                          currentIndex = realIndex;
-                        }
-                      });
-                    },
-                    icon: Icon(
-                      icons[i],
-                      size: 24,
-                      color: isActive ? const Color(0xFF00104A) : Colors.grey.shade500,
-                    ),
+        return _loadingView();
+      },
+    );
+  }
+
+  // ---------------- LOADING ----------------
+  Widget _loadingView() {
+    return Container(
+      color: primaryBlue,
+      child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+    );
+  }
+
+  // ---------------- ERROR ----------------
+  Widget _errorView(String error) {
+    return Container(
+      color: primaryBlue,
+      child: Center(
+        child: Text('❌ Error: $error', style: const TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
+  // ---------------- LOADED ----------------
+  Widget _loadedView(HomeLoaded state) {
+    final data = state.data;
+
+    final List<Map<String, dynamic>> flights = List<Map<String, dynamic>>.from(
+      data["updatedFlights"] ?? [],
+    );
+
+    final Map<String, dynamic>? trackedFlight = data["trackedFlight"] as Map<String, dynamic>?;
+
+    return Material(
+      color: primaryBlue,
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            HomeAppBar(primaryBlue: primaryBlue),
+
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
                   ),
-                );
-              }),
+                ),
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UpdatedFlightsSection(
+                        flights: flights,
+                        primaryBlue: primaryBlue,
+                        accentOrange: accentOrange,
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      if (trackedFlight != null && trackedFlight.isNotEmpty) ...[
+                        SectionTitle(
+                          title: 'Your Tracked Flight',
+                          color: primaryBlue,
+                          leading: const TrackedFlightIcon(),
+                        ),
+                        const SizedBox(height: 10),
+
+                        TrackedFlightBigCard(
+                          trackedFlight: trackedFlight,
+                          primaryBlue: primaryBlue,
+                          accentOrange: accentOrange,
+                        ),
+
+                        const SizedBox(height: 24),
+                      ],
+
+                      SectionTitle(
+                        title: 'Airport Services',
+                        color: primaryBlue,
+                        leading: const AirportServicesIcon(),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      AirportServicesGrid(primaryBlue: primaryBlue, accentOrange: accentOrange),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
-}
-
-class ServiceItem {
-  final String title;
-  final IconData icon;
-  final VoidCallback onTap;
-
-  ServiceItem({required this.title, required this.icon, required this.onTap});
 }

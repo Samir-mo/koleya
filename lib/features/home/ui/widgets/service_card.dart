@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/features/home/ui/home_screen.dart';
+import 'package:koleya/features/home/data/model/service_item.dart';
 
 class ServiceCard extends StatelessWidget {
   final ServiceItem item;
