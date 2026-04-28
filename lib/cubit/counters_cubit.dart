@@ -1,11 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../data/repositories/services_repository.dart';
+import 'package:koleya/data/repositories/services_repository.dart';
+
 import 'counters_state.dart';
 
 class CountersCubit extends Cubit<CountersState> {
-  final ServicesRepository _repository;
-
-  CountersCubit(this._repository) : super(CountersInitial());
+  CountersCubit(ServicesRepository servicesRepository) : super(CountersInitial());
 
   // ==== Mock Data بدل الـ API مؤقتاً ====
   static const List<Map<String, String>> _domesticMock = [

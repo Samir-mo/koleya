@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:koleya/cubit/reset_password_cubit.dart';
 import 'package:koleya/cubit/reset_password_state.dart';
 import '../../../constants.dart';
-import 'login_screen.dart';
+import '../../features/auth/ui/login_screen.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   ResetPasswordScreen({super.key});

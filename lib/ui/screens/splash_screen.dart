@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'login_screen.dart'; 
+import 'package:koleya/core/router/routes.dart';
+import 'package:koleya/core/utils/extensions/context_ext.dart';
 import 'package:koleya/data/storage/auth_storage.dart';
 import 'package:koleya/data/storage/storage_helper.dart';
-import 'package:koleya/routes/app_routes.dart';
+
+import '../../features/auth/ui/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,8 +13,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
@@ -22,21 +22,17 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, 0.6),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
     _controller.forward();
 
@@ -51,10 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
     final seen = StorageHelper.get("onboarding_seen") ?? false;
 
     if (!seen) {
-      Navigator.pushNamed(
-        context,
-        Routes.onboarding,
-      );
+      Navigator.pushNamed(context, Routes.mainScaffold);
       return;
     }
 
@@ -63,16 +56,10 @@ class _SplashScreenState extends State<SplashScreen>
 
     if (token != null && token.isNotEmpty) {
       // ✅ المستخدم مسجل دخول سابقًا
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      context.pushNamedAndRemoveAll(Routes.mainScaffold);
     } else {
       // 🚪 المستخدم جديد أو سجل خروج → نروّح على Login
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => LoginScreen()),
-      );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen()));
     }
   }
 
@@ -109,10 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
                 const SizedBox(height: 10),
-                const CircularProgressIndicator(
-                  color: Color(0xFFD39A28),
-                  strokeWidth: 2,
-                ),
+                const CircularProgressIndicator(color: Color(0xFFD39A28), strokeWidth: 2),
               ],
             ),
           ),

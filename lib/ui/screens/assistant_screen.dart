@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../cubit/assistant_cubit.dart';
 import '../../cubit/assistant_state.dart';
 import '../../data/models/assistant_message.dart';
@@ -9,10 +10,7 @@ class AssistantScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AssistantCubit(),
-      child: const _AssistantView(),
-    );
+    return BlocProvider(create: (_) => AssistantCubit(), child: const _AssistantView());
   }
 }
 
@@ -46,8 +44,7 @@ class _AssistantViewState extends State<_AssistantView> {
         ),
         child: Text(
           msg.text,
-          style: TextStyle(
-              color: isUser ? Colors.white : Colors.black87, fontSize: 15),
+          style: TextStyle(color: isUser ? Colors.white : Colors.black87, fontSize: 15),
         ),
       ),
     );
@@ -57,15 +54,9 @@ class _AssistantViewState extends State<_AssistantView> {
   Widget build(BuildContext context) {
     final cubit = context.watch<AssistantCubit>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF003366),
-        title: const Text("Gate Buddy Assistant 🤖",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
-      body: Column(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
         children: [
           Expanded(
             child: BlocBuilder<AssistantCubit, AssistantState>(
@@ -89,12 +80,9 @@ class _AssistantViewState extends State<_AssistantView> {
           ),
           SafeArea(
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.black12),
-                ),
+                border: Border(top: BorderSide(color: Colors.black12)),
               ),
               child: Row(
                 children: [
@@ -117,8 +105,7 @@ class _AssistantViewState extends State<_AssistantView> {
                   CircleAvatar(
                     backgroundColor: const Color(0xFF003366),
                     child: IconButton(
-                      icon:
-                          const Icon(Icons.send, color: Colors.white, size: 20),
+                      icon: const Icon(Icons.send, color: Colors.white, size: 20),
                       onPressed: _sendMessage,
                     ),
                   ),

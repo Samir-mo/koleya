@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:koleya/ui/screens/tracked_flight_screen.dart';
+
 import '../../data/models/flight_model.dart';
-import 'package:koleya/routes/app_routes.dart';
 
 class FlightsScreen extends StatelessWidget {
   const FlightsScreen({super.key});
@@ -50,79 +50,25 @@ class FlightsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // فلترة حسب from/to عشان Departure / Arrival
     final departureFlights = mockFlights
-        .where((f) => f.from
-            .toLowerCase()
-            .contains("nile international airport".toLowerCase()))
+        .where((f) => f.from.toLowerCase().contains("nile international airport".toLowerCase()))
         .toList();
 
     final arrivalFlights = mockFlights
-        .where((f) => f.to
-            .toLowerCase()
-            .contains("nile international airport".toLowerCase()))
+        .where((f) => f.to.toLowerCase().contains("nile international airport".toLowerCase()))
         .toList();
 
     return DefaultTabController(
       length: 2, // Departure & Arrival
-      child: Scaffold(
-        backgroundColor: const Color(0xFFEFEFF5),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF003366),
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Flights',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(height: 2),
-              Text(
-                'Nile International Airport',
-                style: TextStyle(fontSize: 12, color: Colors.white70),
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.account_circle, color: Colors.white),
-              onPressed: () {
-                Navigator.pushNamed(context, Routes.profile);
-              },
-            ),
-          ],
-          bottom: const TabBar(
-            indicatorColor: Colors.amber,
-            indicatorWeight: 3,
-            labelColor: Colors.amber,
-            unselectedLabelColor: Colors.white,
-            tabs: [
-              Tab(text: 'Departure'),
-              Tab(text: 'Arrival'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            FlightsTab(flights: departureFlights),
-            FlightsTab(flights: arrivalFlights),
-          ],
-        ),
+      child: TabBarView(
+        children: [
+          FlightsTab(flights: departureFlights),
+          FlightsTab(flights: arrivalFlights),
+        ],
       ),
     );
   }
 }
 
-// *************************
-//   FlightsTab (UI فقط)
-// *************************
 class FlightsTab extends StatelessWidget {
   final List<FlightModel> flights;
 
@@ -185,9 +131,7 @@ class FlightCard extends StatelessWidget {
         color: Colors.white,
         margin: const EdgeInsets.symmetric(vertical: 8),
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -196,9 +140,7 @@ class FlightCard extends StatelessWidget {
               height: 6,
               decoration: const BoxDecoration(
                 color: Color(0xFF003366),
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               ),
             ),
             Padding(
@@ -219,7 +161,7 @@ class FlightCard extends StatelessWidget {
                             image: info.logo.isNotEmpty
                                 ? NetworkImage(info.logo)
                                 : const AssetImage('assets/images/placeholder.png')
-                                    as ImageProvider,
+                                      as ImageProvider,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -232,18 +174,12 @@ class FlightCard extends StatelessWidget {
                           children: [
                             Text(
                               info.airline,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               'Flight No: ${info.flightNo}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
+                              style: const TextStyle(fontSize: 12, color: Colors.black54),
                             ),
                           ],
                         ),
@@ -255,10 +191,7 @@ class FlightCard extends StatelessWidget {
                         children: [
                           Text(
                             'Gate: ${info.gate}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
                           ),
                           const SizedBox(height: 4),
                           Row(
@@ -279,11 +212,7 @@ class FlightCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(width: 4),
-                      const Icon(
-                        Icons.lock_outline,
-                        size: 18,
-                        color: Color(0xFF003366),
-                      ),
+                      const Icon(Icons.lock_outline, size: 18, color: Color(0xFF003366)),
                     ],
                   ),
 
@@ -298,28 +227,18 @@ class FlightCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Icon(
-                                Icons.access_time,
-                                size: 16,
-                                color: Colors.black54,
-                              ),
+                              const Icon(Icons.access_time, size: 16, color: Colors.black54),
                               const SizedBox(width: 4),
                               Text(
                                 info.time,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                               ),
                             ],
                           ),
                           const SizedBox(height: 4),
                           Text(
                             info.date,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                            ),
+                            style: const TextStyle(fontSize: 12, color: Colors.black54),
                           ),
                         ],
                       ),
@@ -336,18 +255,12 @@ class FlightCard extends StatelessWidget {
                               textAlign: TextAlign.right,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black87,
-                              ),
+                              style: const TextStyle(fontSize: 12, color: Colors.black87),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'T${info.terminal}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
+                              style: const TextStyle(fontSize: 12, color: Colors.black54),
                             ),
                           ],
                         ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:koleya/core/router/routes.dart';
 import 'package:koleya/cubit/verify_code_cubit.dart';
 import 'package:koleya/cubit/verify_code_state.dart';
+
 import '../../../constants.dart';
-import 'package:koleya/routes/app_routes.dart';
+
 class GetCodeScreen extends StatelessWidget {
   final String? email;
   GetCodeScreen({super.key, this.email});
@@ -12,10 +14,7 @@ class GetCodeScreen extends StatelessWidget {
 
   void _showMessage(BuildContext context, String msg, {bool error = true}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: error ? Colors.redAccent : Colors.green,
-      ),
+      SnackBar(content: Text(msg), backgroundColor: error ? Colors.redAccent : Colors.green),
     );
   }
 
@@ -31,10 +30,7 @@ class GetCodeScreen extends StatelessWidget {
           listener: (context, state) {
             if (state is VerifyCodeSuccess) {
               _showMessage(context, state.message, error: false);
-              Navigator.pushNamed(
-                context,
-                Routes.resetPassword,
-              );
+              Navigator.pushNamed(context, Routes.resetPassword);
             } else if (state is VerifyCodeFailure) {
               _showMessage(context, state.error);
             }
@@ -53,8 +49,7 @@ class GetCodeScreen extends StatelessWidget {
                   child: Container(
                     decoration: const BoxDecoration(
                       color: kPrimaryColor,
-                      borderRadius:
-                          BorderRadius.only(bottomLeft: Radius.circular(130)),
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(130)),
                     ),
                     child: const Center(
                       child: Padding(
@@ -76,8 +71,7 @@ class GetCodeScreen extends StatelessWidget {
                 const Positioned(
                   top: -60,
                   right: -60,
-                  child:
-                      CircleAvatar(backgroundColor: kAccentColor, radius: 80),
+                  child: CircleAvatar(backgroundColor: kAccentColor, radius: 80),
                 ),
 
                 // 🔙 زر الرجوع
@@ -86,8 +80,7 @@ class GetCodeScreen extends StatelessWidget {
                   left: 16,
                   child: SafeArea(
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new,
-                          color: Colors.white),
+                      icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -97,8 +90,7 @@ class GetCodeScreen extends StatelessWidget {
                 Positioned.fill(
                   top: height * 0.30,
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -118,18 +110,13 @@ class GetCodeScreen extends StatelessWidget {
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: "Enter your code",
-                            prefixIcon: const Icon(
-                              Icons.confirmation_number,
-                              color: kPrimaryColor,
-                            ),
+                            prefixIcon: const Icon(Icons.confirmation_number, color: kPrimaryColor),
                             enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: kAccentColor),
+                              borderSide: const BorderSide(color: kAccentColor),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: kPrimaryColor),
+                              borderSide: const BorderSide(color: kPrimaryColor),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
@@ -141,11 +128,7 @@ class GetCodeScreen extends StatelessWidget {
                           child: TextButton(
                             onPressed: () {
                               cubit.resendCode(email ?? "");
-                              _showMessage(
-                                context,
-                                "Verification code resent ✅",
-                                error: false,
-                              );
+                              _showMessage(context, "Verification code resent ✅", error: false);
                             },
                             child: const Text(
                               "Resend code?",
@@ -156,32 +139,27 @@ class GetCodeScreen extends StatelessWidget {
                         const SizedBox(height: 20),
 
                         state is VerifyCodeLoading
-                            ? const Center(
-                                child: CircularProgressIndicator(),
-                              )
+                            ? const Center(child: CircularProgressIndicator())
                             : ElevatedButton(
                                 onPressed: () {
                                   final code = codeController.text.trim();
 
                                   if (code.isEmpty) {
-                                    _showMessage(context,
-                                        "Please enter the verification code.");
+                                    _showMessage(context, "Please enter the verification code.");
                                     return;
                                   } else if (code.length < 4) {
-                                    _showMessage(context,
-                                        "Invalid code. Please check and try again.");
+                                    _showMessage(
+                                      context,
+                                      "Invalid code. Please check and try again.",
+                                    );
                                     return;
                                   }
 
-                                  cubit.verifyCode(
-                                    email: email ?? "",
-                                    code: code,
-                                  );
+                                  cubit.verifyCode(email: email ?? "", code: code);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: kPrimaryColor,
-                                  minimumSize:
-                                      const Size(double.infinity, 50),
+                                  minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
