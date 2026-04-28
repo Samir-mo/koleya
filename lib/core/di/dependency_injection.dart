@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:koleya/data/repositories/dashboard_repository.dart';
 import '../api/dio_factory.dart';
 import '../networking/network_info.dart';
 import '../utils/app_constants.dart';
@@ -37,7 +38,7 @@ Future<void> setUpDependencies() async {
   );
 
   // --- Repositories ---
-  // getIt.registerLazySingleton(() => AuthRepository(getIt()));
+  getIt.registerLazySingleton(() => DashboardRepository());
 
   // --- Use Cases ---
   // getIt.registerFactory(() => LoginUseCase(getIt()));
