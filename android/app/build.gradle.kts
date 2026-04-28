@@ -42,7 +42,22 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+        flavorDimensions += "default"
+
+    productFlavors {
+        create("development") {
+            dimension = "default"
+            applicationIdSuffix = ".dev"
+            // Fixed the missing quote below
+            resValue("string", "app_name", "Gate Buddy Dev") 
+        }
+        create("production") {
+            dimension = "default"
+            resValue("string", "app_name", "Gate Buddy") 
+        }
+    }
 }
+
 
 flutter {
     source = "../.."
