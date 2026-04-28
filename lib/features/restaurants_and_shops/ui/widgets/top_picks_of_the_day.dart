@@ -5,9 +5,9 @@ class TopPicksOfTheDay extends StatelessWidget {
   const TopPicksOfTheDay({super.key});
 
   final List<String?> imagePaths = const [
-    'assets/images/test_image.jpeg',
-    'assets/images/test_image.jpeg',
-    'assets/images/test_image.jpeg',
+    'assets/images/6.png',
+    'assets/images/6.png',
+    'assets/images/6.png',
     null,
     null,
   ];

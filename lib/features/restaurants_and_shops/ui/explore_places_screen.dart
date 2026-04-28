@@ -10,42 +10,39 @@ class ExplorePlacesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Color(0xFF002D6B),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: ColoredBox(
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomAppBar(appBarTitle: 'Gate buddy'),
-                Padding(
-                  padding: EdgeInsetsGeometry.only(
-                    top: 16,
-                    left: 16,
-                    right: 16,
-                  ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF002D6B),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom App Bar - Outside the scroll view (Recommended)
+            const CustomAppBar(appBarTitle: 'Gate Buddy'),
+
+            // Scrollable Content
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildIntroText(),
-                      SizedBox(height: 24),
-                      SearchField(),
-                      SizedBox(height: 24),
-                      FilterChipRow(),
-                      SizedBox(height: 24),
-                      TopPicksOfTheDay(),
-                      SizedBox(height: 24),
-                      PlaceListView(),
+                      const SizedBox(height: 24),
+                      const SearchField(),
+                      const SizedBox(height: 24),
+                      const FilterChipRow(),
+                      const SizedBox(height: 24),
+                      const TopPicksOfTheDay(),
+                      const SizedBox(height: 24),
+                      const PlaceListView(),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -53,10 +50,10 @@ class ExplorePlacesScreen extends StatelessWidget {
 
   Widget _buildIntroText() {
     return RichText(
-      text: TextSpan(
-        style: const TextStyle(color: Color(0xFF002D6B)),
+      text: const TextSpan(
+        style: TextStyle(color: Color(0xFF002D6B)),
         children: [
-          const TextSpan(
+          TextSpan(
             text: 'Explore Shops & Restaurants\n',
             style: TextStyle(
               fontSize: 20,
@@ -64,9 +61,8 @@ class ExplorePlacesScreen extends StatelessWidget {
               height: 1.5,
             ),
           ),
-          const TextSpan(
-            text:
-                'Discover dining and shopping options available at NIA Airport.',
+          TextSpan(
+            text: 'Discover dining and shopping options available at NIA Airport.',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.normal,

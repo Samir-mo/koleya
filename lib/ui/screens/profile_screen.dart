@@ -58,14 +58,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (sure != true) return;
 
-    // ✅ امسح الداتا من التخزين + الذاكرة
     await AuthStorage.clearAuth();
     CurrentUser.clear();
 
     if (!mounted) return;
 
-    // ✅ ارجع لصفحة اللوجين وامسح الستاك
-    Navigator.pushNamedAndRemoveUntil(context, Routes.login, (route) => false);
+    // Important: Use pushNamedAndRemoveUntil to clear everything
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (route) => false);
   }
 
   @override
@@ -74,6 +73,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       valueListenable: CurrentUser.listenable,
       builder: (context, _, __) {
         final currentName = CurrentUser.name ?? 'User name';
+
+        // Sync controller if CurrentUser changes externally
         if (_nameController.text != (CurrentUser.name ?? '')) {
           _nameController.text = CurrentUser.name ?? '';
         }
@@ -85,12 +86,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           appBar: AppBar(
             backgroundColor: _primaryBlue,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
+            // REMOVED the back button - very important for bottom nav tabs!
+            // leading: IconButton(...),   ← Delete this
             centerTitle: true,
-            title: const Text('Profile', style: TextStyle(fontWeight: FontWeight.w600)),
+            title: const Text(
+              'Profile',
+              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+            ),
           ),
           body: SafeArea(
             child: Center(
@@ -110,6 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
                           child: Column(
                             children: [
+                              // Profile Picture
                               Stack(
                                 alignment: Alignment.bottomRight,
                                 children: [
@@ -120,10 +123,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       backgroundColor: Colors.grey.shade300,
                                       backgroundImage: _localImage != null
                                           ? FileImage(_localImage!)
-                                          : (CurrentUser.image != null &&
-                                                CurrentUser.image!.isNotEmpty)
+                                          : (CurrentUser.image?.isNotEmpty == true)
                                           ? NetworkImage(CurrentUser.image!) as ImageProvider
-                                          : const AssetImage('assets/images/placeholder.png'),
+                                          : const AssetImage('assets/images/6.png'),
                                     ),
                                   ),
                                   Positioned(
@@ -148,8 +150,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
 
+                              const SizedBox(height: 16),
                               Text(
                                 currentName,
                                 style: const TextStyle(
@@ -159,7 +161,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-
                               Text(email, style: const TextStyle(fontSize: 13, color: _accentGold)),
 
                               const SizedBox(height: 24),
@@ -167,17 +168,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _ProfileActionButton(
                                 icon: Icons.flight_takeoff_outlined,
                                 label: 'Tracked Flight',
-                                onPressed: () {
-                                  Navigator.pushNamed(context, Routes.trackedFlight);
-                                },
+                                onPressed: () => Navigator.pushNamed(context, Routes.trackedFlight),
                               ),
                               const SizedBox(height: 12),
                               _ProfileActionButton(
                                 icon: Icons.local_parking_outlined,
                                 label: 'Saved parking',
-                                onPressed: () {
-                                  Navigator.pushNamed(context, Routes.indoorMap);
-                                },
+                                onPressed: () => Navigator.pushNamed(context, Routes.indoorMap),
                               ),
                               const SizedBox(height: 12),
                               _ProfileActionButton(
@@ -193,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               const SizedBox(height: 32),
 
-                              Align(
+                              const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   'Account info',
@@ -210,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 controller: _nameController,
                                 decoration: InputDecoration(
                                   labelText: 'Full name',
-                                  prefixIcon: const Icon(Icons.person_outline),
+                                  prefixIcon: Icon(Icons.person_outline),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -223,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 controller: TextEditingController(text: email),
                                 decoration: InputDecoration(
                                   labelText: 'Email',
-                                  prefixIcon: const Icon(Icons.email_outlined),
+                                  prefixIcon: Icon(Icons.email_outlined),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -231,6 +228,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
 
                               const SizedBox(height: 20),
+
+                              // Save Changes Button
                               SizedBox(
                                 width: double.infinity,
                                 height: 44,
@@ -264,8 +263,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
 
-                              // ✅ زر تسجيل خروج
                               const SizedBox(height: 14),
+
+                              // Logout Button
                               SizedBox(
                                 width: double.infinity,
                                 height: 44,
@@ -304,6 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+// Keep your _ProfileActionButton as is (it's fine)
 class _ProfileActionButton extends StatelessWidget {
   final IconData icon;
   final String label;

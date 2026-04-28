@@ -1,96 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:koleya/data/models/flight_model.dart';
 import 'package:koleya/ui/screens/tracked_flight_screen.dart';
 
-import '../../data/models/flight_model.dart';
-
-class FlightsScreen extends StatelessWidget {
-  const FlightsScreen({super.key});
-
-  // 🔹 بيانات وهمية للعرض بس – عدّلها زي ما تحب
-  static final List<FlightModel> mockFlights = [
-    FlightModel(
-      flightNo: 'MS123',
-      airline: 'EgyptAir',
-      status: 'Departed',
-      gate: 'A12',
-      time: '14:30',
-      date: '2025-01-01',
-      from: 'Nile International Airport',
-      to: 'Dubai International Airport',
-      terminal: '1',
-      logo: '',
-    ),
-    FlightModel(
-      flightNo: 'MS456',
-      airline: 'Nile Air',
-      status: 'Landed',
-      gate: 'B5',
-      time: '16:00',
-      date: '2025-01-01',
-      from: 'Cairo International Airport',
-      to: 'Nile International Airport',
-      terminal: '2',
-      logo: '',
-    ),
-    FlightModel(
-      flightNo: 'MS789',
-      airline: 'Fly Emirates',
-      status: 'Boarding',
-      gate: 'C3',
-      time: '18:15',
-      date: '2025-01-01',
-      from: 'Nile International Airport',
-      to: 'Riyadh Airport',
-      terminal: '1',
-      logo: '',
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    // فلترة حسب from/to عشان Departure / Arrival
-    final departureFlights = mockFlights
-        .where((f) => f.from.toLowerCase().contains("nile international airport".toLowerCase()))
-        .toList();
-
-    final arrivalFlights = mockFlights
-        .where((f) => f.to.toLowerCase().contains("nile international airport".toLowerCase()))
-        .toList();
-
-    return DefaultTabController(
-      length: 2, // Departure & Arrival
-      child: TabBarView(
-        children: [
-          FlightsTab(flights: departureFlights),
-          FlightsTab(flights: arrivalFlights),
-        ],
-      ),
-    );
-  }
-}
-
-class FlightsTab extends StatelessWidget {
-  final List<FlightModel> flights;
-
-  const FlightsTab({super.key, required this.flights});
-
-  @override
-  Widget build(BuildContext context) {
-    if (flights.isEmpty) {
-      return const Center(child: Text('لا توجد رحلات حالياً'));
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      itemCount: flights.length,
-      itemBuilder: (context, index) => FlightCard(info: flights[index]),
-    );
-  }
-}
-
-// *************************
-//   FlightCard
-// *************************
 class FlightCard extends StatelessWidget {
   final FlightModel info;
   const FlightCard({super.key, required this.info});
@@ -160,8 +71,7 @@ class FlightCard extends StatelessWidget {
                           image: DecorationImage(
                             image: info.logo.isNotEmpty
                                 ? NetworkImage(info.logo)
-                                : const AssetImage('assets/images/placeholder.png')
-                                      as ImageProvider,
+                                : const AssetImage('assets/images/6.png') as ImageProvider,
                             fit: BoxFit.cover,
                           ),
                         ),

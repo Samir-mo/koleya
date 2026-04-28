@@ -6,7 +6,8 @@ import 'package:koleya/cubit/home_cubit.dart';
 import 'package:koleya/features/home/ui/home_screen.dart';
 import 'package:koleya/features/restaurants_and_shops/ui/explore_places_screen.dart';
 import 'package:koleya/ui/screens/assistant_screen.dart';
-import 'package:koleya/ui/screens/flights_screen.dart';
+import 'package:koleya/features/flights/ui/flights_screen.dart';
+import 'package:koleya/ui/screens/profile_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -20,29 +21,36 @@ class _MainScaffoldState extends State<MainScaffold> {
   late final PersistentTabController _controller;
   final ScrollController _homeScrollController = ScrollController();
 
+  late final HomeCubit _homeCubit;
+
   static const int initialIndex = 2;
 
   @override
   void initState() {
     super.initState();
-
     _controller = PersistentTabController(initialIndex: initialIndex);
+
+    // Create the cubit once here
+    _homeCubit = HomeCubit(getIt())..loadDashboard();
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _homeScrollController.dispose();
+    _homeCubit.close();           // Important: close it manually
     super.dispose();
   }
 
   // ---------------- SCREENS ----------------
   List<Widget> _buildScreens() {
     return [
-      const Placeholder(),
+      const ProfileScreen(),
       const FlightsScreen(),
-      BlocProvider(
-        create: (_) => HomeCubit(getIt())..loadDashboard(),
+      
+      // Use BlocProvider.value instead of creating new one every time
+      BlocProvider.value(
+        value: _homeCubit,
         child: HomeScreen(scrollController: _homeScrollController),
       ),
 
@@ -76,7 +84,6 @@ class _MainScaffoldState extends State<MainScaffold> {
     );
   }
 
-  // ---------------- UI ----------------
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(
@@ -84,21 +91,16 @@ class _MainScaffoldState extends State<MainScaffold> {
       controller: _controller,
       screens: _buildScreens(),
       items: _navItems(),
-
       backgroundColor: Colors.white,
       navBarStyle: NavBarStyle.style15,
-
       confineToSafeArea: true,
-      stateManagement: true,
-
+      stateManagement: true,           // keep this true
       hideNavigationBarWhenKeyboardAppears: true,
-
       decoration: NavBarDecoration(
         borderRadius: BorderRadius.circular(10),
         colorBehindNavBar: Colors.white,
         border: Border(top: BorderSide(color: Colors.grey.shade200)),
       ),
-
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
     );

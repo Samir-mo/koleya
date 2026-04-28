@@ -17,7 +17,7 @@ class PlaceListView extends StatelessWidget {
         rating: 4.6,
         openHours: '24 Hours',
         cuisine: 'International & Egyptian',
-        imagePath: 'assets/images/test_image.jpeg.png',
+        imagePath: 'assets/images/6.png',
       ),
       PlaceOfServiceModel(
         id: 2,
@@ -26,7 +26,7 @@ class PlaceListView extends StatelessWidget {
         rating: 4.7,
         openHours: '24 Hours',
         cuisine: 'Sandwiches, coffee.',
-        imagePath: 'assets/images/test_image.jpeg',
+        imagePath: 'assets/images/6.png',
       ),
       PlaceOfServiceModel(
         id: 2,
@@ -35,7 +35,7 @@ class PlaceListView extends StatelessWidget {
         rating: 4.8,
         openHours: '24 Hours',
         cuisine: 'Sandwiches, coffee.',
-        imagePath: 'assets/images/test_image.jpeg',
+        imagePath: 'assets/images/6.png',
       ),
     ];
 
