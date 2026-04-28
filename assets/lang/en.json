@@ -2,6 +2,7 @@
   "app_title": "My App",
   "welcome": "Welcome",
   "errors": {
+    "error_screen_title":"Error",
     "no_internet": "No internet connection. Please check your network.",
     "timeout": "Request timeout. Please try again.",
     "connection_error": "Connection error. Please check your internet connection.",
