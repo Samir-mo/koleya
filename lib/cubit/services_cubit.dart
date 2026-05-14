@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/services_repository.dart';
-import '../../data/models/service_model.dart';
+import '../core/shared/models/service_model.dart';
 import 'services_state.dart';
 
 class ServicesCubit extends Cubit<ServicesState> {

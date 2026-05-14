@@ -3,7 +3,7 @@ import 'login_state.dart';
 
 import 'package:koleya/data/repositories/auth_repository.dart';
 import 'package:koleya/data/storage/auth_storage.dart';
-import 'package:koleya/data/models/user_model.dart';
+import 'package:koleya/core/shared/models/user_model.dart';
 import 'package:koleya/data/storage/current_user.dart';
 
 class LoginCubit extends Cubit<LoginState> {

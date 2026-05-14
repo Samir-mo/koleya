@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../api/api_client.dart';
 import '../api/api_endpoints.dart';
-import '../models/user_model.dart';
+import '../../core/shared/models/user_model.dart';
 
 /// ProfileRepository — مسئول عن البيانات الشخصية للمستخدم
 class ProfileRepository {

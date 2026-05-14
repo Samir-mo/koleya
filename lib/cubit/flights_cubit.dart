@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/flight_repository.dart';
-import '../../data/models/flight_model.dart';
+import '../core/shared/models/flight_model.dart';
 import 'flights_state.dart';
 
 class FlightsCubit extends Cubit<FlightsState> {

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/tracked_flight_model.dart';
+import '../core/shared/models/tracked_flight_model.dart';
 
 abstract class TrackedFlightState extends Equatable {
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/dashboard_repository.dart';
-import '../../data/models/dashboard_model.dart';
+import '../core/shared/models/dashboard_model.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {

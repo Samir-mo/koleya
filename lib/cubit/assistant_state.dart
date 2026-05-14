@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/assistant_message.dart';
+import '../core/shared/models/assistant_message.dart';
 
 abstract class AssistantState extends Equatable {
   @override

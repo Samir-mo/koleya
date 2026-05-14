@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/notifications_repository.dart';
-import '../../data/models/notification_model.dart';
+import '../core/shared/models/notification_model.dart';
 import 'notifications_state.dart';
 
 class NotificationsCubit extends Cubit<NotificationsState> {

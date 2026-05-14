@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/place_model.dart';
+import '../core/shared/models/place_model.dart';
 
 abstract class PlacesState extends Equatable {
   @override

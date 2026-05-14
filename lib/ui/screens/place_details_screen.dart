@@ -4,7 +4,7 @@ import 'package:koleya/core/router/routes.dart';
 
 import '../../cubit/places_cubit.dart';
 import '../../cubit/places_state.dart';
-import '../../data/models/place_model.dart';
+import '../../core/shared/models/place_model.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   final int placeId;

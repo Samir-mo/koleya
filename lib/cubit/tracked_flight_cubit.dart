@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/tracked_flight_repository.dart';
-import '../../data/models/tracked_flight_model.dart';
+import '../core/shared/models/tracked_flight_model.dart';
 import 'tracked_flight_state.dart';
 
 class TrackedFlightCubit extends Cubit<TrackedFlightState> {

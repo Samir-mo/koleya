@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../data/models/service_model.dart';
+import '../../core/shared/models/service_model.dart';
 
 class CustomCard extends StatelessWidget {
   final ServiceModel service;

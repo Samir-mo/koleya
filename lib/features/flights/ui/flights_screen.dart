@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:koleya/features/flights/ui/widgets/flights_tab.dart';
 
-import '../../../data/models/flight_model.dart';
+import '../../../core/shared/models/flight_model.dart';
 
 class FlightsScreen extends StatelessWidget {
   const FlightsScreen({super.key});

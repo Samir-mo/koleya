@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/models/service_model.dart';
+import '../core/shared/models/service_model.dart';
 import 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {

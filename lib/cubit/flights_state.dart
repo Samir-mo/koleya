@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/flight_model.dart';
+import '../core/shared/models/flight_model.dart';
 
 abstract class FlightsState extends Equatable {
   @override
