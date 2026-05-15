@@ -34,13 +34,15 @@ class ApiClient {
           }
 
           print(
-              "🌐 Request → [${options.method}] ${options.baseUrl}${options.path}");
+            "🌐 Request → [${options.method}] ${options.baseUrl}${options.path}",
+          );
           return handler.next(options);
         },
 
         onResponse: (response, handler) {
           print(
-              "✅ Response [${response.statusCode}] → ${response.requestOptions.path}");
+            "✅ Response [${response.statusCode}] → ${response.requestOptions.path}",
+          );
           return handler.next(response);
         },
 

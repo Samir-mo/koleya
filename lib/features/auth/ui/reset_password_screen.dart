@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:koleya/core/utils/extensions/context_ext.dart';
 import 'package:koleya/cubit/reset_password_cubit.dart';
 import 'package:koleya/cubit/reset_password_state.dart';
-import '../../../constants.dart';
-import '../../features/auth/ui/login_screen.dart';
+
+import 'login_screen.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   ResetPasswordScreen({super.key});
@@ -38,7 +39,7 @@ class ResetPasswordScreen extends StatelessWidget {
               Future.delayed(const Duration(seconds: 1), () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (_) =>  LoginScreen()),
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
                   (route) => false,
                 );
               });
@@ -58,10 +59,11 @@ class ResetPasswordScreen extends StatelessWidget {
                   right: 0,
                   height: height * 0.33,
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius:
-                          BorderRadius.only(bottomLeft: Radius.circular(130)),
+                    decoration: BoxDecoration(
+                      color: context.customColors.infoBackground,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(130),
+                      ),
                     ),
                     child: const Center(
                       child: Padding(
@@ -80,10 +82,13 @@ class ResetPasswordScreen extends StatelessWidget {
                 ),
 
                 // الدائرة الذهبية
-                const Positioned(
+                Positioned(
                   top: -60,
                   right: -60,
-                  child: CircleAvatar(backgroundColor: kAccentColor, radius: 80),
+                  child: CircleAvatar(
+                    backgroundColor: context.customColors.infoBackground,
+                    radius: 80,
+                  ),
                 ),
 
                 // زر الرجوع
@@ -92,8 +97,10 @@ class ResetPasswordScreen extends StatelessWidget {
                   left: 16,
                   child: SafeArea(
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new,
-                          color: Colors.white),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -104,27 +111,31 @@ class ResetPasswordScreen extends StatelessWidget {
                   top: height * 0.30,
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 20),
+                      horizontal: 24.0,
+                      vertical: 20,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Reset password",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: kPrimaryColor,
+                            color: context.customColors.infoBackground,
                           ),
                         ),
                         const SizedBox(height: 40),
 
                         // الحقول
                         _buildPasswordField(
+                          context,
                           controller: newPasswordController,
                           hint: "Enter new password",
                         ),
                         const SizedBox(height: 20),
                         _buildPasswordField(
+                          context,
                           controller: confirmPasswordController,
                           hint: "Confirm password",
                         ),
@@ -135,25 +146,31 @@ class ResetPasswordScreen extends StatelessWidget {
                             ? const Center(child: CircularProgressIndicator())
                             : ElevatedButton(
                                 onPressed: () {
-                                  final newPass =
-                                      newPasswordController.text.trim();
-                                  final confirmPass =
-                                      confirmPasswordController.text.trim();
+                                  final newPass = newPasswordController.text
+                                      .trim();
+                                  final confirmPass = confirmPasswordController
+                                      .text
+                                      .trim();
 
-                                  if (newPass.isEmpty ||
-                                      confirmPass.isEmpty) {
-                                    _showMessage(context,
-                                        "Please fill in both fields.");
+                                  if (newPass.isEmpty || confirmPass.isEmpty) {
+                                    _showMessage(
+                                      context,
+                                      "Please fill in both fields.",
+                                    );
                                     return;
                                   }
                                   if (newPass.length < 6) {
-                                    _showMessage(context,
-                                        "Password must be at least 6 characters.");
+                                    _showMessage(
+                                      context,
+                                      "Password must be at least 6 characters.",
+                                    );
                                     return;
                                   }
                                   if (newPass != confirmPass) {
-                                    _showMessage(context,
-                                        "Passwords do not match.");
+                                    _showMessage(
+                                      context,
+                                      "Passwords do not match.",
+                                    );
                                     return;
                                   }
 
@@ -163,17 +180,17 @@ class ResetPasswordScreen extends StatelessWidget {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: kPrimaryColor,
-                                  minimumSize:
-                                      const Size(double.infinity, 50),
+                                  backgroundColor:
+                                      context.customColors.infoBackground,
+                                  minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   "Confirm",
                                   style: TextStyle(
-                                    color: kAccentColor,
+                                    color: context.customColors.infoBackground,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -192,7 +209,8 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordField({
+  Widget _buildPasswordField(
+    context, {
     required TextEditingController controller,
     required String hint,
   }) {
@@ -201,13 +219,16 @@ class ResetPasswordScreen extends StatelessWidget {
       obscureText: true,
       decoration: InputDecoration(
         hintText: hint,
-        prefixIcon: const Icon(Icons.lock, color: kPrimaryColor),
+        prefixIcon: Icon(
+          Icons.lock,
+          color: context.customColors.infoBackground,
+        ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: kAccentColor),
+          borderSide: BorderSide(color: context.customColors.infoBackground),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: kPrimaryColor),
+          borderSide: BorderSide(color: context.customColors.infoBackground),
           borderRadius: BorderRadius.circular(8),
         ),
       ),
