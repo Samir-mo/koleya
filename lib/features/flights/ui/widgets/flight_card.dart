@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/core/shared/models/flight_model.dart';
-import 'package:koleya/ui/screens/tracked_flight_screen.dart';
+import 'package:gate_buddy/core/shared/models/flight_model.dart';
+import 'package:gate_buddy/ui/screens/tracked_flight_screen.dart';
 
 class FlightCard extends StatelessWidget {
   final FlightModel info;

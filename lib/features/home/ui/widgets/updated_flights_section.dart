@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/features/home/ui/widgets/flight_row.dart';
-import 'package:koleya/features/home/ui/widgets/section_title.dart';
+import 'package:gate_buddy/features/home/ui/widgets/flight_row.dart';
+import 'package:gate_buddy/features/home/ui/widgets/section_title.dart';
 
 class UpdatedFlightsSection extends StatelessWidget {
   final List flights;
@@ -21,11 +21,19 @@ class UpdatedFlightsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(title: 'Updated Flights ✈️', color: primaryBlue, showDot: true),
+        SectionTitle(
+          title: 'Updated Flights ✈️',
+          color: primaryBlue,
+          showDot: true,
+        ),
         const SizedBox(height: 2),
         Text(
           'Stay informed about the latest flight and gate changes.',
-          style: TextStyle(color: Colors.grey.shade700, fontSize: 12, height: 1.4),
+          style: TextStyle(
+            color: Colors.grey.shade700,
+            fontSize: 12,
+            height: 1.4,
+          ),
         ),
         const SizedBox(height: 10),
 
@@ -49,7 +57,9 @@ class UpdatedFlightsSection extends StatelessWidget {
             children: [
               for (int i = 0; i < list.length; i++)
                 Padding(
-                  padding: EdgeInsets.only(bottom: i == list.length - 1 ? 0 : 10),
+                  padding: EdgeInsets.only(
+                    bottom: i == list.length - 1 ? 0 : 10,
+                  ),
                   child: FlightRow(
                     index: i,
                     flight: list[i],

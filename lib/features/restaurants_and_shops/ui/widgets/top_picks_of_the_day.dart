@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/widgets/pick_thumbnail.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/pick_thumbnail.dart';
 
 class TopPicksOfTheDay extends StatelessWidget {
   const TopPicksOfTheDay({super.key});
@@ -24,7 +24,8 @@ class TopPicksOfTheDay extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: imagePaths.length,
-            itemBuilder: (context, index) => PickThumbnail(imagePath: imagePaths[index]),
+            itemBuilder: (context, index) =>
+                PickThumbnail(imagePath: imagePaths[index]),
           ),
         ),
       ],
@@ -44,7 +45,11 @@ class _SectionHeader extends StatelessWidget {
         SizedBox(width: 6),
         Text(
           'Top Picks of the Day',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
       ],
     );

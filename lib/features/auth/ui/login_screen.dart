@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koleya/core/router/routes.dart';
-import 'package:koleya/core/themes/app_text_styles.dart';
-import 'package:koleya/core/utils/extensions/context_ext.dart';
-import 'package:koleya/cubit/login_cubit.dart';
-import 'package:koleya/cubit/login_state.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/cubit/login_cubit.dart';
+import 'package:gate_buddy/cubit/login_state.dart';
 
 import 'signup_screen.dart';
 

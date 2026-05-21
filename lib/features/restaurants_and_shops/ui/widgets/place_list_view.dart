@@ -1,6 +1,6 @@
 // --- Restaurant List View ---
 import 'package:flutter/material.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/widgets/place_card.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/place_card.dart';
 
 import '../../data/models/place_of_service_model.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/ui/screens/tracked_flight_screen.dart';
+import 'package:gate_buddy/ui/screens/tracked_flight_screen.dart';
 
 class TrackedFlightBigCard extends StatelessWidget {
   final Map trackedFlight;
@@ -18,7 +18,8 @@ class TrackedFlightBigCard extends StatelessWidget {
     final String airline = (trackedFlight['airline'] ?? 'Egypt Air') as String;
     final String flightNo = (trackedFlight['flight_no'] ?? 'MS359') as String;
     final String time = (trackedFlight['time'] ?? '11:25') as String;
-    final String status = (trackedFlight['status'] ?? 'Boarding in 20 minutes') as String;
+    final String status =
+        (trackedFlight['status'] ?? 'Boarding in 20 minutes') as String;
 
     return Container(
       width: double.infinity,
@@ -40,7 +41,10 @@ class TrackedFlightBigCard extends StatelessWidget {
           // الشريط الأزرق في أعلى الكارت
           Container(
             height: 18,
-            decoration: BoxDecoration(color: primaryBlue, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+              color: primaryBlue,
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
           const SizedBox(height: 10),
 
@@ -76,7 +80,10 @@ class TrackedFlightBigCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             'Flight No: $flightNo',
-                            style: TextStyle(color: Colors.grey.shade800, fontSize: 12),
+                            style: TextStyle(
+                              color: Colors.grey.shade800,
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),
@@ -90,7 +97,11 @@ class TrackedFlightBigCard extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.flight_takeoff, size: 14, color: Color(0xFFF3A623)),
+                        const Icon(
+                          Icons.flight_takeoff,
+                          size: 14,
+                          color: Color(0xFFF3A623),
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           time,
@@ -104,7 +115,10 @@ class TrackedFlightBigCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFF1D4),
                         borderRadius: BorderRadius.circular(20),
@@ -151,14 +165,19 @@ class TrackedFlightBigCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        TrackedFlightScreen(flightNo: flightNo, airline: airline, status: status),
+                    builder: (_) => TrackedFlightScreen(
+                      flightNo: flightNo,
+                      airline: airline,
+                      status: status,
+                    ),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryBlue,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -198,7 +217,9 @@ class TrackedFlightBigCard extends StatelessWidget {
               },
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: accentOrange, width: 1.2),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

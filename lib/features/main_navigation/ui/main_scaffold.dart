@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koleya/core/di/dependency_injection.dart';
-import 'package:koleya/core/themes/app_colors.dart';
-import 'package:koleya/cubit/home_cubit.dart';
-import 'package:koleya/features/home/ui/home_screen.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/explore_places_screen.dart';
-import 'package:koleya/ui/screens/assistant_screen.dart';
-import 'package:koleya/features/flights/ui/flights_screen.dart';
-import 'package:koleya/ui/screens/profile_screen.dart';
+import 'package:gate_buddy/core/di/dependency_injection.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/cubit/home_cubit.dart';
+import 'package:gate_buddy/features/flights/ui/flights_screen.dart';
+import 'package:gate_buddy/features/home/ui/home_screen.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/explore_places_screen.dart';
+import 'package:gate_buddy/ui/screens/assistant_screen.dart';
+import 'package:gate_buddy/ui/screens/profile_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -38,7 +38,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   void dispose() {
     _controller.dispose();
     _homeScrollController.dispose();
-    _homeCubit.close();           // Important: close it manually
+    _homeCubit.close(); // Important: close it manually
     super.dispose();
   }
 
@@ -47,7 +47,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     return [
       const ProfileScreen(),
       const FlightsScreen(),
-      
+
       // Use BlocProvider.value instead of creating new one every time
       BlocProvider.value(
         value: _homeCubit,
@@ -62,7 +62,10 @@ class _MainScaffoldState extends State<MainScaffold> {
   // ---------------- NAV ITEMS ----------------
   List<PersistentBottomNavBarItem> _navItems() {
     return [
-      _buildItem(Icons.accessibility_new_rounded, Icons.accessibility_new_outlined),
+      _buildItem(
+        Icons.accessibility_new_rounded,
+        Icons.accessibility_new_outlined,
+      ),
       _buildItem(Icons.flight_takeoff_rounded, Icons.flight_takeoff_outlined),
       _buildItem(Icons.home_rounded, Icons.home_outlined, isCenter: true),
       _buildItem(Icons.storefront_rounded, Icons.storefront_outlined),
@@ -78,7 +81,9 @@ class _MainScaffoldState extends State<MainScaffold> {
     return PersistentBottomNavBarItem(
       icon: Icon(activeIcon, size: 28),
       inactiveIcon: Icon(inactiveIcon, size: 26),
-      activeColorPrimary: isCenter ? const Color(0xFF00104A) : AppColors.primary400,
+      activeColorPrimary: isCenter
+          ? const Color(0xFF00104A)
+          : AppColors.primary400,
       inactiveColorPrimary: Colors.grey,
       title: isCenter ? "Home" : null,
     );
@@ -94,7 +99,7 @@ class _MainScaffoldState extends State<MainScaffold> {
       backgroundColor: Colors.white,
       navBarStyle: NavBarStyle.style15,
       confineToSafeArea: true,
-      stateManagement: true,           // keep this true
+      stateManagement: true, // keep this true
       hideNavigationBarWhenKeyboardAppears: true,
       decoration: NavBarDecoration(
         borderRadius: BorderRadius.circular(10),

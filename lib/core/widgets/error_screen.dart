@@ -1,8 +1,7 @@
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:koleya/core/themes/app_text_styles.dart';
-import 'package:koleya/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 
 import '../themes/app_colors.dart';
 import '../utils/spacing.dart';
@@ -67,9 +66,7 @@ class ErrorScreen extends StatelessWidget {
                     if (error != null) ...[
                       verticalSpacing(16),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: rw(16),
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: rw(16)),
                         child: Text(
                           error!,
                           style: AppTextStyles.font12Regular.copyWith(

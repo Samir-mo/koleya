@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koleya/core/utils/extensions/context_ext.dart';
-import 'package:koleya/cubit/reset_password_cubit.dart';
-import 'package:koleya/cubit/reset_password_state.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/cubit/reset_password_cubit.dart';
+import 'package:gate_buddy/cubit/reset_password_state.dart';
 
 import 'login_screen.dart';
 

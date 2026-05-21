@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/shared/models/user_model.dart';
+import 'package:gate_buddy/data/repositories/auth_repository.dart';
+import 'package:gate_buddy/data/storage/auth_storage.dart';
+import 'package:gate_buddy/data/storage/current_user.dart';
+
 import 'signup_state.dart';
-import 'package:koleya/data/repositories/auth_repository.dart';
-import 'package:koleya/data/storage/auth_storage.dart';
-import 'package:koleya/core/shared/models/user_model.dart';
-import 'package:koleya/data/storage/current_user.dart';
 
 class SignupCubit extends Cubit<SignupState> {
   final AuthRepository _repo = AuthRepository();

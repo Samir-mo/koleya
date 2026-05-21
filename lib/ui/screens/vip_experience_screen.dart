@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/ui/screens/profile_screen.dart';
+import 'package:gate_buddy/ui/screens/profile_screen.dart';
 // TODO: لما ترجع تربط الـ API والـ Bloc استوردهم هنا
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import '../../cubit/vip_cubit.dart';
@@ -23,8 +23,7 @@ class VipExperienceScreen extends StatelessWidget {
       },
       {
         "title": "Food & Beverage",
-        "description":
-            "Enjoy a wide variety of gourmet meals and beverages.",
+        "description": "Enjoy a wide variety of gourmet meals and beverages.",
       },
       {
         "title": "Free Wi-Fi & Entertainment",
@@ -45,11 +44,11 @@ class VipExperienceScreen extends StatelessWidget {
 
     // 👇 أيكون مختلفة لكل عنصر زي الفيجما
     final List<IconData> demoIcons = [
-      Icons.event_seat,          // Private Lounge Access
-      Icons.restaurant_menu,     // Food & Beverage
-      Icons.wifi_tethering,      // Free Wi-Fi & Entertainment
-      Icons.smoke_free,          // Smoking & Non-Smoking Areas
-      Icons.map_outlined,        // Highlighted on Map
+      Icons.event_seat, // Private Lounge Access
+      Icons.restaurant_menu, // Food & Beverage
+      Icons.wifi_tethering, // Free Wi-Fi & Entertainment
+      Icons.smoke_free, // Smoking & Non-Smoking Areas
+      Icons.map_outlined, // Highlighted on Map
     ];
 
     return Scaffold(
@@ -239,15 +238,13 @@ class _VipServiceItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0, vertical: 10.0),
+                horizontal: 12.0,
+                vertical: 10.0,
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    iconData,
-                    size: 26,
-                    color: const Color(0xFF154D71),
-                  ),
+                  Icon(iconData, size: 26, color: const Color(0xFF154D71)),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(

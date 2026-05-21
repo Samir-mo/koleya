@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koleya/core/utils/extensions/context_ext.dart';
-import 'package:koleya/cubit/signup_cubit.dart';
-import 'package:koleya/cubit/signup_state.dart';
-import 'package:koleya/features/auth/ui/login_screen.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/cubit/signup_cubit.dart';
+import 'package:gate_buddy/cubit/signup_state.dart';
+import 'package:gate_buddy/features/auth/ui/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
