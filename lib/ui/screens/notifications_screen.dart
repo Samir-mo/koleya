@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../cubit/notifications_cubit.dart';
 import '../../cubit/notifications_state.dart';
-import '../../data/models/notification_model.dart';
+import '../../core/shared/models/notification_model.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});

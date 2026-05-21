@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubit/assistant_cubit.dart';
 import '../../cubit/assistant_state.dart';
-import '../../data/models/assistant_message.dart';
+import '../../core/shared/models/assistant_message.dart';
 
 class AssistantScreen extends StatefulWidget {
   const AssistantScreen({super.key});

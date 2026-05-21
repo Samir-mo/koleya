@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/features/home/data/model/service_item.dart';
-import 'package:koleya/features/home/ui/widgets/service_card.dart';
-import 'package:koleya/ui/screens/accessibility_screen.dart';
-import 'package:koleya/ui/screens/financial_services_screen.dart';
-import 'package:koleya/ui/screens/flight_counters_screen.dart';
-import 'package:koleya/ui/screens/vip_experience_screen.dart';
+import 'package:gate_buddy/features/home/data/model/service_item.dart';
+import 'package:gate_buddy/features/home/ui/widgets/service_card.dart';
+import 'package:gate_buddy/ui/screens/accessibility_screen.dart';
+import 'package:gate_buddy/ui/screens/financial_services_screen.dart';
+import 'package:gate_buddy/ui/screens/flight_counters_screen.dart';
+import 'package:gate_buddy/ui/screens/vip_experience_screen.dart';
 
 class AirportServicesGrid extends StatelessWidget {
   final Color primaryBlue;
   final Color accentOrange;
 
-  const AirportServicesGrid({super.key, required this.primaryBlue, required this.accentOrange});
+  const AirportServicesGrid({
+    super.key,
+    required this.primaryBlue,
+    required this.accentOrange,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +23,20 @@ class AirportServicesGrid extends StatelessWidget {
         title: 'Counters',
         icon: Icons.flight_takeoff_outlined,
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const FlightCountersScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const FlightCountersScreen()),
+          );
         },
       ),
       ServiceItem(
         title: 'Vip Experience',
         icon: Icons.workspace_premium_outlined,
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const VipExperienceScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const VipExperienceScreen()),
+          );
         },
       ),
       ServiceItem(
@@ -43,11 +53,22 @@ class AirportServicesGrid extends StatelessWidget {
         title: 'Accessibility',
         icon: Icons.accessible_outlined,
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const AccessibilityScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AccessibilityScreen()),
+          );
         },
       ),
-      ServiceItem(title: 'Shops', icon: Icons.storefront_outlined, onTap: () {}),
-      ServiceItem(title: 'Restaurant', icon: Icons.restaurant_outlined, onTap: () {}),
+      ServiceItem(
+        title: 'Shops',
+        icon: Icons.storefront_outlined,
+        onTap: () {},
+      ),
+      ServiceItem(
+        title: 'Restaurant',
+        icon: Icons.restaurant_outlined,
+        onTap: () {},
+      ),
     ];
 
     return Container(

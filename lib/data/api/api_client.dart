@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:koleya/data/storage/auth_storage.dart'; // ✅ لإضافة التوكن تلقائيًا
+import 'package:gate_buddy/data/storage/auth_storage.dart'; // ✅ لإضافة التوكن تلقائيًا
 
 /// ApiClient — إعداد الاتصال العام بالتطبيق
 class ApiClient {
@@ -9,7 +9,7 @@ class ApiClient {
   // ✅ إعداد Dio الأساسي
   static final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: "http://localhost:5000/", // 📌 غيّرها لما توصلك الـ API
+      baseUrl: "https://gate-buddy-backend-production.up.railway.app/api/v1",
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
       responseType: ResponseType.json,
@@ -34,13 +34,15 @@ class ApiClient {
           }
 
           print(
-              "🌐 Request → [${options.method}] ${options.baseUrl}${options.path}");
+            "🌐 Request → [${options.method}] ${options.baseUrl}${options.path}",
+          );
           return handler.next(options);
         },
 
         onResponse: (response, handler) {
           print(
-              "✅ Response [${response.statusCode}] → ${response.requestOptions.path}");
+            "✅ Response [${response.statusCode}] → ${response.requestOptions.path}",
+          );
           return handler.next(response);
         },
 

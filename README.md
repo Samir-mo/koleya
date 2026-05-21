@@ -1,3 +1,3 @@
-# koleya
+# gate_buddy
 
 A new Flutter project.

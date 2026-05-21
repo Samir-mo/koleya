@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../api/api_client.dart';
 import '../api/api_endpoints.dart';
-import '../models/service_model.dart';
+import '../../core/shared/models/service_model.dart';
 
 /// 🇪🇬 AirportRepository مسؤول عن كل الطلبات المتعلقة بالمطار (الخدمات، الاستعلامات ...إلخ)
 class AirportRepository {

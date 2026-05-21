@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../data/models/dashboard_model.dart';
+import '../core/shared/models/dashboard_model.dart';
 
 abstract class DashboardState extends Equatable {
   @override

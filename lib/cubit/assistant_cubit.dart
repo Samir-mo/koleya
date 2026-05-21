@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/assistant_repository.dart';
-import '../../data/models/assistant_message.dart';
+import '../core/shared/models/assistant_message.dart';
 import 'assistant_state.dart';
 
 class AssistantCubit extends Cubit<AssistantState> {

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../constants.dart';
-import 'get_code_screen.dart';
-import 'package:koleya/cubit/forget_password_cubit.dart';
-import 'package:koleya/cubit/forget_password_state.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/cubit/forget_password_cubit.dart';
+import 'package:gate_buddy/cubit/forget_password_state.dart';
 
+import '../../../ui/screens/get_code_screen.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   ForgetPasswordScreen({super.key});
@@ -27,8 +28,9 @@ class ForgetPasswordScreen extends StatelessWidget {
         body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
           listener: (context, state) {
             if (state is ForgetPasswordSuccess) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -37,8 +39,9 @@ class ForgetPasswordScreen extends StatelessWidget {
                 ),
               );
             } else if (state is ForgetPasswordFailure) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.error)));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.error)));
             }
           },
           builder: (context, state) {
@@ -53,10 +56,11 @@ class ForgetPasswordScreen extends StatelessWidget {
                   right: 0,
                   height: height * 0.33,
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius:
-                          BorderRadius.only(bottomLeft: Radius.circular(130)),
+                    decoration: BoxDecoration(
+                      color: context.customColors.infoBackground,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(130),
+                      ),
                     ),
                     child: const Center(
                       child: Padding(
@@ -75,10 +79,13 @@ class ForgetPasswordScreen extends StatelessWidget {
                 ),
 
                 // 🔸 الدائرة الذهبية
-                const Positioned(
+                Positioned(
                   top: -60,
                   right: -60,
-                  child: CircleAvatar(backgroundColor: kAccentColor, radius: 80),
+                  child: CircleAvatar(
+                    backgroundColor: context.customColors.infoBackground,
+                    radius: 80,
+                  ),
                 ),
 
                 // 🔙 زر الرجوع
@@ -87,7 +94,10 @@ class ForgetPasswordScreen extends StatelessWidget {
                   left: 16,
                   child: SafeArea(
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -97,17 +107,19 @@ class ForgetPasswordScreen extends StatelessWidget {
                 Positioned.fill(
                   top: height * 0.30,
                   child: SingleChildScrollView(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 20.0,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Forget password",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: kPrimaryColor,
+                            color: context.customColors.infoBackground,
                           ),
                         ),
                         const SizedBox(height: 40),
@@ -116,14 +128,20 @@ class ForgetPasswordScreen extends StatelessWidget {
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             hintText: "Enter your email",
-                            prefixIcon:
-                                const Icon(Icons.email, color: kPrimaryColor),
+                            prefixIcon: Icon(
+                              Icons.email,
+                              color: context.customColors.infoBackground,
+                            ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: kAccentColor),
+                              borderSide: BorderSide(
+                                color: context.customColors.infoBackground,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: kPrimaryColor),
+                              borderSide: BorderSide(
+                                color: context.customColors.infoBackground,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
@@ -138,15 +156,19 @@ class ForgetPasswordScreen extends StatelessWidget {
                                   if (email.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text(
-                                              "Please enter your email.")),
+                                        content: Text(
+                                          "Please enter your email.",
+                                        ),
+                                      ),
                                     );
                                     return;
                                   } else if (!_isValidEmail(email)) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text(
-                                              "Please enter a valid email address.")),
+                                        content: Text(
+                                          "Please enter a valid email address.",
+                                        ),
+                                      ),
                                     );
                                     return;
                                   }
@@ -154,20 +176,16 @@ class ForgetPasswordScreen extends StatelessWidget {
                                   cubit.sendCode(email);
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: kPrimaryColor,
-                                  minimumSize:
-                                      const Size(double.infinity, 50),
+                                  backgroundColor:
+                                      context.customColors.infoBackground,
+                                  minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   "Next",
-                                  style: TextStyle(
-                                    color: kAccentColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: AppTextStyles.font18Light,
                                 ),
                               ),
                         const SizedBox(height: 20),

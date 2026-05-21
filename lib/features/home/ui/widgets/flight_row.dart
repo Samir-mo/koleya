@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/ui/screens/tracked_flight_screen.dart';
+import 'package:gate_buddy/ui/screens/tracked_flight_screen.dart';
 
 class FlightRow extends StatelessWidget {
   final Map<String, dynamic> flight;
@@ -43,8 +43,11 @@ class FlightRow extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) =>
-                TrackedFlightScreen(flightNo: flightNo, airline: airline, status: statusText),
+            builder: (_) => TrackedFlightScreen(
+              flightNo: flightNo,
+              airline: airline,
+              status: statusText,
+            ),
           ),
         );
       },
@@ -163,7 +166,10 @@ class FlightRow extends StatelessWidget {
 
                   // الـ Chip بتاعة الحالة (Delayed / Gate changed)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFF1D4),
                       borderRadius: BorderRadius.circular(20),

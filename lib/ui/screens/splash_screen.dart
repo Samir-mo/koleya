@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/core/router/routes.dart';
-import 'package:koleya/core/utils/extensions/context_ext.dart';
-import 'package:koleya/data/storage/auth_storage.dart';
-import 'package:koleya/data/storage/storage_helper.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/data/storage/auth_storage.dart';
+import 'package:gate_buddy/data/storage/storage_helper.dart';
 
 import '../../features/auth/ui/login_screen.dart';
 
@@ -13,7 +13,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
@@ -22,7 +23,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, 0.6),
@@ -59,7 +63,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       context.pushNamedAndRemoveAll(Routes.mainScaffold);
     } else {
       // 🚪 المستخدم جديد أو سجل خروج → نروّح على Login
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => LoginScreen()),
+      );
     }
   }
 
@@ -96,7 +103,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ),
                 ),
                 const SizedBox(height: 10),
-                const CircularProgressIndicator(color: Color(0xFFD39A28), strokeWidth: 2),
+                const CircularProgressIndicator(
+                  color: Color(0xFFD39A28),
+                  strokeWidth: 2,
+                ),
               ],
             ),
           ),

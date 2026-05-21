@@ -1,5 +1,5 @@
-import 'package:koleya/core/errors/failure.dart';
-import 'package:koleya/core/errors/handlers/dio_handler.dart';
+import 'package:gate_buddy/core/errors/failure.dart';
+import 'package:gate_buddy/core/errors/handlers/dio_handler.dart';
 
 import 'exceptions.dart' hide NotFoundException;
 

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koleya/cubit/home_cubit.dart';
-import 'package:koleya/cubit/home_state.dart';
-import 'package:koleya/features/home/ui/widgets/airport_services_grid.dart';
-import 'package:koleya/features/home/ui/widgets/airport_services_icon.dart';
-import 'package:koleya/features/home/ui/widgets/home_app_bar.dart';
-import 'package:koleya/features/home/ui/widgets/section_title.dart';
-import 'package:koleya/features/home/ui/widgets/tracked_flight_big_card.dart';
-import 'package:koleya/features/home/ui/widgets/tracked_flight_icon.dart';
-import 'package:koleya/features/home/ui/widgets/updated_flights_section.dart';
+import 'package:gate_buddy/cubit/home_cubit.dart';
+import 'package:gate_buddy/cubit/home_state.dart';
+import 'package:gate_buddy/features/home/ui/widgets/airport_services_grid.dart';
+import 'package:gate_buddy/features/home/ui/widgets/airport_services_icon.dart';
+import 'package:gate_buddy/features/home/ui/widgets/home_app_bar.dart';
+import 'package:gate_buddy/features/home/ui/widgets/section_title.dart';
+import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_big_card.dart';
+import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_icon.dart';
+import 'package:gate_buddy/features/home/ui/widgets/updated_flights_section.dart';
 
 class HomeScreen extends StatelessWidget {
   final ScrollController scrollController;
@@ -44,7 +44,9 @@ class HomeScreen extends StatelessWidget {
   Widget _loadingView() {
     return Container(
       color: primaryBlue,
-      child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+      child: const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      ),
     );
   }
 
@@ -53,7 +55,10 @@ class HomeScreen extends StatelessWidget {
     return Container(
       color: primaryBlue,
       child: Center(
-        child: Text('❌ Error: $error', style: const TextStyle(color: Colors.white)),
+        child: Text(
+          '❌ Error: $error',
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
     );
   }
@@ -66,7 +71,8 @@ class HomeScreen extends StatelessWidget {
       data["updatedFlights"] ?? [],
     );
 
-    final Map<String, dynamic>? trackedFlight = data["trackedFlight"] as Map<String, dynamic>?;
+    final Map<String, dynamic>? trackedFlight =
+        data["trackedFlight"] as Map<String, dynamic>?;
 
     return Material(
       color: primaryBlue,
@@ -100,7 +106,8 @@ class HomeScreen extends StatelessWidget {
 
                       const SizedBox(height: 24),
 
-                      if (trackedFlight != null && trackedFlight.isNotEmpty) ...[
+                      if (trackedFlight != null &&
+                          trackedFlight.isNotEmpty) ...[
                         SectionTitle(
                           title: 'Your Tracked Flight',
                           color: primaryBlue,
@@ -125,7 +132,10 @@ class HomeScreen extends StatelessWidget {
 
                       const SizedBox(height: 10),
 
-                      AirportServicesGrid(primaryBlue: primaryBlue, accentOrange: accentOrange),
+                      AirportServicesGrid(
+                        primaryBlue: primaryBlue,
+                        accentOrange: accentOrange,
+                      ),
                     ],
                   ),
                 ),

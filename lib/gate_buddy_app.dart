@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:koleya/features/main_navigation/ui/main_scaffold.dart';
+import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
 
 import 'core/config/app_config.dart';
 import 'core/router/app_router.dart';
@@ -24,24 +24,29 @@ class GateBuddyApp extends StatelessWidget {
         return BlocProvider(
           create: (final _) => AppSettingsCubit(),
           child: BlocBuilder<AppSettingsCubit, AppSettingsState>(
-            builder: (final BuildContext context, final AppSettingsState settings) {
-              return MaterialApp(
-                localizationsDelegates: context.localizationDelegates,
-                supportedLocales: context.supportedLocales,
-                locale: settings.locale, // driven by cubit
-                debugShowCheckedModeBanner: false,
-                home: MainScaffold(),
-                onGenerateRoute: AppRouter.generateRoute,
-                title: AppConfig.appName,
-                theme: getLightTheme().copyWith(
-                  textTheme: getLightTheme().textTheme.apply(fontFamily: settings.fontFamily),
-                ),
-                darkTheme: getDarkTheme().copyWith(
-                  textTheme: getDarkTheme().textTheme.apply(fontFamily: settings.fontFamily),
-                ),
-                themeMode: settings.themeMode,
-              );
-            },
+            builder:
+                (final BuildContext context, final AppSettingsState settings) {
+                  return MaterialApp(
+                    localizationsDelegates: context.localizationDelegates,
+                    supportedLocales: context.supportedLocales,
+                    locale: settings.locale, // driven by cubit
+                    debugShowCheckedModeBanner: false,
+                    home: MainScaffold(),
+                    onGenerateRoute: AppRouter.generateRoute,
+                    title: AppConfig.appName,
+                    theme: getLightTheme().copyWith(
+                      textTheme: getLightTheme().textTheme.apply(
+                        fontFamily: settings.fontFamily,
+                      ),
+                    ),
+                    darkTheme: getDarkTheme().copyWith(
+                      textTheme: getDarkTheme().textTheme.apply(
+                        fontFamily: settings.fontFamily,
+                      ),
+                    ),
+                    themeMode: settings.themeMode,
+                  );
+                },
           ),
         );
       },

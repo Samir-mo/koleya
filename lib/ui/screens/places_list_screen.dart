@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../cubit/places_cubit.dart';
 import '../../cubit/places_state.dart';
-import '../../data/models/place_model.dart';
+import '../../core/shared/models/place_model.dart';
 import 'place_details_screen.dart';
 
 class PlacesListScreen extends StatelessWidget {

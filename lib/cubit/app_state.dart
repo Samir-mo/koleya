@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../data/models/service_model.dart';
+import '../core/shared/models/service_model.dart';
 
 abstract class AppState extends Equatable {
   @override

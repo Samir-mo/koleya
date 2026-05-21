@@ -1,14 +1,14 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:koleya/cubit/home_cubit.dart';
-// import 'package:koleya/cubit/home_state.dart';
-// import 'package:koleya/features/home/ui/widgets/airport_services_grid.dart';
-// import 'package:koleya/features/home/ui/widgets/airport_services_icon.dart';
-// import 'package:koleya/features/home/ui/widgets/home_app_bar.dart';
-// import 'package:koleya/features/home/ui/widgets/section_title.dart';
-// import 'package:koleya/features/home/ui/widgets/tracked_flight_big_card.dart';
-// import 'package:koleya/features/home/ui/widgets/tracked_flight_icon.dart';
-// import 'package:koleya/features/home/ui/widgets/updated_flights_section.dart';
+// import 'package:gate_buddy/cubit/home_cubit.dart';
+// import 'package:gate_buddy/cubit/home_state.dart';
+// import 'package:gate_buddy/features/home/ui/widgets/airport_services_grid.dart';
+// import 'package:gate_buddy/features/home/ui/widgets/airport_services_icon.dart';
+// import 'package:gate_buddy/features/home/ui/widgets/home_app_bar.dart';
+// import 'package:gate_buddy/features/home/ui/widgets/section_title.dart';
+// import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_big_card.dart';
+// import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_icon.dart';
+// import 'package:gate_buddy/features/home/ui/widgets/updated_flights_section.dart';
 
 // class HomeDashboard extends StatelessWidget {
 //   final ScrollController? scrollController;

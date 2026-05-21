@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/core/router/routes.dart';
-import 'package:koleya/ui/screens/profile_screen.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/ui/screens/profile_screen.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key, required this.primaryBlue});
@@ -35,7 +35,10 @@ class HomeAppBar extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              );
             },
             child: const Icon(Icons.person_outline, color: iconGold, size: 28),
           ),

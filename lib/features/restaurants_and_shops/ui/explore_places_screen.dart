@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/widgets/custom_app_bar.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/widgets/filter_chip_row.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/widgets/place_list_view.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/widgets/search_field.dart';
-import 'package:koleya/features/restaurants_and_shops/ui/widgets/top_picks_of_the_day.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/custom_app_bar.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/filter_chip_row.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/place_list_view.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/search_field.dart';
+import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/top_picks_of_the_day.dart';
 
 class ExplorePlacesScreen extends StatelessWidget {
   const ExplorePlacesScreen({super.key});
@@ -62,11 +62,9 @@ class ExplorePlacesScreen extends StatelessWidget {
             ),
           ),
           TextSpan(
-            text: 'Discover dining and shopping options available at NIA Airport.',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.normal,
-            ),
+            text:
+                'Discover dining and shopping options available at NIA Airport.',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
           ),
         ],
       ),

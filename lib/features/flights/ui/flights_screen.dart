@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/features/flights/ui/widgets/flights_tab.dart';
+import 'package:gate_buddy/features/flights/ui/widgets/flights_tab.dart';
 
-import '../../../data/models/flight_model.dart';
+import '../../../core/shared/models/flight_model.dart';
 
 class FlightsScreen extends StatelessWidget {
   const FlightsScreen({super.key});
@@ -11,7 +11,9 @@ class FlightsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final departureFlights = mockFlights
-        .where((f) => f.from.toLowerCase().contains("nile international airport"))
+        .where(
+          (f) => f.from.toLowerCase().contains("nile international airport"),
+        )
         .toList();
 
     final arrivalFlights = mockFlights

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/data/models/flight_model.dart';
-import 'package:koleya/features/flights/ui/widgets/flight_card.dart';
+import 'package:gate_buddy/core/shared/models/flight_model.dart';
+import 'package:gate_buddy/features/flights/ui/widgets/flight_card.dart';
 
 class FlightsTab extends StatelessWidget {
   final List<FlightModel> flights;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koleya/core/router/routes.dart';
-import 'package:koleya/cubit/verify_code_cubit.dart';
-import 'package:koleya/cubit/verify_code_state.dart';
-
-import '../../../constants.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/cubit/verify_code_cubit.dart';
+import 'package:gate_buddy/cubit/verify_code_state.dart';
 
 class GetCodeScreen extends StatelessWidget {
   final String? email;
@@ -14,7 +14,10 @@ class GetCodeScreen extends StatelessWidget {
 
   void _showMessage(BuildContext context, String msg, {bool error = true}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), backgroundColor: error ? Colors.redAccent : Colors.green),
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: error ? Colors.redAccent : Colors.green,
+      ),
     );
   }
 
@@ -47,9 +50,11 @@ class GetCodeScreen extends StatelessWidget {
                   right: 0,
                   height: height * 0.33,
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(130)),
+                    decoration: BoxDecoration(
+                      color: context.customColors.infoBackground,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(130),
+                      ),
                     ),
                     child: const Center(
                       child: Padding(
@@ -68,10 +73,13 @@ class GetCodeScreen extends StatelessWidget {
                 ),
 
                 // 🔸 الدائرة الذهبية
-                const Positioned(
+                Positioned(
                   top: -60,
                   right: -60,
-                  child: CircleAvatar(backgroundColor: kAccentColor, radius: 80),
+                  child: CircleAvatar(
+                    backgroundColor: context.customColors.infoBackground,
+                    radius: 80,
+                  ),
                 ),
 
                 // 🔙 زر الرجوع
@@ -80,7 +88,10 @@ class GetCodeScreen extends StatelessWidget {
                   left: 16,
                   child: SafeArea(
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -90,17 +101,16 @@ class GetCodeScreen extends StatelessWidget {
                 Positioned.fill(
                   top: height * 0.30,
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 20,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Get your code",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: kPrimaryColor,
-                          ),
+                          style: AppTextStyles.font20SemiBold,
                         ),
                         const SizedBox(height: 40),
 
@@ -110,13 +120,20 @@ class GetCodeScreen extends StatelessWidget {
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: "Enter your code",
-                            prefixIcon: const Icon(Icons.confirmation_number, color: kPrimaryColor),
+                            prefixIcon: Icon(
+                              Icons.confirmation_number,
+                              color: context.customColors.infoBackground,
+                            ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: kAccentColor),
+                              borderSide: BorderSide(
+                                color: context.customColors.infoBackground,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: kPrimaryColor),
+                              borderSide: BorderSide(
+                                color: context.customColors.infoBackground,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
@@ -128,11 +145,17 @@ class GetCodeScreen extends StatelessWidget {
                           child: TextButton(
                             onPressed: () {
                               cubit.resendCode(email ?? "");
-                              _showMessage(context, "Verification code resent ✅", error: false);
+                              _showMessage(
+                                context,
+                                "Verification code resent ✅",
+                                error: false,
+                              );
                             },
-                            child: const Text(
+                            child: Text(
                               "Resend code?",
-                              style: TextStyle(color: kPrimaryColor),
+                              style: TextStyle(
+                                color: context.customColors.infoBackground,
+                              ),
                             ),
                           ),
                         ),
@@ -145,7 +168,10 @@ class GetCodeScreen extends StatelessWidget {
                                   final code = codeController.text.trim();
 
                                   if (code.isEmpty) {
-                                    _showMessage(context, "Please enter the verification code.");
+                                    _showMessage(
+                                      context,
+                                      "Please enter the verification code.",
+                                    );
                                     return;
                                   } else if (code.length < 4) {
                                     _showMessage(
@@ -155,22 +181,22 @@ class GetCodeScreen extends StatelessWidget {
                                     return;
                                   }
 
-                                  cubit.verifyCode(email: email ?? "", code: code);
+                                  cubit.verifyCode(
+                                    email: email ?? "",
+                                    code: code,
+                                  );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: kPrimaryColor,
+                                  backgroundColor:
+                                      context.customColors.infoBackground,
                                   minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   "Next",
-                                  style: TextStyle(
-                                    color: kAccentColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: AppTextStyles.font18Bold,
                                 ),
                               ),
 
