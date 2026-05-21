@@ -11,7 +11,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.koleya"
+    namespace = "com.example.gate_buddy"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -26,7 +26,7 @@ android {
 
     defaultConfig {
         // ✅ Application ID
-        applicationId = "com.example.koleya"
+        applicationId = "com.example.gate_buddy"
 
         // قيم Flutter الافتراضية
         minSdk = flutter.minSdkVersion

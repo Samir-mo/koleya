@@ -1,4 +1,4 @@
-package com.example.koleya
+package com.example.gate_buddy
 
 import io.flutter.embedding.android.FlutterActivity
 
