@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koleya/ui/screens/login_screen.dart';
-import '../../../constants.dart';
+import 'package:koleya/features/auth/ui/login_screen.dart';
+import '../../../../constants.dart';
 
 import 'package:koleya/cubit/signup_cubit.dart';
 import 'package:koleya/cubit/signup_state.dart';

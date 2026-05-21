@@ -1,10 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:koleya/data/storage/current_user.dart';
+import 'package:koleya/core/router/routes.dart';
 import 'package:koleya/data/storage/auth_storage.dart';
-import 'package:koleya/routes/app_routes.dart';
+import 'package:koleya/data/storage/current_user.dart';
 import 'package:koleya/ui/screens/settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -47,16 +47,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text('تسجيل خروج'),
         content: const Text('هل أنت متأكد إنك عايز تسجل خروج؟'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('إلغاء'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('إلغاء')),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(
-              'تسجيل خروج',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('تسجيل خروج', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -64,18 +58,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (sure != true) return;
 
-    // ✅ امسح الداتا من التخزين + الذاكرة
     await AuthStorage.clearAuth();
     CurrentUser.clear();
 
     if (!mounted) return;
 
-    // ✅ ارجع لصفحة اللوجين وامسح الستاك
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      Routes.login,
-      (route) => false,
-    );
+    // Important: Use pushNamedAndRemoveUntil to clear everything
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, (route) => false);
   }
 
   @override
@@ -84,6 +73,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       valueListenable: CurrentUser.listenable,
       builder: (context, _, __) {
         final currentName = CurrentUser.name ?? 'User name';
+
+        // Sync controller if CurrentUser changes externally
         if (_nameController.text != (CurrentUser.name ?? '')) {
           _nameController.text = CurrentUser.name ?? '';
         }
@@ -95,14 +86,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           appBar: AppBar(
             backgroundColor: _primaryBlue,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
+            // REMOVED the back button - very important for bottom nav tabs!
+            // leading: IconButton(...),   ← Delete this
             centerTitle: true,
             title: const Text(
               'Profile',
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
             ),
           ),
           body: SafeArea(
@@ -123,6 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
                           child: Column(
                             children: [
+                              // Profile Picture
                               Stack(
                                 alignment: Alignment.bottomRight,
                                 children: [
@@ -133,13 +123,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       backgroundColor: Colors.grey.shade300,
                                       backgroundImage: _localImage != null
                                           ? FileImage(_localImage!)
-                                          : (CurrentUser.image != null &&
-                                                  CurrentUser.image!.isNotEmpty)
-                                              ? NetworkImage(CurrentUser.image!)
-                                                  as ImageProvider
-                                              : const AssetImage(
-                                                  'assets/images/placeholder.png',
-                                                ),
+                                          : (CurrentUser.image?.isNotEmpty == true)
+                                          ? NetworkImage(CurrentUser.image!) as ImageProvider
+                                          : const AssetImage('assets/images/6.png'),
                                     ),
                                   ),
                                   Positioned(
@@ -152,10 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         decoration: BoxDecoration(
                                           color: _accentGold,
                                           shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: Colors.white,
-                                            width: 2,
-                                          ),
+                                          border: Border.all(color: Colors.white, width: 2),
                                         ),
                                         child: const Icon(
                                           Icons.edit,
@@ -167,8 +150,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
 
+                              const SizedBox(height: 16),
                               Text(
                                 currentName,
                                 style: const TextStyle(
@@ -178,37 +161,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-
-                              Text(
-                                email,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: _accentGold,
-                                ),
-                              ),
+                              Text(email, style: const TextStyle(fontSize: 13, color: _accentGold)),
 
                               const SizedBox(height: 24),
 
                               _ProfileActionButton(
                                 icon: Icons.flight_takeoff_outlined,
                                 label: 'Tracked Flight',
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.trackedFlight,
-                                  );
-                                },
+                                onPressed: () => Navigator.pushNamed(context, Routes.trackedFlight),
                               ),
                               const SizedBox(height: 12),
                               _ProfileActionButton(
                                 icon: Icons.local_parking_outlined,
                                 label: 'Saved parking',
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.mapScreen,
-                                  );
-                                },
+                                onPressed: () => Navigator.pushNamed(context, Routes.indoorMap),
                               ),
                               const SizedBox(height: 12),
                               _ProfileActionButton(
@@ -217,16 +183,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const SettingsScreen(),
-                                    ),
+                                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
                                   );
                                 },
                               ),
 
                               const SizedBox(height: 32),
 
-                              Align(
+                              const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   'Account info',
@@ -243,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 controller: _nameController,
                                 decoration: InputDecoration(
                                   labelText: 'Full name',
-                                  prefixIcon: const Icon(Icons.person_outline),
+                                  prefixIcon: Icon(Icons.person_outline),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -256,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 controller: TextEditingController(text: email),
                                 decoration: InputDecoration(
                                   labelText: 'Email',
-                                  prefixIcon: const Icon(Icons.email_outlined),
+                                  prefixIcon: Icon(Icons.email_outlined),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -264,6 +228,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
 
                               const SizedBox(height: 20),
+
+                              // Save Changes Button
                               SizedBox(
                                 width: double.infinity,
                                 height: 44,
@@ -278,9 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     );
 
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Changes saved locally 😉'),
-                                      ),
+                                      const SnackBar(content: Text('Changes saved locally 😉')),
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -299,8 +263,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
 
-                              // ✅ زر تسجيل خروج
                               const SizedBox(height: 14),
+
+                              // Logout Button
                               SizedBox(
                                 width: double.infinity,
                                 height: 44,
@@ -312,8 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  icon: const Icon(Icons.logout,
-                                      color: Colors.white),
+                                  icon: const Icon(Icons.logout, color: Colors.white),
                                   label: const Text(
                                     'Log out',
                                     style: TextStyle(
@@ -340,16 +304,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+// Keep your _ProfileActionButton as is (it's fine)
 class _ProfileActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onPressed;
 
-  const _ProfileActionButton({
-    required this.icon,
-    required this.label,
-    required this.onPressed,
-  });
+  const _ProfileActionButton({required this.icon, required this.label, required this.onPressed});
 
   static const Color _primaryBlue = Color(0xFF005B8F);
   static const Color _accentGold = Color(0xFFF3A623);
@@ -363,17 +324,12 @@ class _ProfileActionButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: _primaryBlue,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         icon: Icon(icon, color: _accentGold, size: 18),
         label: Text(
           label,
-          style: const TextStyle(
-            color: _accentGold,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(color: _accentGold, fontWeight: FontWeight.w600),
         ),
       ),
     );

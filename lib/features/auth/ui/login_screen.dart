@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:koleya/core/router/routes.dart';
+import 'package:koleya/core/utils/extensions/context_ext.dart';
 import 'package:koleya/cubit/login_cubit.dart';
 import 'package:koleya/cubit/login_state.dart';
-import 'package:koleya/ui/screens/home_screen.dart';
+
+import '../../../../constants.dart';
 import 'signup_screen.dart';
-import '../../../constants.dart';
-import 'package:koleya/routes/app_routes.dart';
+
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
@@ -21,14 +23,9 @@ class LoginScreen extends StatelessWidget {
         body: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const HomeScreen()),
-              );
+              context.pushNamedAndRemoveAll(Routes.mainScaffold);
             } else if (state is LoginFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
             }
           },
           builder: (context, state) {
@@ -55,16 +52,23 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(height: 30),
                       _buildTextField(Icons.email, "Email", controller: emailController),
                       const SizedBox(height: 20),
-                      _buildTextField(Icons.lock, "Password", controller: passwordController, isPassword: true),
+                      _buildTextField(
+                        Icons.lock,
+                        "Password",
+                        controller: passwordController,
+                        isPassword: true,
+                      ),
                       const SizedBox(height: 10),
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                           Navigator.pushNamed(context, Routes.forgetPassword);
-
+                            Navigator.pushNamed(context, Routes.forgetPassword);
                           },
-                          child: const Text("Forget password?", style: TextStyle(color: kPrimaryColor)),
+                          child: const Text(
+                            "Forget password?",
+                            style: TextStyle(color: kPrimaryColor),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -85,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                         context,
                         "You don't have an account? ",
                         "Sign",
-                         SignupScreen(),
+                        SignupScreen(),
                       ),
                     ],
                   ),
@@ -109,38 +113,42 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildHeader() => Stack(
-        children: const [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 250,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: kPrimaryColor,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(130)),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(top: 60),
-                child: Center(
-                  child: Text(
-                    "Gate buddy",
-                    style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                ),
+    children: const [
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 250,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: kPrimaryColor,
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(130)),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(top: 60),
+            child: Center(
+              child: Text(
+                "Gate buddy",
+                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
           ),
-          Positioned(
-            top: -60,
-            right: -60,
-            child: CircleAvatar(backgroundColor: kAccentColor, radius: 80),
-          ),
-        ],
-      );
+        ),
+      ),
+      Positioned(
+        top: -60,
+        right: -60,
+        child: CircleAvatar(backgroundColor: kAccentColor, radius: 80),
+      ),
+    ],
+  );
 
-  Widget _buildTextField(IconData icon, String hint,
-      {bool isPassword = false, required TextEditingController controller}) {
+  Widget _buildTextField(
+    IconData icon,
+    String hint, {
+    bool isPassword = false,
+    required TextEditingController controller,
+  }) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
@@ -167,12 +175,10 @@ class LoginScreen extends StatelessWidget {
         minimumSize: const Size(double.infinity, 50),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
-      child: Text(label,
-          style: const TextStyle(
-            color: kAccentColor,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          )),
+      child: Text(
+        label,
+        style: const TextStyle(color: kAccentColor, fontSize: 18, fontWeight: FontWeight.bold),
+      ),
     );
   }
 

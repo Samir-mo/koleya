@@ -1,26 +1,54 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        
-        {
-            "name": "koleya",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "koleya (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "koleya (release mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Gate buddy Dev",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main_dev.dart",
+      "args": [
+        "--flavor",
+        "development",
+        "--target",
+        "lib/main_dev.dart",
+        "--dart-define",
+        "ENV=development",
+        "--dart-define",
+        "APP_NAME=Flutter Starter Dev"
+      ]
+    },
+    {
+      "name": "Gate Buddy Dev (Profile)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main_dev.dart",
+      "args": [
+        "--flavor",
+        "development",
+        "--target",
+        "lib/main_dev.dart",
+        "--dart-define",
+        "ENV=development",
+        "--dart-define",
+        "APP_NAME=Flutter Starter Dev",
+        "--profile"
+      ]
+    },
+    {
+      "name": "Gate buddy Prod",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main_prod.dart",
+      "args": [
+        "--flavor",
+        "production",
+        "--target",
+        "lib/main_prod.dart",
+        "--dart-define",
+        "ENV=production",
+        "--dart-define",
+        "APP_NAME=Flutter Starter"
+      ]
+    }
+  ]
 }

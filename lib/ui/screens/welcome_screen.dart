@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koleya/routes/app_routes.dart';
+import 'package:koleya/core/router/routes.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -56,11 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Text(
                     "Log in to access your account or create a new one to get started!",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 15,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(color: Colors.black54, fontSize: 15, height: 1.5),
                   ),
                 ),
                 const SizedBox(height: 50),
@@ -77,9 +73,7 @@ class WelcomeScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF002F6C),
                           minimumSize: const Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         ),
                         child: const Text(
                           "Log In",
@@ -93,20 +87,14 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.signup,
-                          );
+                          Navigator.pushNamed(context, Routes.signup);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(
-                              color: Color(0xFF002F6C),
-                              width: 2,
-                            ),
+                            side: const BorderSide(color: Color(0xFF002F6C), width: 2),
                           ),
                         ),
                         child: const Text(
@@ -132,10 +120,7 @@ class WelcomeScreen extends StatelessWidget {
             child: Container(
               width: 200,
               height: 200,
-              decoration: const BoxDecoration(
-                color: Color(0xFFD39A28),
-                shape: BoxShape.circle,
-              ),
+              decoration: const BoxDecoration(color: Color(0xFFD39A28), shape: BoxShape.circle),
             ),
           ),
         ],
@@ -150,9 +135,7 @@ class TopWaveClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(0, size.height - 80);
-    path.quadraticBezierTo(
-      size.width / 2, size.height, size.width, size.height - 60,
-    );
+    path.quadraticBezierTo(size.width / 2, size.height, size.width, size.height - 60);
     path.lineTo(size.width, 0);
     path.close();
     return path;
