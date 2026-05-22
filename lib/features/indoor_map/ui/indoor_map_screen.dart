@@ -23,7 +23,6 @@ class _IndoorMapScreenState extends State<IndoorMapScreen> {
   final MapController _mapController = MapController();
 
   // Approximate center of Schiphol airport services
-  static const _airportCenter = LatLng(52.3080, 4.7640);
 
   @override
   void initState() {

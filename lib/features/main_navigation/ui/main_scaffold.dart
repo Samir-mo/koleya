@@ -101,7 +101,7 @@ class _MainScaffoldState extends State<MainScaffold> {
       screens: _buildScreens(),
       items: _navItems(),
       backgroundColor: Colors.white,
-      navBarStyle: NavBarStyle.style15,
+      navBarStyle: NavBarStyle.style9,
       confineToSafeArea: true,
       stateManagement: true, // keep this true
       hideNavigationBarWhenKeyboardAppears: true,
