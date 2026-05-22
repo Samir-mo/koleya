@@ -3,13 +3,14 @@
 class ApiEndpoints {
   // 🧭 العنوان الأساسي للسيرفر
   // غيّر localhost إلى 10.0.2.2 لو بتشغل على Android Emulator
-static const String baseUrl = "http://localhost:3000";
+  static const String baseUrl = "http://localhost:3000";
   // ======================= Auth & Users =======================
   static const String signup = "/api/v1/users/signup"; // public
   static const String login = "/api/v1/users/login"; // public
   static const String forgetPassword = "/api/v1/users/forgotPassword"; // public
   static const String resetPassword = "/api/v1/users/resetPassword"; // public
-  static const String updateMyPassword = "/api/v1/users/updateMyPassword"; // protected
+  static const String updateMyPassword =
+      "/api/v1/users/updateMyPassword"; // protected
   static const String me = "/api/v1/users/me"; // protected
   static const String updateMe = "/api/v1/users/updateMe"; // protected
   static const String deleteMe = "/api/v1/users/deleteMe"; // protected
@@ -45,13 +46,18 @@ static const String baseUrl = "http://localhost:3000";
 
   // ======================= Notifications (⚠️ مش موجودة حالياً في الباك) =======================
   static const String notifications = "/api/v1/notifications";
-  static const String subscribeNotifications = "/api/v1/notifications/subscribe";
+  static const String subscribeNotifications =
+      "/api/v1/notifications/subscribe";
   static const String readNotification = "/api/v1/notifications/:id/read";
 
   // ======================= Analytics (⚠️ مش موجودة حالياً في الباك) =======================
-  static const String analyticsDownloadClick = "/api/v1/analytics/download-click";
+  static const String analyticsDownloadClick =
+      "/api/v1/analytics/download-click";
   static const String analyticsPageView = "/api/v1/analytics/page-view";
 
   // ======================= Places (⚠️ مش موجودة حالياً في الباك) =======================
   static const String places = "/api/v1/places";
+
+  static const String mapAllServices =
+      "/services?category=SHOPS&limit=10&page=1";
 }

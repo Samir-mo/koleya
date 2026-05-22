@@ -35,6 +35,6 @@ class AppConfig {
 
   // API
   static String get baseUrl => isProduction
-      ? 'https://api.production.com'
-      : 'https://api.development.com';
+      ? 'https://gate-buddy-backend-production.up.railway.app/api/v1'
+      : 'https://gate-buddy-backend-production.up.railway.app/api/v1';
 }
