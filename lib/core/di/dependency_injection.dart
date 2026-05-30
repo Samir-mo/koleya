@@ -52,11 +52,11 @@ Future<void> setUpDependencies() async {
 
   // Repositories
   getIt.registerLazySingleton<IndoorMapRepo>(
-    () => IndoorMapRepoImpl(remoteDS: getIt()),
+    () => IndoorMapRepoImpl(remoteDs: getIt()),
   );
 
   // Cubits
   getIt.registerLazySingleton<IndoorMapCubit>(
-    () => IndoorMapCubit(repository: getIt()),
+    () => IndoorMapCubit(indoorMapRepo: getIt()),
   );
 }

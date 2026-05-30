@@ -1,313 +1,499 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/features/indoor_map/data/models/map_service_model.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
-import 'package:gate_buddy/features/indoor_map/ui/category_filter_bar.dart';
-import 'package:gate_buddy/features/indoor_map/ui/widgets/service_bottom_sheet.dart';
-import 'package:gate_buddy/features/indoor_map/ui/widgets/zone_selector.dart';
 import 'package:latlong2/latlong.dart';
 
-class IndoorMapScreen extends StatefulWidget {
+import '../data/models/service_location_model.dart';
+import 'widgets/map_category_filter.dart';
+import 'widgets/navigation_panel.dart';
+import 'widgets/service_detail_sheet.dart';
+import 'widgets/user_position_marker.dart';
+
+class IndoorMapScreen extends StatelessWidget {
   const IndoorMapScreen({super.key});
 
   @override
-  State<IndoorMapScreen> createState() => _IndoorMapScreenState();
+  Widget build(BuildContext context) {
+    return _IndoorMapView();
+  }
 }
 
-class _IndoorMapScreenState extends State<IndoorMapScreen> {
-  final MapController _mapController = MapController();
+class _IndoorMapView extends StatefulWidget {
+  const _IndoorMapView();
 
-  // Approximate center of Schiphol airport services
+  @override
+  State<_IndoorMapView> createState() => _IndoorMapViewState();
+}
+
+class _IndoorMapViewState extends State<_IndoorMapView> {
+  late final MapController _mapController;
+
+  static const _primaryBlue = Color(0xFF013F82);
+  static const _accentGold = Color(0xFFF3A623);
+
+  // Airport center — based on real service coordinates
+  static const _airportCenter = LatLng(52.3090, 4.7620);
+  static const _defaultZoom = 16.5;
 
   @override
   void initState() {
     super.initState();
-    context.read<IndoorMapCubit>().loadServices();
+    _mapController = MapController();
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  // ─── Fit map to show entire route ─────────────────────────────────────────
+
+  void _fitRoute(List<LatLng> points) {
+    if (points.isEmpty) return;
+    final bounds = LatLngBounds.fromPoints(points);
+    _mapController.fitCamera(
+      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(60)),
+    );
+  }
+
+  // ─── Marker icon by category ──────────────────────────────────────────────
+
+  Color _markerColor(String category) {
+    return switch (category.toUpperCase()) {
+      'SHOPS' => const Color(0xFF7C3AED),
+      'RESTAURANTS' => const Color(0xFFEA580C),
+      'VIP' => const Color(0xFFF3A623),
+      'SERVICES' => const Color(0xFF059669),
+      _ => _primaryBlue,
+    };
+  }
+
+  IconData _markerIcon(String category) {
+    return switch (category.toUpperCase()) {
+      'SHOPS' => Icons.storefront_rounded,
+      'RESTAURANTS' => Icons.restaurant_rounded,
+      'VIP' => Icons.workspace_premium_rounded,
+      'SERVICES' => Icons.miscellaneous_services_rounded,
+      _ => Icons.place_rounded,
+    };
+  }
+
+  // ─── Build a service marker ───────────────────────────────────────────────
+
+  Marker _buildServiceMarker(
+    ServiceLocationModel service,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    final color = _markerColor(service.category);
+    return Marker(
+      point: LatLng(service.latitude, service.longitude),
+      width: isSelected ? 52 : 40,
+      height: isSelected ? 62 : 50,
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: isSelected ? 44 : 34,
+                height: isSelected ? 44 : 34,
+                decoration: BoxDecoration(
+                  color: isSelected ? color : Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: color, width: isSelected ? 0 : 2.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withOpacity(isSelected ? 0.45 : 0.25),
+                      blurRadius: isSelected ? 14 : 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  _markerIcon(service.category),
+                  size: isSelected ? 22 : 17,
+                  color: isSelected ? Colors.white : color,
+                ),
+              ),
+              // Pin tip
+              Container(
+                width: 2,
+                height: isSelected ? 10 : 8,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<IndoorMapCubit, IndoorMapState>(
+      backgroundColor: _primaryBlue,
+      body: BlocConsumer<IndoorMapCubit, IndoorMapState>(
+        // Only rebuild map layer when route changes, not on every sim tick
+        listenWhen: (prev, curr) {
+          if (prev is IndoorMapLoaded && curr is IndoorMapLoaded) {
+            return prev.activeRoute != curr.activeRoute;
+          }
+          return false;
+        },
+        listener: (context, state) {
+          if (state is IndoorMapLoaded && state.activeRoute != null) {
+            _fitRoute(state.activeRoute!.polylinePoints);
+          }
+        },
         builder: (context, state) {
-          if (state is IndoorMapLoading || state is IndoorMapInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          return SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                // ── App bar ───────────────────────────────────────────────
+                _buildAppBar(context, state),
 
-          if (state is IndoorMapError) {
-            debugPrint('Error loading services: ${state.message}');
-            return _ErrorView(
-              message: state.message,
-              onRetry: () => context.read<IndoorMapCubit>().loadServices(),
-            );
-          }
+                // ── Map + overlays ────────────────────────────────────────
+                Expanded(
+                  child: Stack(
+                    children: [
+                      _buildMap(context, state),
 
-          if (state is IndoorMapLoaded) {
-            return _MapContent(state: state, mapController: _mapController);
-          }
+                      // Category filter chips — hidden during navigation
+                      if (state is IndoorMapLoaded && !state.isNavigating)
+                        Positioned(
+                          top: 12,
+                          left: 0,
+                          right: 0,
+                          child: MapCategoryFilter(
+                            selected: state.selectedCategory,
+                            onSelected: (cat) => context
+                                .read<IndoorMapCubit>()
+                                .filterByCategory(cat),
+                          ),
+                        ),
 
-          return const SizedBox.shrink();
+                      // Legend (bottom-left)
+                      if (state is IndoorMapLoaded && !state.isNavigating)
+                        Positioned(bottom: 14, left: 12, child: _buildLegend()),
+
+                      // Bottom sheet area
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: _buildBottomArea(context, state),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
   }
-}
 
-class _MapContent extends StatelessWidget {
-  final IndoorMapLoaded state;
-  final MapController mapController;
+  // ─── App bar ──────────────────────────────────────────────────────────────
 
-  const _MapContent({required this.state, required this.mapController});
+  Widget _buildAppBar(BuildContext context, IndoorMapState state) {
+    final isNav = state is IndoorMapLoaded && state.isNavigating;
+    return Container(
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      color: _primaryBlue,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Indoor Map',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
+                ),
+                if (state is IndoorMapLoaded)
+                  Text(
+                    isNav
+                        ? 'Navigation mode'
+                        : '${state.filteredServices.length} services nearby',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 11,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          // Re-center button
+          GestureDetector(
+            onTap: () => _mapController.move(_airportCenter, _defaultZoom),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.my_location_rounded,
+                color: _accentGold,
+                size: 18,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
+  // ─── Map ──────────────────────────────────────────────────────────────────
+
+  Widget _buildMap(BuildContext context, IndoorMapState state) {
+    final loaded = state is IndoorMapLoaded ? state : null;
+
+    return FlutterMap(
+      mapController: _mapController,
+      options: MapOptions(
+        initialCenter: _airportCenter,
+        initialZoom: _defaultZoom,
+        minZoom: 14,
+        maxZoom: 19,
+        onTap: (_, __) {
+          if (loaded != null && !loaded.isNavigating) {
+            context.read<IndoorMapCubit>().clearSelection();
+          }
+        },
+      ),
       children: [
-        // ── Map ──────────────────────────────────────────────
-        FlutterMap(
-          mapController: mapController,
-          options: MapOptions(
-            initialCenter: const LatLng(52.3080, 4.7640),
-            initialZoom: 16.5,
-            minZoom: 14,
-            maxZoom: 19,
-            onTap: (_, __) =>
-                context.read<IndoorMapCubit>().selectService(null),
+        // OSM tile layer
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.gate_buddy.app',
+        ),
+
+        // Route polyline
+        if (loaded?.activeRoute != null)
+          PolylineLayer(
+            polylines: [
+              // Background shadow line
+              Polyline(
+                points: loaded!.activeRoute!.polylinePoints,
+                strokeWidth: 9,
+                color: _primaryBlue.withOpacity(0.18),
+              ),
+              // Main route line
+              Polyline(
+                points: loaded.activeRoute!.polylinePoints,
+                strokeWidth: 5,
+                color: _primaryBlue,
+                strokeCap: StrokeCap.round,
+                strokeJoin: StrokeJoin.round,
+              ),
+              // Animated dashes on top
+              Polyline(
+                points: loaded.activeRoute!.polylinePoints,
+                strokeWidth: 3,
+                color: _accentGold.withOpacity(0.85),
+                pattern: StrokePattern.dashed(segments: [12, 8]),
+                strokeCap: StrokeCap.round,
+              ),
+            ],
           ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.gate_buddy',
-            ),
-            MarkerLayer(
-              markers: state.filteredServices
-                  .map((s) => _buildMarker(context, s, state.selectedService))
-                  .toList(),
-            ),
-          ],
-        ),
 
-        // ── Top bar: title + search-like header ──────────────
-        Positioned(top: 0, left: 0, right: 0, child: _MapTopBar()),
-
-        // ── Category filter bar ───────────────────────────────
-        Positioned(
-          top: 100.h,
-          left: 0,
-          right: 0,
-          child: CategoryFilterBar(
-            selectedCategory: state.selectedCategory,
-            onCategoryChanged: (cat) =>
-                context.read<IndoorMapCubit>().filterByCategory(cat),
+        // Service markers
+        if (loaded != null)
+          MarkerLayer(
+            markers: loaded.filteredServices.map((service) {
+              final isSelected = loaded.selectedService?.id == service.id;
+              return _buildServiceMarker(
+                service,
+                isSelected,
+                () => context.read<IndoorMapCubit>().selectService(service),
+              );
+            }).toList(),
           ),
-        ),
 
-        // ── Zone selector (right side) ────────────────────────
-        Positioned(
-          right: 16.w,
-          top: 160.h,
-          child: ZoneSelector(
-            selectedZone: state.selectedZone,
-            onZoneChanged: (zone) =>
-                context.read<IndoorMapCubit>().filterByZone(zone),
-          ),
-        ),
+        // User position dot
+        if (loaded != null)
+          MarkerLayer(markers: [buildUserMarker(loaded.userPosition)]),
 
-        // ── Results count chip ────────────────────────────────
-        Positioned(
-          left: 16.w,
-          top: 160.h,
-          child: _ResultsCountChip(count: state.filteredServices.length),
-        ),
-
-        // ── Service bottom sheet ──────────────────────────────
-        if (state.selectedService != null)
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: ServiceBottomSheet(
-              service: state.selectedService!,
-              onClose: () => context.read<IndoorMapCubit>().selectService(null),
-            ),
+        // Destination marker when navigating
+        if (loaded?.navigationDestination != null)
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: LatLng(
+                  loaded!.navigationDestination!.latitude,
+                  loaded.navigationDestination!.longitude,
+                ),
+                width: 44,
+                height: 54,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: _accentGold,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: _accentGold.withOpacity(0.45),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.place_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    Container(width: 2, height: 10, color: _accentGold),
+                  ],
+                ),
+              ),
+            ],
           ),
       ],
     );
   }
 
-  Marker _buildMarker(
-    BuildContext context,
-    MapServiceModel service,
-    MapServiceModel? selectedService,
-  ) {
-    final isSelected = selectedService?.id == service.id;
-    return Marker(
-      point: LatLng(service.latitude, service.longitude),
-      width: isSelected ? 48.w : 38.w,
-      height: isSelected ? 48.w : 38.w,
-      child: GestureDetector(
-        onTap: () => context.read<IndoorMapCubit>().selectService(service),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary200 : Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isSelected ? AppColors.primary200 : Colors.grey[300]!,
-              width: 2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: (isSelected ? AppColors.primary200 : Colors.black)
-                    .withOpacity(0.25),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          padding: EdgeInsets.all(8.r),
-          child: Icon(
-            _categoryIcon(service.category),
-            size: isSelected ? 22.sp : 18.sp,
-            color: isSelected ? Colors.white : AppColors.primary200,
-          ),
-        ),
-      ),
-    );
-  }
+  // ─── Bottom sheet area ────────────────────────────────────────────────────
 
-  IconData _categoryIcon(String category) {
-    switch (category) {
-      case 'RESTAURANTS':
-        return Icons.restaurant_outlined;
-      case 'ATM':
-        return Icons.atm_outlined;
-      case 'LOUNGE':
-        return Icons.weekend_outlined;
-      case 'SERVICES':
-        return Icons.miscellaneous_services_outlined;
-      case 'SHOPS':
-      default:
-        return Icons.shopping_bag_outlined;
+  Widget _buildBottomArea(BuildContext context, IndoorMapState state) {
+    if (state is IndoorMapLoading) {
+      return const Padding(
+        padding: EdgeInsets.all(24),
+        child: Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
     }
-  }
-}
 
-// ── Supporting widgets ──────────────────────────────────────────
-
-class _MapTopBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 52.h, 16.w, 12.h),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.white,
-            Colors.white.withOpacity(0.95),
-            Colors.white.withOpacity(0),
-          ],
+    if (state is IndoorMapError) {
+      return Container(
+        margin: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
         ),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.map_outlined, color: AppColors.primary200, size: 22.sp),
-          SizedBox(width: 8.w),
-          Text('Indoor Map', style: AppTextStyles.font18Bold),
-          const Spacer(),
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.r),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 6),
-              ],
-            ),
-            child: Icon(
-              Icons.my_location_rounded,
-              size: 20.sp,
-              color: AppColors.primary200,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ResultsCountChip extends StatelessWidget {
-  final int count;
-  const _ResultsCountChip({required this.count});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 6),
-        ],
-      ),
-      child: Text(
-        '$count places',
-        style: AppTextStyles.font12Bold.copyWith(color: AppColors.primary200),
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-
-  const _ErrorView({required this.message, required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.r),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
           children: [
-            Icon(Icons.map_outlined, size: 64.sp, color: Colors.grey[300]),
-            SizedBox(height: 16.h),
-            Text('Could not load map', style: AppTextStyles.font18Bold),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              style: AppTextStyles.font14Regular.copyWith(
-                color: Colors.grey[500],
-              ),
-              textAlign: TextAlign.center,
+            const Icon(Icons.error_outline, color: Colors.red),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(state.message, style: const TextStyle(fontSize: 13)),
             ),
-            SizedBox(height: 24.h),
-            ElevatedButton(
-              onPressed: onRetry,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary200,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.h),
-              ),
-              child: Text(
-                'Try Again',
-                style: AppTextStyles.font14Bold.copyWith(color: Colors.white),
-              ),
+            TextButton(
+              onPressed: () => context.read<IndoorMapCubit>().retry(),
+              child: const Text('Retry'),
             ),
           ],
         ),
+      );
+    }
+
+    if (state is! IndoorMapLoaded) return const SizedBox.shrink();
+
+    // Navigation panel takes priority
+    if (state.isNavigating) {
+      return NavigationPanel(
+        state: state,
+        onCancel: () => context.read<IndoorMapCubit>().cancelNavigation(),
+        onNextStep: () => context.read<IndoorMapCubit>().nextStep(),
+      );
+    }
+
+    // Service detail sheet
+    if (state.selectedService != null) {
+      return ServiceDetailSheet(
+        service: state.selectedService!,
+        onClose: () => context.read<IndoorMapCubit>().clearSelection(),
+        onNavigate: () => context.read<IndoorMapCubit>().startNavigation(
+          state.selectedService!,
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  // ─── Legend ───────────────────────────────────────────────────────────────
+
+  Widget _buildLegend() {
+    final items = [
+      ('Shops', const Color(0xFF7C3AED)),
+      ('Food', const Color(0xFFEA580C)),
+      ('VIP', const Color(0xFFF3A623)),
+      ('Services', const Color(0xFF059669)),
+    ];
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: items
+            .map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: item.$2,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      item.$1,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF1A1A2E),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }
