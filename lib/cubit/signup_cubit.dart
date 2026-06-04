@@ -80,7 +80,7 @@ class SignupCubit extends Cubit<SignupState> {
       CurrentUser.setUser(
         id: user.id.toString(),
         name: user.name,
-        email: user.email ?? email,
+        email: user.email,
         image: user.image,
         token: token,
       );
