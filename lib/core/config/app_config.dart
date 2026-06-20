@@ -25,16 +25,16 @@ class AppConfig {
   static const String buildNumber = '1';
 
   // Developer Info
-  static const String developerName = 'Mustafa Elbaz';
+  static const String developerName = 'Abdelrhman';
   static const String developerGithub = 'https://github.com/mustafaelbaz5';
   static const String developerProfile =
       'https://mustafa-portfolio-eight.vercel.app/';
   static const String developerLinkedIn =
-      'https://www.linkedin.com/in/mustafa-elbaz-725a6631a';
-  static const String developerEmail = 'm9stafa05@gmail.com';
+      '';
+  static const String developerEmail = '';
 
   // API
   static String get baseUrl => isProduction
-      ? 'https://gate-buddy-backend-production.up.railway.app/api/v1'
-      : 'https://gate-buddy-backend-production.up.railway.app/api/v1';
+      ? 'https://gate-buddy-backend-production-f6df.up.railway.app/api/v1'
+      : 'https://gate-buddy-backend-production-f6df.up.railway.app/api/v1';
 }

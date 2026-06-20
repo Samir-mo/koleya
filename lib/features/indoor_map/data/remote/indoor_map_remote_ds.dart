@@ -17,29 +17,24 @@ class IndoorMapRemoteDs {
         queryParams['category'] = category;
       }
 
-      final response = await api.get(
+     // ApiConsumer.get returns dynamic — it IS the decoded body, not a Response object
+      final dynamic response = await api.get(
         ApiEndpoints.services,
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
 
-      final data = response.data;
-
       List<dynamic> raw = [];
 
-      if (data is List) {
-        raw = data;
-      } else if (data is Map) {
-        // { "data": { "services": [...] } }
-        if (data['data'] is Map && data['data']['services'] is List) {
-          raw = data['data']['services'] as List;
-        }
-        // { "data": [...] }
-        else if (data['data'] is List) {
-          raw = data['data'] as List;
-        }
-        // { "services": [...] }
-        else if (data['services'] is List) {
-          raw = data['services'] as List;
+      if (response is List) {
+        raw = response;
+      } else if (response is Map) {
+        // ✅ matches your actual shape: { "status": "success", "data": { "services": [...] } }
+        if (response['data'] is Map && response['data']['services'] is List) {
+          raw = response['data']['services'] as List;
+        } else if (response['data'] is List) {
+          raw = response['data'] as List;
+        } else if (response['services'] is List) {
+          raw = response['services'] as List;
         }
       }
 
