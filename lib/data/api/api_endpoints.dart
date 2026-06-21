@@ -3,7 +3,7 @@
 class ApiEndpoints {
   // 🧭 العنوان الأساسي للسيرفر
   // غيّر localhost إلى 10.0.2.2 لو بتشغل على Android Emulator
-  static const String baseUrl = "http://localhost:3000";
+  static const String baseUrl = "https://gate-buddy-backend-production-f6df.up.railway.app/api/v1";
   // ======================= Auth & Users =======================
   static const String signup = "/api/v1/users/signup"; // public
   static const String login = "/api/v1/users/login"; // public
@@ -28,7 +28,7 @@ class ApiEndpoints {
   static const String untrackFlight = "/api/v1/flights/:id/track"; // DELETE
 
   // ======================= Services =======================
-  static const String services = "/api/v1/services";
+  static const String services = "/services?limit=2001";
   static const String serviceById = "/api/v1/services/:id";
   static const String serviceLocation = "/api/v1/services/:id/location";
   static const String vipLounges = "/api/v1/services/vip-lounges";
@@ -42,7 +42,7 @@ class ApiEndpoints {
   static const String shopById = "/api/v1/shops/:id";
 
   // ======================= Assistant (Chatbot) =======================
-  static const String assistant = "/api/v1/assistant";
+  static const String assistant = "/chat/query";
 
   // ======================= Notifications (⚠️ مش موجودة حالياً في الباك) =======================
   static const String notifications = "/api/v1/notifications";
