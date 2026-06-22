@@ -3,7 +3,7 @@ import 'package:gate_buddy/features/indoor_map/data/remote/indoor_map_remote_ds.
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo.dart';
 
 class IndoorMapRepoImpl implements IndoorMapRepo {
-   final IndoorMapRemoteDs remoteDs;
+  final IndoorMapRemoteDs remoteDs;
 
   IndoorMapRepoImpl({required this.remoteDs});
 

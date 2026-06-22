@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gate_buddy/core/api/api_consumer.dart';
 
-import '../../../../data/api/api_endpoints.dart';
+import '../../../../core/api/api_endpoints.dart';
 import '../models/service_location_model.dart';
 
 class IndoorMapRemoteDs {
