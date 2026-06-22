@@ -17,7 +17,8 @@ class Routes {
   static const String accessibility = '/accessibility';
   static const String financial = '/financialServices';
   static const String counters = '/flightCounters';
-  static const String exploreShops = '/exploreShops';
+  static const String explorePlacesScreen = '/explorePlacesScreen';
+  static const String placeDetailsScreen = '/placeDetailsScreen';
   static const String search = '/search';
   static const String indoorMap = '/indoorMap';
 

@@ -3,6 +3,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gate_buddy/core/api/api_consumer.dart';
 import 'package:gate_buddy/core/api/dio_consumer.dart';
 import 'package:gate_buddy/data/repositories/dashboard_repository.dart';
+import 'package:gate_buddy/features/auth/data/remote/auth_remote_ds.dart';
+import 'package:gate_buddy/features/auth/data/repo/auth_repo_impl.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/explore_places/data/remote/explore_places_remote_ds.dart';
+import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo_impl.dart';
+import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
 import 'package:gate_buddy/features/indoor_map/data/remote/indoor_map_remote_ds.dart';
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo.dart';
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo_impl.dart';
@@ -40,23 +46,39 @@ Future<void> setUpDependencies() async {
   );
 
   // --- Repositories ---
-  getIt.registerLazySingleton(() => DashboardRepository());
+  getIt.registerLazySingleton(
+    () => DashboardRepository(api: getIt<ApiConsumer>()),
+  );
 
   // --- Api ---
   getIt.registerLazySingleton<ApiConsumer>(() => DioConsumer(getIt()));
 
-  // --- Remote Data Source ---
+  // Auth
+  getIt.registerLazySingleton(() => AuthRemoteDs(api: getIt<ApiConsumer>()));
+  getIt.registerLazySingleton(
+    () => AuthRepoImpl(remote: getIt<AuthRemoteDs>()),
+  );
+  getIt.registerLazySingleton(() => AuthCubit(repo: getIt<AuthRepoImpl>()));
+
+  // Indoor Map
   getIt.registerLazySingleton<IndoorMapRemoteDs>(
     () => IndoorMapRemoteDs(api: getIt()),
   );
-
-  // Repositories
   getIt.registerLazySingleton<IndoorMapRepo>(
     () => IndoorMapRepoImpl(remoteDs: getIt()),
   );
-
-  // Cubits
   getIt.registerLazySingleton<IndoorMapCubit>(
     () => IndoorMapCubit(indoorMapRepo: getIt()),
+  );
+
+  // Explore Places
+  getIt.registerLazySingleton(
+    () => ExplorePlacesRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton(
+    () => ExplorePlacesRepoImpl(remoteDs: getIt<ExplorePlacesRemoteDs>()),
+  );
+  getIt.registerLazySingleton(
+    () => ExploreCubit(repo: getIt<ExplorePlacesRepoImpl>()),
   );
 }

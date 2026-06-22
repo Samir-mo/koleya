@@ -1,41 +1,43 @@
-// ignore_for_file: always_specify_types
-
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/features/explore_places/ui/place_details_screens.dart';
 import 'package:gate_buddy/features/indoor_map/ui/indoor_map_screen.dart';
 import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
 import 'package:gate_buddy/ui/screens/get_code_screen.dart';
-import 'package:gate_buddy/ui/screens/splash_screen.dart';
 import 'package:gate_buddy/ui/screens/tracked_flight_screen.dart';
-
-import '../../features/auth/ui/login_screen.dart';
-import '../../features/auth/ui/signup_screen.dart';
-// ... other imports
 
 class AppRouter {
   AppRouter._();
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    final args = settings.arguments as Map<String, dynamic>?;
     switch (settings.name) {
-      case Routes.splash:
-        return _buildRoute(const SplashScreen(), settings);
+      // case Routes.splash:
+      // return _buildRoute(const SplashScreen(), settings);
 
-      case Routes.login:
-        return _buildRoute(LoginScreen(), settings);
+      // case Routes.login:
+      //   return _buildRoute(LoginScreen(), settings);
 
-      case Routes.signup:
-        return _buildRoute(const SignupScreen(), settings);
+      // case Routes.signup:
+      //   return _buildRoute(const SignupScreen(), settings);
 
       case Routes.mainScaffold:
         return _buildRoute(const MainScaffold(), settings);
 
       case Routes.getCode:
-        final args = settings.arguments as Map<String, dynamic>?;
         return _buildRoute(
           GetCodeScreen(email: args?['email'] ?? ''),
           settings,
         );
 
+      case Routes.placeDetailsScreen:
+        // You can pass arguments here if needed
+        return _buildRoute(
+          PlaceDetailsScreen(
+            place: args?['place'],
+          ), // Replace with actual place data
+          settings,
+        );
       case Routes.trackedFlight:
         // You can pass arguments here if needed
         return _buildRoute(
