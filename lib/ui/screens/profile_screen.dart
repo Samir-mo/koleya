@@ -90,28 +90,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final email = CurrentUser.email ?? 'user@example.com';
 
         return Scaffold(
-          backgroundColor: _primaryBlue,
-          appBar: AppBar(
-            backgroundColor: _primaryBlue,
-            elevation: 0,
-            // REMOVED the back button - very important for bottom nav tabs!
-            // leading: IconButton(...),   ← Delete this
-            centerTitle: true,
-            title: const Text(
-              'Profile',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-          ),
           body: SafeArea(
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 375),
                 child: Column(
                   children: [
-                    const SizedBox(height: 12),
+                    Text(
+                      'Profile',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: _primaryBlue,
+                      ),
+                    ),
+                    SizedBox(height: 12),
                     Expanded(
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 12),

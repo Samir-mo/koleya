@@ -9,7 +9,7 @@ class ApiClient {
   // ✅ إعداد Dio الأساسي
   static final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: "https://gate-buddy-backend-production.up.railway.app/api/v1",
+      baseUrl: "https://gate-buddy-backend-production-f6df.up.railway.app/api/v1",
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
       responseType: ResponseType.json,

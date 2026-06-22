@@ -74,8 +74,6 @@ class _AssistantViewState extends State<_AssistantView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ← Added Scaffold (Recommended)
-      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

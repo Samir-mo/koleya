@@ -11,7 +11,6 @@ class ExplorePlacesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF002D6B),
       body: SafeArea(
         child: Column(
           children: [
