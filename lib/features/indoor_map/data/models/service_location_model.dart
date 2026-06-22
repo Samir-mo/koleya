@@ -1,5 +1,3 @@
-/// Model for a service/shop/restaurant with location data
-/// Maps to GET /api/v1/services response
 class ServiceLocationModel {
   final String id;
   final String name;
