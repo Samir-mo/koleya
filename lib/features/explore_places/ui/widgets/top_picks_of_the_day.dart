@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/features/restaurants_and_shops/ui/widgets/pick_thumbnail.dart';
+import 'package:gate_buddy/features/explore_places/ui/widgets/pick_thumbnail.dart';
 
 class TopPicksOfTheDay extends StatelessWidget {
   const TopPicksOfTheDay({super.key});

@@ -3,13 +3,13 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 
 class CustomAppBar extends StatelessWidget {
-  final String appBarTitle;
+  final String title;
   final Widget? leading;
   final VoidCallback? onLeadingPressed;
 
   const CustomAppBar({
     super.key,
-    required this.appBarTitle,
+    required this.title,
     this.leading,
     this.onLeadingPressed,
   });
@@ -30,7 +30,7 @@ class CustomAppBar extends StatelessWidget {
               child: GestureDetector(onTap: onLeadingPressed, child: leading),
             ),
           Text(
-            appBarTitle,
+            title,
             style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
           ),
         ],
