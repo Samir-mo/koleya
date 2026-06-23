@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../cubit/assistant_cubit.dart';
-import '../../../cubit/assistant_state.dart';
 import '../../../core/shared/models/assistant_message.dart';
+import '../logic/assistant_cubit.dart';
+import '../logic/assistant_state.dart';
 
 class AssistantScreen extends StatefulWidget {
   const AssistantScreen({super.key});
@@ -19,7 +19,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
   @override
   void initState() {
     super.initState();
-    _assistantCubit = AssistantCubit();
+    _assistantCubit = context.read<AssistantCubit>();
   }
 
   @override
@@ -30,7 +30,10 @@ class _AssistantScreenState extends State<AssistantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(value: _assistantCubit, child: const _AssistantView());
+    return BlocProvider.value(
+      value: _assistantCubit,
+      child: const _AssistantView(),
+    );
   }
 }
 
@@ -65,7 +68,10 @@ class _AssistantViewState extends State<_AssistantView> {
         ),
         child: Text(
           msg.text,
-          style: TextStyle(color: isUser ? Colors.white : Colors.black87, fontSize: 15),
+          style: TextStyle(
+            color: isUser ? Colors.white : Colors.black87,
+            fontSize: 15,
+          ),
         ),
       ),
     );
@@ -100,7 +106,10 @@ class _AssistantViewState extends State<_AssistantView> {
             ),
             SafeArea(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: const BoxDecoration(
                   border: Border(top: BorderSide(color: Colors.black12)),
                 ),
@@ -126,7 +135,11 @@ class _AssistantViewState extends State<_AssistantView> {
                     CircleAvatar(
                       backgroundColor: const Color(0xFF003366),
                       child: IconButton(
-                        icon: const Icon(Icons.send, color: Colors.white, size: 20),
+                        icon: const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                         onPressed: _sendMessage,
                       ),
                     ),
