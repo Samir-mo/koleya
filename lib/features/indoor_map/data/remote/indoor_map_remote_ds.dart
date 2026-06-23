@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:gate_buddy/core/api/api_consumer.dart';
+import 'package:gate_buddy/core/errors/error_handler.dart';
 
 import '../../../../core/api/api_endpoints.dart';
 import '../models/service_location_model.dart';
@@ -17,7 +17,7 @@ class IndoorMapRemoteDs {
         queryParams['category'] = category;
       }
 
-     // ApiConsumer.get returns dynamic — it IS the decoded body, not a Response object
+      // ApiConsumer.get returns dynamic — it IS the decoded body, not a Response object
       final dynamic response = await api.get(
         ApiEndpoints.services,
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
@@ -43,12 +43,8 @@ class IndoorMapRemoteDs {
           // Only include items that have real coordinates
           .where((s) => s.latitude != 0.0 && s.longitude != 0.0)
           .toList();
-    } on DioException catch (e) {
-      final msg =
-          e.response?.data?['message'] ?? e.message ?? 'Map services error';
-      throw Exception(msg);
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      ErrorHandler.handleException(e);
     }
   }
 }
