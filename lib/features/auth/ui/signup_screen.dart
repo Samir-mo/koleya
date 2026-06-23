@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/cubit/signup_state.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
 import 'package:gate_buddy/features/auth/ui/login_screen.dart';
@@ -67,14 +66,14 @@ class _SignupScreenState extends State<SignupScreen> {
               context,
               MaterialPageRoute(builder: (_) => LoginScreen()),
             );
-          } else if (state is SignupFailure) {
+          } else if (state is AuthError) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text("❌ ${state.props[0]}")));
           }
         },
         builder: (context, state) {
-          final loading = state is SignupLoading;
+          final loading = state is AuthLoading;
 
           return Scaffold(
             backgroundColor: Colors.white,
