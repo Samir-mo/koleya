@@ -1,5 +1,6 @@
 import 'package:gate_buddy/core/api/api_consumer.dart';
 import 'package:gate_buddy/core/api/api_endpoints.dart';
+import 'package:gate_buddy/core/errors/error_handler.dart';
 
 import '../models/place_of_service_model.dart';
 
@@ -31,7 +32,7 @@ class ExplorePlacesRemoteDs {
           .map((e) => PlaceOfServiceModel.fromJson(e as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      rethrow;
+      ErrorHandler.handleException(e);
     }
   }
 }
