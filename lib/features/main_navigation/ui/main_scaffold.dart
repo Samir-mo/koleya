@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/cubit/home_cubit.dart';
+import 'package:gate_buddy/features/chat_bot/ui/assistant_screen.dart';
+import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
+import 'package:gate_buddy/features/explore_places/ui/explore_places_screen.dart';
 import 'package:gate_buddy/features/flights/ui/flights_screen.dart';
 import 'package:gate_buddy/features/home/ui/home_screen.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
 import 'package:gate_buddy/features/indoor_map/ui/indoor_map_screen.dart';
-import 'package:gate_buddy/features/restaurants_and_shops/ui/explore_places_screen.dart';
-import 'package:gate_buddy/ui/screens/assistant_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class MainScaffold extends StatefulWidget {
@@ -58,7 +59,10 @@ class _MainScaffoldState extends State<MainScaffold> {
         child: HomeScreen(scrollController: _homeScrollController),
       ),
 
-      const ExplorePlacesScreen(),
+      BlocProvider(
+        create: (context) => getIt<ExploreCubit>()..loadPlaces(),
+        child: const ExplorePlacesScreen(),
+      ),
       const AssistantScreen(),
     ];
   }
