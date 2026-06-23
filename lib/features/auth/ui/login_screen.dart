@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/cubit/login_cubit.dart';
 import 'package:gate_buddy/cubit/login_state.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
 
 import 'signup_screen.dart';
 
@@ -16,111 +17,105 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => LoginCubit(),
-      child: Scaffold(
-        body: BlocConsumer<LoginCubit, LoginState>(
-          listener: (context, state) {
-            if (state is LoginSuccess) {
-              context.pushNamedAndRemoveAll(Routes.mainScaffold);
-            } else if (state is LoginFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.error)));
-            }
-          },
-          builder: (context, state) {
-            final cubit = context.read<LoginCubit>();
+    return Scaffold(
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            context.pushNamedAndRemoveAll(Routes.mainScaffold);
+          } else if (state is LoginFailure) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("❌ ")));
+          }
+        },
+        builder: (context, state) {
+          context.read<AuthCubit>();
 
-            return Stack(
-              children: [
-                _buildHeader(context),
-                SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 300,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Text(
-                          "Log In",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: context.customColors.infoBackground,
-                          ),
+          return Stack(
+            children: [
+              _buildHeader(context),
+              SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 300),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        "Log In",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: context.customColors.infoBackground,
                         ),
                       ),
-                      const SizedBox(height: 30),
-                      _buildTextField(
-                        Icons.email,
-                        context,
-                        "Email",
-                        controller: emailController,
-                      ),
-                      const SizedBox(height: 20),
-                      _buildTextField(
-                        Icons.lock,
-                        context,
-                        "Password",
-                        controller: passwordController,
-                        isPassword: true,
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, Routes.forgetPassword);
-                          },
-                          child: const Text(
-                            "Forget password?",
-                            style: AppTextStyles.font16Regular,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      state is LoginLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : _buildButton(
-                              context,
-                              "Log in",
-                              onPressed: () {
-                                cubit.login(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim(),
-                                );
-                              },
-                            ),
-                      const SizedBox(height: 20),
-                      _buildBottomText(
-                        context,
-                        "You don't have an account? ",
-                        "Sign",
-                        SignupScreen(),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 50,
-                  left: 16,
-                  child: SafeArea(
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pop(context),
                     ),
+                    const SizedBox(height: 30),
+                    _buildTextField(
+                      Icons.email,
+                      context,
+                      "Email",
+                      controller: emailController,
+                    ),
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                      Icons.lock,
+                      context,
+                      "Password",
+                      controller: passwordController,
+                      isPassword: true,
+                    ),
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, Routes.forgetPassword);
+                        },
+                        child: const Text(
+                          "Forget password?",
+                          style: AppTextStyles.font16Regular,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    state is AuthLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : _buildButton(
+                            context,
+                            "Log in",
+                            onPressed: () {
+                              // cubit.login(
+                              //   emailController.text.trim(),
+                              //   passwordController.text.trim(),
+                              // );
+                            },
+                          ),
+                    const SizedBox(height: 20),
+                    _buildBottomText(
+                      context,
+                      "You don't have an account? ",
+                      "Sign",
+                      SignupScreen(),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 50,
+                left: 16,
+                child: SafeArea(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/cubit/signup_cubit.dart';
 import 'package:gate_buddy/cubit/signup_state.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
 import 'package:gate_buddy/features/auth/ui/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -47,23 +49,19 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    context.read<SignupCubit>().signup(
-      name: name,
-      email: email,
-      password: pass,
-    );
+    context.read<AuthCubit>().signup(name: name, email: email, password: pass);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SignupCubit(),
-      child: BlocConsumer<SignupCubit, SignupState>(
+      create: (_) => getIt<AuthCubit>(),
+      child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is SignupSuccess) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("✅ ${state.message}")));
+          if (state is AuthSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("✅ ${state.data["message"]}")),
+            );
 
             Navigator.pushReplacement(
               context,
@@ -72,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
           } else if (state is SignupFailure) {
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(SnackBar(content: Text("❌ ${state.error}")));
+            ).showSnackBar(SnackBar(content: Text("❌ ${state.props[0]}")));
           }
         },
         builder: (context, state) {
