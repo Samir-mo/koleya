@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
-import '../api/api_client.dart';
-import '../api/api_endpoints.dart';
+import 'package:gate_buddy/core/api/api_consumer.dart';
+
+import '../../core/api/api_endpoints.dart';
 
 /// DashboardRepository — مسئول عن جلب بيانات الصفحة الرئيسية (Home)
 class DashboardRepository {
-  final Dio _client = ApiClient.instance.dio;
+  final ApiConsumer api;
+
+  DashboardRepository({required this.api});
 
   /// 📥 جلب بيانات الـ Dashboard / Home من السيرفر
   ///
@@ -12,10 +15,11 @@ class DashboardRepository {
   /// - لو مش مسجل → بيرجع بيانات عامة عن الرحلات والخدمات
   Future<Response> getHomeData() async {
     try {
-      final response = await _client.get(ApiEndpoints.home);
+      final response = await api.get(ApiEndpoints.home);
       return response;
     } on DioException catch (e) {
-      final msg = e.response?.data?["message"] ??
+      final msg =
+          e.response?.data?["message"] ??
           e.message ??
           "Failed to fetch home data";
       throw Exception(msg);

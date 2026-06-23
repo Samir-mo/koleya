@@ -1,17 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import '../api/api_client.dart';
-import '../api/api_endpoints.dart';
+import 'package:gate_buddy/core/api/api_consumer.dart';
+
+import '../../core/api/api_endpoints.dart';
 
 /// ✈️ FlightRepository — مسئول عن كل العمليات الخاصة بالرحلات
 class FlightRepository {
-  final Dio _client = ApiClient.instance.dio;
+  final ApiConsumer api;
+
+  FlightRepository({required this.api});
 
   /// 🔹 البحث عن رحلات (GET /flights/search)
   /// [queryParams] يمكن أن تحتوي على flightNumber, destination, airline, إلخ.
   Future<Response> searchFlights([Map<String, dynamic>? queryParams]) async {
     try {
-      final response = await _client.get(
+      final response = await api.get(
         ApiEndpoints.flightsSearch,
         queryParameters: queryParams,
       );
@@ -29,7 +32,7 @@ class FlightRepository {
   /// 🔹 الحصول على كل الرحلات (GET /flights)
   Future<Response> getFlights() async {
     try {
-      final response = await _client.get(ApiEndpoints.flights);
+      final response = await api.get(ApiEndpoints.flights);
       return response;
     } on DioException catch (e) {
       final msg =
@@ -44,10 +47,11 @@ class FlightRepository {
   /// 🔹 الحصول على الرحلات المحدّثة (GET /flights/updated)
   Future<Response> getUpdatedFlights() async {
     try {
-      final response = await _client.get(ApiEndpoints.flightsUpdated);
+      final response = await api.get(ApiEndpoints.flightsUpdated);
       return response;
     } on DioException catch (e) {
-      final msg = e.response?.data?["message"] ??
+      final msg =
+          e.response?.data?["message"] ??
           e.message ??
           "Get updated flights error";
       throw Exception("API Error: $msg");
@@ -61,10 +65,11 @@ class FlightRepository {
   Future<Response> getFlightById(String id) async {
     try {
       final endpoint = ApiEndpoints.flightById.replaceAll(":id", id);
-      final response = await _client.get(endpoint);
+      final response = await api.get(endpoint);
       return response;
     } on DioException catch (e) {
-      final msg = e.response?.data?["message"] ??
+      final msg =
+          e.response?.data?["message"] ??
           e.message ??
           "Get flight details error";
       throw Exception("API Error: $msg");
@@ -77,10 +82,11 @@ class FlightRepository {
   /// 🔹 جلب الرحلات التي يتتبعها المستخدم (GET /flights/tracked)
   Future<Response> getTrackedFlights() async {
     try {
-      final response = await _client.get(ApiEndpoints.trackedFlights);
+      final response = await api.get(ApiEndpoints.trackedFlights);
       return response;
     } on DioException catch (e) {
-      final msg = e.response?.data?["message"] ??
+      final msg =
+          e.response?.data?["message"] ??
           e.message ??
           "Get tracked flights error";
       throw Exception("API Error: $msg");
@@ -94,7 +100,7 @@ class FlightRepository {
   Future<Response> trackFlight(String id) async {
     try {
       final endpoint = ApiEndpoints.trackFlight.replaceAll(":id", id);
-      final response = await _client.post(endpoint);
+      final response = await api.post(endpoint);
       return response;
     } on DioException catch (e) {
       final msg =
@@ -110,7 +116,7 @@ class FlightRepository {
   Future<Response> untrackFlight(String id) async {
     try {
       final endpoint = ApiEndpoints.untrackFlight.replaceAll(":id", id);
-      final response = await _client.delete(endpoint);
+      final response = await api.delete(endpoint);
       return response;
     } on DioException catch (e) {
       final msg =

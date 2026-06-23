@@ -1,17 +1,20 @@
 import 'package:dio/dio.dart';
-import '../api/api_client.dart';
-import '../api/api_endpoints.dart';
+import 'package:gate_buddy/core/api/api_consumer.dart';
+
+import '../../core/api/api_endpoints.dart';
 import '../../core/shared/models/service_model.dart';
 
 /// 🇪🇬 AirportRepository مسؤول عن كل الطلبات المتعلقة بالمطار (الخدمات، الاستعلامات ...إلخ)
 class AirportRepository {
-  final Dio _client = ApiClient.instance.dio;
+  final ApiConsumer api;
+
+  AirportRepository({required this.api});
 
   /// 🛫 جلب قائمة الخدمات من الـ API مباشرة
   Future<List<ServiceModel>> getServices() async {
     try {
       // ✅ استدعاء الـ API الحقيقي
-      final Response response = await _client.get(ApiEndpoints.services);
+      final Response response = await api.get(ApiEndpoints.services);
 
       // 🔍 التأكد إن البيانات القادمة عبارة عن List أو داخل "data"
       if (response.data is List) {
@@ -26,13 +29,11 @@ class AirportRepository {
       } else {
         throw Exception("Invalid response format - expected a list");
       }
-
     } on DioException catch (e) {
       // ⚠️ معالجة أخطاء Dio (شبكة / رد غير صالح)
       final errorMessage =
           e.response?.data?["message"] ?? e.message ?? "Unknown API error";
       throw Exception("API Error: $errorMessage");
-
     } catch (e, stackTrace) {
       // ⚠️ أي أخطاء عامة أخرى
       // 👇 نضيف stackTrace لغرض الديباغ فقط (اختياري)

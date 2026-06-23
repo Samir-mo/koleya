@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
-import '../api/api_client.dart';
-import '../api/api_endpoints.dart';
+import 'package:gate_buddy/core/api/api_consumer.dart';
+
+import '../../core/api/api_endpoints.dart';
 
 /// AnalyticsRepository — مسئول عن إرسال تتبع التحميلات والمشاهدات
 class AnalyticsRepository {
-  final Dio _client = ApiClient.instance.dio;
+  final ApiConsumer api;
+
+  AnalyticsRepository({required this.api});
 
   /// 🔹 إرسال حدث عند الضغط على زر تحميل التطبيق
   ///
@@ -23,13 +26,14 @@ class AnalyticsRepository {
         "referrer": referrer,
       };
 
-      final response = await _client.post(
+      final response = await api.post(
         ApiEndpoints.analyticsDownloadClick,
-        data: body,
+        body: body,
       );
       return response;
     } on DioException catch (e) {
-      final msg = e.response?.data?["message"] ?? e.message ?? "Download click error";
+      final msg =
+          e.response?.data?["message"] ?? e.message ?? "Download click error";
       throw Exception(msg);
     } catch (e) {
       throw Exception("Unexpected error: $e");
@@ -47,19 +51,18 @@ class AnalyticsRepository {
     required int duration,
   }) async {
     try {
-      final body = {
-        "page": page,
-        "source": source,
-        "duration": duration,
-      };
+      final body = {"page": page, "source": source, "duration": duration};
 
-      final response = await _client.post(
+      final response = await api.post(
         ApiEndpoints.analyticsPageView,
-        data: body,
+        body: body,
       );
       return response;
     } on DioException catch (e) {
-      final msg = e.response?.data?["message"] ?? e.message ?? "Page view analytics error";
+      final msg =
+          e.response?.data?["message"] ??
+          e.message ??
+          "Page view analytics error";
       throw Exception(msg);
     } catch (e) {
       throw Exception("Unexpected error: $e");
