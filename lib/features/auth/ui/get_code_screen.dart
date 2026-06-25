@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/forget_password_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/forget_password_state.dart';
-import 'package:gate_buddy/features/auth/ui/get_code_screen.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/verify_code_state.dart';
 
-class ForgetPasswordScreen extends StatelessWidget {
-  ForgetPasswordScreen({super.key});
+class GetCodeScreen extends StatelessWidget {
+  final String? email;
+  GetCodeScreen({super.key, this.email});
 
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController codeController = TextEditingController();
 
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
+  void _showMessage(BuildContext context, String msg, {bool error = true}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: error ? Colors.redAccent : Colors.green,
+      ),
+    );
   }
 
   @override
@@ -21,34 +26,23 @@ class ForgetPasswordScreen extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return BlocProvider(
-      create: (_) => ForgetPasswordCubit(),
+      create: (_) => VerifyCodeCubit(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
+        body: BlocConsumer<VerifyCodeCubit, VerifyCodeState>(
           listener: (context, state) {
-            if (state is ForgetPasswordSuccess) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      GetCodeScreen(email: emailController.text.trim()),
-                ),
-              );
-            } else if (state is ForgetPasswordFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.error)));
+            if (state is VerifyCodeSuccess) {
+              _showMessage(context, state.message, error: false);
+              Navigator.pushNamed(context, Routes.resetPassword);
+            } else if (state is VerifyCodeFailure) {
+              _showMessage(context, state.error);
             }
           },
           builder: (context, state) {
-            final cubit = context.read<ForgetPasswordCubit>();
+            final cubit = context.read<VerifyCodeCubit>();
 
             return Stack(
               children: [
-                // 🔹 الخلفية الزرقاء
                 Positioned(
                   top: 0,
                   left: 0,
@@ -57,7 +51,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: context.customColors.infoBackground,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(130),
                       ),
                     ),
@@ -65,7 +59,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(top: 60),
                         child: Text(
-                          "Gate buddy",
+                          'Gate buddy',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
@@ -76,8 +70,6 @@ class ForgetPasswordScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // 🔸 الدائرة الذهبية
                 Positioned(
                   top: -60,
                   right: -60,
@@ -86,8 +78,6 @@ class ForgetPasswordScreen extends StatelessWidget {
                     radius: 80,
                   ),
                 ),
-
-                // 🔙 زر الرجوع
                 Positioned(
                   top: 50,
                   left: 16,
@@ -101,34 +91,28 @@ class ForgetPasswordScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // 🔹 محتوى الصفحة
                 Positioned.fill(
                   top: height * 0.30,
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24.0,
-                      vertical: 20.0,
+                      vertical: 20,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Forget password",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: context.customColors.infoBackground,
-                          ),
+                          'Get your code',
+                          style: AppTextStyles.font20SemiBold,
                         ),
                         const SizedBox(height: 40),
                         TextField(
-                          controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
+                          controller: codeController,
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: "Enter your email",
+                            hintText: 'Enter your code',
                             prefixIcon: Icon(
-                              Icons.email,
+                              Icons.confirmation_number,
                               color: context.customColors.infoBackground,
                             ),
                             enabledBorder: OutlineInputBorder(
@@ -145,34 +129,49 @@ class ForgetPasswordScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 30),
-                        state is ForgetPasswordLoading
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              cubit.resendCode(email ?? '');
+                              _showMessage(
+                                context,
+                                'Verification code resent ✅',
+                                error: false,
+                              );
+                            },
+                            child: Text(
+                              'Resend code?',
+                              style: TextStyle(
+                                color: context.customColors.infoBackground,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        state is VerifyCodeLoading
                             ? const Center(child: CircularProgressIndicator())
                             : ElevatedButton(
                                 onPressed: () {
-                                  final email = emailController.text.trim();
-
-                                  if (email.isEmpty) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "Please enter your email.",
-                                        ),
-                                      ),
+                                  final code = codeController.text.trim();
+                                  if (code.isEmpty) {
+                                    _showMessage(
+                                      context,
+                                      'Please enter the verification code.',
                                     );
                                     return;
-                                  } else if (!_isValidEmail(email)) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "Please enter a valid email address.",
-                                        ),
-                                      ),
+                                  } else if (code.length < 4) {
+                                    _showMessage(
+                                      context,
+                                      'Invalid code. Please check and try again.',
                                     );
                                     return;
                                   }
-
-                                  cubit.sendCode(email);
+                                  cubit.verifyCode(
+                                    email: email ?? '',
+                                    code: code,
+                                  );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
@@ -183,11 +182,11 @@ class ForgetPasswordScreen extends StatelessWidget {
                                   ),
                                 ),
                                 child: Text(
-                                  "Next",
-                                  style: AppTextStyles.font18Light,
+                                  'Next',
+                                  style: AppTextStyles.font18Bold,
                                 ),
                               ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
