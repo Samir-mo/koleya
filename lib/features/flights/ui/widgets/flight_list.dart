@@ -6,6 +6,7 @@ import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 import 'package:gate_buddy/features/flights/logic/cubit/flights_cubit.dart';
 import 'package:gate_buddy/features/flights/logic/cubit/flights_state.dart';
+import 'package:gate_buddy/features/flights/ui/flight_details_screen.dart';
 import 'package:gate_buddy/features/flights/ui/widgets/flight_card.dart';
 import 'package:gate_buddy/features/flights/ui/widgets/flight_card_shimmer.dart';
 
@@ -47,7 +48,20 @@ class FlightList extends StatelessWidget {
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: flights.length,
-        itemBuilder: (_, i) => FlightCard(flight: flights[i]),
+        itemBuilder: (_, i) => FlightCard(
+          flight: flights[i],
+          onTap: () {
+            final cubit = context.read<FlightsCubit>();
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: cubit,
+                  child: FlightDetailsScreen(flight: flights[i]),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
