@@ -1,40 +1,15 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/shared/models/assistant_message.dart';
 import '../logic/assistant_cubit.dart';
 import '../logic/assistant_state.dart';
 
-class AssistantScreen extends StatefulWidget {
+class AssistantScreen extends StatelessWidget {
   const AssistantScreen({super.key});
 
   @override
-  State<AssistantScreen> createState() => _AssistantScreenState();
-}
-
-class _AssistantScreenState extends State<AssistantScreen> {
-  // Keep the cubit alive for the lifetime of this screen / MainScaffold
-  late final AssistantCubit _assistantCubit;
-
-  @override
-  void initState() {
-    super.initState();
-    _assistantCubit = context.read<AssistantCubit>();
-  }
-
-  @override
-  void dispose() {
-    _assistantCubit.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _assistantCubit,
-      child: const _AssistantView(),
-    );
-  }
+  Widget build(BuildContext context) => const _AssistantView();
 }
 
 class _AssistantView extends StatefulWidget {
@@ -47,16 +22,21 @@ class _AssistantView extends StatefulWidget {
 class _AssistantViewState extends State<_AssistantView> {
   final TextEditingController _controller = TextEditingController();
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
-
     context.read<AssistantCubit>().sendMessage(text);
     _controller.clear();
   }
 
   Widget _buildMessage(AssistantMessage msg) {
-    final isUser = msg.sender == "user";
+    final isUser = msg.sender == 'user';
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -90,7 +70,7 @@ class _AssistantViewState extends State<_AssistantView> {
                 if (messages.isEmpty) {
                   return const Center(
                     child: Text(
-                      "Say hi to your Gate Buddy ✈️",
+                      'Say hi to your Gate Buddy ✈️',
                       style: TextStyle(color: Colors.black45, fontSize: 16),
                     ),
                   );
@@ -115,7 +95,7 @@ class _AssistantViewState extends State<_AssistantView> {
                     child: TextField(
                       controller: _controller,
                       decoration: InputDecoration(
-                        hintText: "Type your message...",
+                        hintText: 'Type your message...',
                         filled: true,
                         fillColor: Colors.grey[100],
                         border: OutlineInputBorder(
@@ -131,11 +111,7 @@ class _AssistantViewState extends State<_AssistantView> {
                   CircleAvatar(
                     backgroundColor: const Color(0xFF003366),
                     child: IconButton(
-                      icon: const Icon(
-                        Icons.send,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+                      icon: const Icon(Icons.send, color: Colors.white, size: 20),
                       onPressed: _sendMessage,
                     ),
                   ),
