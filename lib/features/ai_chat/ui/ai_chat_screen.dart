@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/chat_bot/ui/widgets/assistant_app_bar.dart';
-import 'package:gate_buddy/features/chat_bot/ui/widgets/input_bar.dart';
-import 'package:gate_buddy/features/chat_bot/ui/widgets/message_bubble.dart';
-import 'package:gate_buddy/features/chat_bot/ui/widgets/typing_indicator.dart';
+import 'package:gate_buddy/features/ai_chat/ui/widgets/assistant_app_bar.dart';
+import 'package:gate_buddy/features/ai_chat/ui/widgets/input_bar.dart';
+import 'package:gate_buddy/features/ai_chat/ui/widgets/message_bubble.dart';
+import 'package:gate_buddy/features/ai_chat/ui/widgets/typing_indicator.dart';
 
-import '../logic/cubit/assistant_cubit.dart';
-import '../logic/cubit/assistant_state.dart';
+import '../logic/cubit/ai_chat_cubit.dart';
+import '../logic/cubit/ai_chat_state.dart';
 
 class AssistantScreen extends StatelessWidget {
   const AssistantScreen({super.key});

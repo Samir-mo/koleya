@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/errors/failure.dart';
 
 import '../../../../core/shared/models/assistant_message.dart';
-import '../../data/repo/assistant_repo.dart';
-import 'assistant_state.dart';
+import '../../data/repo/ai_chat_repo.dart';
+import 'ai_chat_state.dart';
 
 class AssistantCubit extends Cubit<AssistantState> {
   final AssistantRepo repo;

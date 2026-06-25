@@ -2,7 +2,7 @@ import 'package:gate_buddy/core/api/api_consumer.dart';
 import 'package:gate_buddy/core/api/api_endpoints.dart';
 import 'package:gate_buddy/core/errors/error_handler.dart';
 
-import '../models/assistant_reply_model.dart';
+import '../models/ai_chat_reply_model.dart';
 
 class AssistantRemoteDs {
   final ApiConsumer api;

@@ -1,6 +1,6 @@
-import '../models/assistant_reply_model.dart';
-import '../remote/assistant_remote_ds.dart';
-import 'assistant_repo.dart';
+import '../models/ai_chat_reply_model.dart';
+import '../remote/ai_chat_remote_ds.dart';
+import 'ai_chat_repo.dart';
 
 class AssistantRepoImpl implements AssistantRepo {
   final AssistantRemoteDs remoteDs;
