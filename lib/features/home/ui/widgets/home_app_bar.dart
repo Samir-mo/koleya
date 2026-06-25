@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/features/profile/ui/profile_screen.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key, required this.primaryBlue});
@@ -35,10 +34,10 @@ class HomeAppBar extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
+              Navigator.of(
                 context,
-                MaterialPageRoute(builder: (_) => const ProfileScreen()),
-              );
+                rootNavigator: true,
+              ).pushNamed(Routes.profile);
             },
             child: const Icon(Icons.person_outline, color: iconGold, size: 28),
           ),
