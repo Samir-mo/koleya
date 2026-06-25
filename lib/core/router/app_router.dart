@@ -9,7 +9,6 @@ import 'package:gate_buddy/features/indoor_map/ui/indoor_map_screen.dart';
 import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
 import 'package:gate_buddy/features/notifications/ui/notifications_screen.dart';
 import 'package:gate_buddy/features/on_boarding/ui/onboarding_screen.dart';
-import 'package:gate_buddy/features/on_boarding/ui/welcome_screen.dart';
 import 'package:gate_buddy/features/profile/ui/profile_screen.dart';
 import 'package:gate_buddy/features/profile/ui/settings_screen.dart';
 import 'package:gate_buddy/features/search/ui/search_screen.dart';
@@ -31,9 +30,6 @@ class AppRouter {
     switch (settings.name) {
       case Routes.onboarding:
         return _buildRoute(const OnboardingScreen(), settings);
-
-      case Routes.welcome:
-        return _buildRoute(const WelcomeScreen(), settings);
 
       case Routes.login:
         return _buildRoute(LoginScreen(), settings);

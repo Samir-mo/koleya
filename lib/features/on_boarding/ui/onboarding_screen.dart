@@ -53,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _onNext(OnboardingCubit cubit, OnboardingState state) {
     if (state.isLastPage) {
-      _navigateToWelcome();
+      _navigateToLogin();
       return;
     }
     cubit.nextPage();
@@ -65,8 +65,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _animateTo(state.currentPage - 1);
   }
 
-  void _navigateToWelcome() {
-    context.pushReplacementNamed(Routes.welcome);
+  void _navigateToLogin() {
+    context.pushReplacementNamed(Routes.login);
   }
 
   @override
@@ -88,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   totalPages: OnboardingCubit.totalPages,
                   onNext: () => _onNext(cubit, state),
                   onBack: () => _onBack(cubit, state),
-                  onSkip: _navigateToWelcome,
+                  onSkip: _navigateToLogin,
                 ),
               );
             },
