@@ -1,18 +1,16 @@
-import 'package:equatable/equatable.dart';
+part of 'onboarding_cubit.dart';
 
-abstract class OnboardingState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+class OnboardingState extends Equatable {
+  const OnboardingState({this.currentPage = 0});
 
-class OnboardingInitial extends OnboardingState {}
-
-class OnboardingPageChanged extends OnboardingState {
   final int currentPage;
-  OnboardingPageChanged(this.currentPage);
+
+  bool get isLastPage => currentPage == OnboardingCubit.totalPages - 1;
+  bool get isFirstPage => currentPage == 0;
+
+  OnboardingState copyWith({int? currentPage}) =>
+      OnboardingState(currentPage: currentPage ?? this.currentPage);
 
   @override
-  List<Object?> get props => [currentPage];
+  List<Object> get props => [currentPage];
 }
-
-class OnboardingFinished extends OnboardingState {}
