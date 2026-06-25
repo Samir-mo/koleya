@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
@@ -7,6 +8,8 @@ import 'package:gate_buddy/features/ai_chat/ui/widgets/assistant_app_bar.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/input_bar.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/message_bubble.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/typing_indicator.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
 
 import '../logic/cubit/ai_chat_cubit.dart';
 import '../logic/cubit/ai_chat_state.dart';
@@ -38,9 +41,18 @@ class _AssistantViewState extends State<_AssistantView> {
     super.dispose();
   }
 
+  bool get _isAuthenticated =>
+      context.read<AuthCubit>().state.isAuthenticated;
+
   void _send() {
     final text = _inputController.text.trim();
     if (text.isEmpty) return;
+
+    if (!_isAuthenticated) {
+      _showLoginPrompt();
+      return;
+    }
+
     context.read<AssistantCubit>().sendMessage(text);
     _inputController.clear();
     _scrollToBottom();
@@ -58,6 +70,41 @@ class _AssistantViewState extends State<_AssistantView> {
     });
   }
 
+  void _showLoginPrompt() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Login Required'),
+        content: const Text(
+          'You need to be logged in to chat with GateBuddy.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary200,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, Routes.login);
+            },
+            child: Text(
+              'Log In',
+              style: AppTextStyles.font14SemiBold.copyWith(
+                  color: AppColors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.customColors;
@@ -65,6 +112,15 @@ class _AssistantViewState extends State<_AssistantView> {
     return Column(
       children: [
         AssistantAppBar(),
+        // Auth guard banner — visible only when not logged in
+        BlocBuilder<AuthCubit, AuthState>(
+          buildWhen: (prev, curr) =>
+              prev.isAuthenticated != curr.isAuthenticated,
+          builder: (context, authState) {
+            if (authState.isAuthenticated) return const SizedBox.shrink();
+            return _AuthBanner();
+          },
+        ),
         Expanded(
           child: BlocConsumer<AssistantCubit, AssistantState>(
             listener: (context, state) {
@@ -119,6 +175,43 @@ class _AssistantViewState extends State<_AssistantView> {
     );
   }
 }
+
+// ── Auth banner shown when unauthenticated ────────────────────────────────────
+
+class _AuthBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: AppColors.amber0,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Row(
+        children: [
+          const Icon(Icons.lock_outline_rounded,
+              size: 16, color: AppColors.amber300),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Log in to chat with GateBuddy',
+              style: AppTextStyles.font12Regular.copyWith(
+                  color: AppColors.amber400),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, Routes.login),
+            child: Text(
+              'Log In',
+              style: AppTextStyles.font12Medium.copyWith(
+                  color: AppColors.amber400),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
   final dynamic colors;

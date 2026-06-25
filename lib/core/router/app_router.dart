@@ -38,10 +38,13 @@ class AppRouter {
         return _buildRoute(const SignupScreen(), settings);
 
       case Routes.forgetPassword:
-        return _buildRoute(ForgetPasswordScreen(), settings);
+        return _buildRoute(const ForgetPasswordScreen(), settings);
 
       case Routes.resetPassword:
-        return _buildRoute(const ResetPasswordScreen(), settings);
+        return _buildRoute(
+          ResetPasswordScreen(resetToken: args?['resetToken'] as String? ?? ''),
+          settings,
+        );
 
       case Routes.getCode:
         return _buildRoute(
