@@ -1,27 +1,37 @@
+import '../models/auth_response_model.dart';
+import '../models/user_model.dart';
+
 abstract class AuthRepo {
-  Future<dynamic> login(String email, String password);
+  Future<AuthResponseModel> login({
+    required String email,
+    required String password,
+  });
 
-  Future<dynamic> signup(String name, String email, String password);
+  Future<AuthResponseModel> signup({
+    required String name,
+    required String email,
+    required String password,
+    required String passwordConfirm,
+  });
 
-  Future<dynamic> forgetPassword(String email);
+  Future<UserModel> getMe();
 
-  Future<dynamic> resetPassword(
-    String token,
-    String password,
-    String passwordConfirm,
-  );
+  Future<UserModel> updateMe(Map<String, dynamic> fields);
 
-  Future<dynamic> updateMyPassword(
-    String currentPassword,
-    String password,
-    String passwordConfirm,
-  );
-
-  Future<dynamic> getMe();
-
-  Future<dynamic> updateMe(Map<String, dynamic> userData);
-
-  Future<dynamic> deleteMe();
+  Future<void> deleteMe();
 
   Future<void> logout();
+
+  Future<void> forgotPassword({required String email});
+
+  Future<String> verifyResetCode({
+    required String email,
+    required String code,
+  });
+
+  Future<AuthResponseModel> resetPassword({
+    required String resetToken,
+    required String password,
+    required String passwordConfirm,
+  });
 }

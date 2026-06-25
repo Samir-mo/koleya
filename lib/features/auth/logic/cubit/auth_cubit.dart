@@ -6,17 +6,32 @@ import 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepo repo;
 
-  AuthCubit({required this.repo}) : super(AuthInitial());
+  AuthCubit({required this.repo}) : super(const AuthState());
+
+  /// Called once at app start — validates stored token against the server.
+  /// Emits [authenticated] if token is valid, [unauthenticated] otherwise.
+  Future<void> checkAuth() async {
+    emit(state.copyWith(status: AuthStatus.loading));
+    try {
+      final user = await repo.getMe();
+      emit(state.copyWith(status: AuthStatus.authenticated, user: user));
+    } catch (_) {
+      emit(state.copyWith(
+        status: AuthStatus.unauthenticated,
+        clearUser: true,
+        clearError: true,
+      ));
+    }
+  }
 
   Future<void> login({required String email, required String password}) async {
-    emit(AuthLoading());
-
+    emit(state.copyWith(status: AuthStatus.loading, clearError: true));
     try {
-      final response = await repo.login(email, password);
-
-      emit(AuthSuccess(response.data));
+      final result = await repo.login(email: email, password: password);
+      emit(state.copyWith(status: AuthStatus.authenticated, user: result.user));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(state.copyWith(
+          status: AuthStatus.error, error: _message(e), clearUser: true));
     }
   }
 
@@ -24,109 +39,85 @@ class AuthCubit extends Cubit<AuthState> {
     required String name,
     required String email,
     required String password,
-  }) async {
-    emit(AuthLoading());
-
-    try {
-      final response = await repo.signup(name, email, password);
-
-      emit(AuthSuccess(response.data));
-    } catch (e) {
-      emit(AuthError(e.toString()));
-    }
-  }
-
-  Future<void> forgetPassword(String email) async {
-    emit(AuthLoading());
-
-    try {
-      final response = await repo.forgetPassword(email);
-
-      emit(AuthMessage(response.data["message"] ?? "Reset email sent"));
-    } catch (e) {
-      emit(AuthError(e.toString()));
-    }
-  }
-
-  Future<void> resetPassword({
-    required String token,
-    required String password,
     required String passwordConfirm,
   }) async {
-    emit(AuthLoading());
-
+    emit(state.copyWith(status: AuthStatus.loading, clearError: true));
     try {
-      final response = await repo.resetPassword(
-        token,
-        password,
-        passwordConfirm,
+      final result = await repo.signup(
+        name: name,
+        email: email,
+        password: password,
+        passwordConfirm: passwordConfirm,
       );
-
-      emit(AuthSuccess(response.data));
+      emit(state.copyWith(status: AuthStatus.authenticated, user: result.user));
     } catch (e) {
-      emit(AuthError(e.toString()));
-    }
-  }
-
-  Future<void> updateMyPassword({
-    required String currentPassword,
-    required String password,
-    required String passwordConfirm,
-  }) async {
-    emit(AuthLoading());
-
-    try {
-      final response = await repo.updateMyPassword(
-        currentPassword,
-        password,
-        passwordConfirm,
-      );
-
-      emit(AuthMessage(response.data["message"] ?? "Password updated"));
-    } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(state.copyWith(
+          status: AuthStatus.error, error: _message(e), clearUser: true));
     }
   }
 
   Future<void> getMe() async {
-    emit(AuthLoading());
-
+    emit(state.copyWith(status: AuthStatus.loading, clearError: true));
     try {
-      final response = await repo.getMe();
-
-      emit(AuthUserLoaded(response.data));
+      final user = await repo.getMe();
+      emit(state.copyWith(status: AuthStatus.authenticated, user: user));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(state.copyWith(status: AuthStatus.error, error: _message(e)));
     }
   }
 
-  Future<void> updateMe(Map<String, dynamic> data) async {
-    emit(AuthLoading());
-
+  Future<void> updateMe(Map<String, dynamic> fields) async {
+    emit(state.copyWith(status: AuthStatus.loading, clearError: true));
     try {
-      final response = await repo.updateMe(data);
-
-      emit(AuthSuccess(response.data));
+      final user = await repo.updateMe(fields);
+      emit(state.copyWith(status: AuthStatus.authenticated, user: user));
     } catch (e) {
-      emit(AuthError(e.toString()));
-    }
-  }
-
-  Future<void> deleteMe() async {
-    emit(AuthLoading());
-
-    try {
-      await repo.deleteMe();
-
-      emit(const AuthMessage("Account deleted"));
-    } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(state.copyWith(status: AuthStatus.error, error: _message(e)));
     }
   }
 
   Future<void> logout() async {
+    emit(state.copyWith(status: AuthStatus.loading));
     await repo.logout();
+    emit(state.copyWith(
+        status: AuthStatus.unauthenticated, clearUser: true, clearError: true));
+  }
 
-    emit(AuthInitial());
+  Future<void> resetPassword({
+    required String resetToken,
+    required String password,
+    required String passwordConfirm,
+  }) async {
+    emit(state.copyWith(status: AuthStatus.loading, clearError: true));
+    try {
+      final result = await repo.resetPassword(
+        resetToken: resetToken,
+        password: password,
+        passwordConfirm: passwordConfirm,
+      );
+      emit(state.copyWith(status: AuthStatus.authenticated, user: result.user));
+    } catch (e) {
+      emit(state.copyWith(
+          status: AuthStatus.error, error: _message(e), clearUser: true));
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    emit(state.copyWith(status: AuthStatus.loading));
+    try {
+      await repo.deleteMe();
+      emit(state.copyWith(
+          status: AuthStatus.unauthenticated,
+          clearUser: true,
+          clearError: true));
+    } catch (e) {
+      emit(state.copyWith(status: AuthStatus.error, error: _message(e)));
+    }
+  }
+
+  static String _message(Object e) {
+    final s = e.toString();
+    if (s.startsWith('Exception:')) return s.replaceFirst('Exception: ', '');
+    return s;
   }
 }

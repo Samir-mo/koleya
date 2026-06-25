@@ -1,103 +1,129 @@
-import 'package:dio/dio.dart';
-import 'package:gate_buddy/features/auth/data/remote/auth_remote_ds.dart';
+import 'package:gate_buddy/core/errors/error_handler.dart';
+import 'package:gate_buddy/core/service/secure_storage.dart';
+import 'package:gate_buddy/core/utils/app_constants.dart';
 
+import '../models/auth_response_model.dart';
+import '../models/user_model.dart';
+import '../remote/auth_remote_ds.dart';
 import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
-  final AuthRemoteDs remote;
+  final AuthRemoteDs remoteDs;
+  final SecureStorage storage;
 
-  const AuthRepoImpl({required this.remote});
+  const AuthRepoImpl({required this.remoteDs, required this.storage});
 
   @override
-  Future<Response> login(String email, String password) async {
+  Future<AuthResponseModel> login({
+    required String email,
+    required String password,
+  }) async {
     try {
-      return await remote.login(email: email, password: password);
-    } on DioException catch (e) {
-      throw Exception(
-        e.response?.data?["message"] ?? e.message ?? "Login failed",
-      );
+      final result = await remoteDs.login(email: email, password: password);
+      await storage.write(key: AppConstants.accessTokenKey, value: result.token);
+      return result;
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
     }
   }
 
   @override
-  Future<Response> signup(String name, String email, String password) async {
+  Future<AuthResponseModel> signup({
+    required String name,
+    required String email,
+    required String password,
+    required String passwordConfirm,
+  }) async {
     try {
-      return await remote.signup(name: name, email: email, password: password);
-    } on DioException catch (e) {
-      throw Exception(e.response?.data?["message"] ?? e.message);
-    }
-  }
-
-  @override
-  Future<Response> forgetPassword(String email) async {
-    try {
-      return await remote.forgetPassword(email: email);
-    } on DioException catch (e) {
-      throw Exception(e.response?.data?["message"] ?? e.message);
-    }
-  }
-
-  @override
-  Future<Response> resetPassword(
-    String token,
-    String password,
-    String passwordConfirm,
-  ) async {
-    try {
-      return await remote.resetPassword(
-        token: token,
+      final result = await remoteDs.signup(
+        name: name,
+        email: email,
         password: password,
         passwordConfirm: passwordConfirm,
       );
-    } on DioException catch (e) {
-      throw Exception(e.response?.data?["message"] ?? e.message);
+      await storage.write(key: AppConstants.accessTokenKey, value: result.token);
+      return result;
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
     }
   }
 
   @override
-  Future<Response> updateMyPassword(
-    String currentPassword,
-    String password,
-    String passwordConfirm,
-  ) async {
+  Future<UserModel> getMe() async {
     try {
-      return await remote.updateMyPassword(
-        currentPassword: currentPassword,
+      return await remoteDs.getMe();
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
+
+  @override
+  Future<UserModel> updateMe(Map<String, dynamic> fields) async {
+    try {
+      return await remoteDs.updateMe(fields);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
+
+  @override
+  Future<void> deleteMe() async {
+    try {
+      await remoteDs.deleteMe();
+      await storage.clearAll();
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await remoteDs.logout();
+    } catch (_) {
+      // Always clear local state even if server call fails
+    } finally {
+      await storage.clearAll();
+    }
+  }
+
+  @override
+  Future<void> forgotPassword({required String email}) async {
+    try {
+      await remoteDs.forgotPassword(email: email);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
+
+  @override
+  Future<String> verifyResetCode({
+    required String email,
+    required String code,
+  }) async {
+    try {
+      return await remoteDs.verifyResetCode(email: email, code: code);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
+
+  @override
+  Future<AuthResponseModel> resetPassword({
+    required String resetToken,
+    required String password,
+    required String passwordConfirm,
+  }) async {
+    try {
+      final result = await remoteDs.resetPassword(
+        resetToken: resetToken,
         password: password,
         passwordConfirm: passwordConfirm,
       );
-    } on DioException catch (e) {
-      throw Exception(e.response?.data?["message"] ?? e.message);
+      await storage.write(key: AppConstants.accessTokenKey, value: result.token);
+      return result;
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
     }
   }
-
-  @override
-  Future<Response> getMe() async {
-    try {
-      return await remote.getMe();
-    } on DioException catch (e) {
-      throw Exception(e.response?.data?["message"] ?? e.message);
-    }
-  }
-
-  @override
-  Future<Response> updateMe(Map<String, dynamic> userData) async {
-    try {
-      return await remote.updateMe(userData);
-    } on DioException catch (e) {
-      throw Exception(e.response?.data?["message"] ?? e.message);
-    }
-  }
-
-  @override
-  Future<Response> deleteMe() async {
-    try {
-      return await remote.deleteMe();
-    } on DioException catch (e) {
-      throw Exception(e.response?.data?["message"] ?? e.message);
-    }
-  }
-
-  @override
-  Future<void> logout() async {}
 }

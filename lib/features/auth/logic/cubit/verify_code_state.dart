@@ -1,26 +1,32 @@
 import 'package:equatable/equatable.dart';
 
-abstract class VerifyCodeState extends Equatable {
+enum VerifyCodeStatus { initial, loading, success, failure }
+
+class VerifyCodeState extends Equatable {
+  final VerifyCodeStatus status;
+  final String? resetToken;
+  final String? error;
+
+  const VerifyCodeState({
+    this.status = VerifyCodeStatus.initial,
+    this.resetToken,
+    this.error,
+  });
+
+  VerifyCodeState copyWith({
+    VerifyCodeStatus? status,
+    String? resetToken,
+    String? error,
+    bool clearError = false,
+  }) =>
+      VerifyCodeState(
+        status: status ?? this.status,
+        resetToken: resetToken ?? this.resetToken,
+        error: clearError ? null : error ?? this.error,
+      );
+
+  bool get isLoading => status == VerifyCodeStatus.loading;
+
   @override
-  List<Object?> get props => [];
-}
-
-class VerifyCodeInitial extends VerifyCodeState {}
-
-class VerifyCodeLoading extends VerifyCodeState {}
-
-class VerifyCodeSuccess extends VerifyCodeState {
-  final String message;
-  VerifyCodeSuccess({this.message = 'Code verified successfully!'});
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class VerifyCodeFailure extends VerifyCodeState {
-  final String error;
-  VerifyCodeFailure(this.error);
-
-  @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [status, resetToken, error];
 }
