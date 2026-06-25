@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/ui/screens/tracked_flight_screen.dart';
+import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
 
 class TrackedFlightBigCard extends StatelessWidget {
   final Map trackedFlight;
@@ -30,7 +30,7 @@ class TrackedFlightBigCard extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE3E7F1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             offset: const Offset(0, 3),
             blurRadius: 8,
           ),

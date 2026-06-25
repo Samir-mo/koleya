@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/ui/screens/tracked_flight_screen.dart';
+import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
 
 class FlightRow extends StatelessWidget {
   final Map<String, dynamic> flight;

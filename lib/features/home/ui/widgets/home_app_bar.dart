@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/ui/screens/profile_screen.dart';
+import 'package:gate_buddy/features/profile/ui/profile_screen.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key, required this.primaryBlue});

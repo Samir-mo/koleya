@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/cubit/home_cubit.dart';
-import 'package:gate_buddy/cubit/home_state.dart';
+import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
+import 'package:gate_buddy/features/home/logic/cubit/home_state.dart';
 import 'package:gate_buddy/features/home/ui/widgets/airport_services_icon.dart';
 import 'package:gate_buddy/features/home/ui/widgets/home_app_bar.dart';
 import 'package:gate_buddy/features/home/ui/widgets/section_title.dart';
