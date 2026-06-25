@@ -3,8 +3,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gate_buddy/core/api/api_consumer.dart';
 import 'package:gate_buddy/core/api/dio_consumer.dart';
 import 'package:gate_buddy/features/auth/data/remote/auth_remote_ds.dart';
+import 'package:gate_buddy/features/auth/data/repo/auth_repo.dart';
 import 'package:gate_buddy/features/auth/data/repo/auth_repo_impl.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/forget_password_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
 import 'package:gate_buddy/features/ai_chat/data/remote/ai_chat_remote_ds.dart';
 import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo.dart';
 import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo_impl.dart';
@@ -53,7 +56,7 @@ Future<void> setUpDependencies() async {
     () => DioFactory.create(
       baseUrl: AppConfig.baseUrl,
       getToken: () async =>
-          await getIt<SecureStorage>().read(key: AppConstants.userDataKey),
+          await getIt<SecureStorage>().read(key: AppConstants.accessTokenKey),
       enableLogging: AppConfig.enableLogging,
     ),
   );
@@ -65,11 +68,20 @@ Future<void> setUpDependencies() async {
   getIt.registerLazySingleton(
     () => AuthRemoteDs(api: getIt<ApiConsumer>()),
   );
-  getIt.registerLazySingleton(
-    () => AuthRepoImpl(remote: getIt<AuthRemoteDs>()),
+  getIt.registerLazySingleton<AuthRepo>(
+    () => AuthRepoImpl(
+      remoteDs: getIt<AuthRemoteDs>(),
+      storage: getIt<SecureStorage>(),
+    ),
   );
   getIt.registerLazySingleton(
-    () => AuthCubit(repo: getIt<AuthRepoImpl>()),
+    () => AuthCubit(repo: getIt<AuthRepo>()),
+  );
+  getIt.registerFactory(
+    () => ForgetPasswordCubit(repo: getIt<AuthRepo>()),
+  );
+  getIt.registerFactory(
+    () => VerifyCodeCubit(repo: getIt<AuthRepo>()),
   );
 
   // ── Chat Bot / Assistant ──────────────────────────────────────────────────

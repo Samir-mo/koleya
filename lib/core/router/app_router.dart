@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/features/auth/ui/forget_password_screen.dart';
+import 'package:gate_buddy/features/auth/ui/get_code_screen.dart';
 import 'package:gate_buddy/features/auth/ui/login_screen.dart';
 import 'package:gate_buddy/features/auth/ui/reset_password_screen.dart';
 import 'package:gate_buddy/features/auth/ui/signup_screen.dart';
@@ -19,7 +20,6 @@ import 'package:gate_buddy/features/services/ui/service_details_screen.dart';
 import 'package:gate_buddy/features/services/ui/services_screen.dart';
 import 'package:gate_buddy/features/services/ui/vip_experience_screen.dart';
 import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
-import 'package:gate_buddy/features/auth/ui/get_code_screen.dart';
 
 class AppRouter {
   AppRouter._();

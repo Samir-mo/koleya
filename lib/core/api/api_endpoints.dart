@@ -6,9 +6,12 @@ class ApiEndpoints {
   static const String forgetPassword = "/users/forgotPassword";
   static const String resetPassword = "/users/resetPassword";
   static const String updateMyPassword = "/users/updateMyPassword";
-  static const String me = "/users/me";
+  static const String getProfile = "/users/me";
   static const String updateMe = "/users/updateMe"; // protected
   static const String deleteMe = "/users/deleteMe"; // protected
+  static const String logout = "/users/logout";
+  static const String refreshToken = "/users/refresh";
+  static const String verifyResetCode = "/users/verifyResetCode";
 
   // ======================= Dashboard / Home =======================
   static const String home = "/home"; // optional

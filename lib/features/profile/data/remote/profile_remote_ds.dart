@@ -5,7 +5,7 @@ class ProfileRemoteDs {
   final ApiConsumer api;
   ProfileRemoteDs({required this.api});
 
-  Future<dynamic> getMe() => api.get(ApiEndpoints.me);
+  Future<dynamic> getMe() => api.get(ApiEndpoints.getProfile);
   Future<dynamic> updateMe(Map<String, dynamic> data) =>
       api.patch(ApiEndpoints.updateMe, body: data);
   Future<dynamic> updateMyPassword(Map<String, dynamic> data) =>
