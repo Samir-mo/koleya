@@ -49,9 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: context.customColors.background,
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
+            final colors = context.customColors;
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -107,9 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: _onLogin,
                           ),
                           const SizedBox(height: 28),
-                          _buildDivider(),
+                          _buildDivider(colors),
                           const SizedBox(height: 28),
-                          _buildSignupRow(context),
+                          _buildSignupRow(context, colors),
                           const SizedBox(height: 24),
                         ],
                       ),
@@ -124,31 +125,31 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildDivider() {
+  Widget _buildDivider(dynamic colors) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: AppColors.grey100)),
+        Expanded(child: Divider(color: colors.divider)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             'or',
-            style:
-                AppTextStyles.font12Regular.copyWith(color: AppColors.grey400),
+            style: AppTextStyles.font12Regular.copyWith(
+                color: colors.textHint),
           ),
         ),
-        const Expanded(child: Divider(color: AppColors.grey100)),
+        Expanded(child: Divider(color: colors.divider)),
       ],
     );
   }
 
-  Widget _buildSignupRow(BuildContext context) {
+  Widget _buildSignupRow(BuildContext context, dynamic colors) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           "Don't have an account? ",
-          style:
-              AppTextStyles.font14Regular.copyWith(color: AppColors.grey500),
+          style: AppTextStyles.font14Regular.copyWith(
+              color: colors.textSecondary),
         ),
         GestureDetector(
           onTap: () => Navigator.pushNamed(context, Routes.signup),

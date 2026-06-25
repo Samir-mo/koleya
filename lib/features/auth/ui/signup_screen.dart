@@ -55,7 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: context.customColors.background,
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             return SingleChildScrollView(
@@ -132,12 +132,14 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildLoginRow(BuildContext context) {
+    final colors = context.customColors;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           'Already have an account? ',
-          style: AppTextStyles.font14Regular.copyWith(color: AppColors.grey500),
+          style: AppTextStyles.font14Regular.copyWith(
+              color: colors.textSecondary),
         ),
         GestureDetector(
           onTap: () => Navigator.pop(context),

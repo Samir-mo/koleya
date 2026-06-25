@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/forget_password_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/forget_password_state.dart';
@@ -67,7 +68,7 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: context.customColors.background,
         body: BlocBuilder<ForgetPasswordCubit, ForgetPasswordState>(
           builder: (context, state) {
             return SingleChildScrollView(

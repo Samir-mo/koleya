@@ -435,7 +435,7 @@ class _RouteCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
-          const Divider(color: AppColors.grey100),
+          Divider(color: colors.divider),
           const SizedBox(height: 12),
 
           // Gate row
@@ -545,6 +545,7 @@ class _QuickInfo extends StatelessWidget {
 class _DashedLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final borderColor = context.customColors.border;
     return LayoutBuilder(
       builder: (_, constraints) {
         final count = (constraints.maxWidth / 6).floor();
@@ -552,11 +553,7 @@ class _DashedLine extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(
             count,
-            (_) => Container(
-              width: 3,
-              height: 1.5,
-              color: AppColors.grey200,
-            ),
+            (_) => Container(width: 3, height: 1.5, color: borderColor),
           ),
         );
       },
@@ -567,7 +564,7 @@ class _DashedLine extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 40, color: AppColors.grey100);
+    return Container(width: 1, height: 40, color: context.customColors.divider);
   }
 }
 
@@ -642,7 +639,7 @@ class _ScheduleSection extends StatelessWidget {
           ],
           if (schedule.gate != null || schedule.terminal != null) ...[
             const SizedBox(height: 12),
-            const Divider(color: AppColors.grey100),
+            Divider(color: colors.divider),
             const SizedBox(height: 10),
             Row(
               children: [
@@ -837,12 +834,13 @@ class _TrackBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).padding.bottom;
+    final colors = context.customColors;
 
     return Container(
       padding: EdgeInsets.fromLTRB(20, 12, 20, bottom + 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.grey100)),
+        color: colors.surface,
+        border: Border(top: BorderSide(color: colors.border)),
         boxShadow: [
           BoxShadow(
             color: AppColors.black.withValues(alpha: 0.06),
@@ -867,10 +865,11 @@ class _TrackBar extends StatelessWidget {
   }
 
   Widget _buildLoading() {
-    return Container(
+    return Builder(
+      builder: (context) => Container(
       key: const ValueKey('loading'),
       decoration: BoxDecoration(
-        color: AppColors.grey100,
+        color: context.customColors.surfaceVariant,
         borderRadius: BorderRadius.circular(14),
       ),
       child: const Center(
@@ -883,6 +882,7 @@ class _TrackBar extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

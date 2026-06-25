@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/verify_code_state.dart';
 import 'package:gate_buddy/features/auth/ui/reset_password_screen.dart';
@@ -87,7 +88,7 @@ class _GetCodeViewState extends State<_GetCodeView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: context.customColors.background,
         body: BlocBuilder<VerifyCodeCubit, VerifyCodeState>(
           builder: (context, state) {
             return SingleChildScrollView(
@@ -181,6 +182,7 @@ class _OtpBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return SizedBox(
       width: 48,
       height: 56,
@@ -196,14 +198,14 @@ class _OtpBox extends StatelessWidget {
         decoration: InputDecoration(
           counterText: '',
           filled: true,
-          fillColor: AppColors.white,
+          fillColor: colors.surface,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.grey100),
+            borderSide: BorderSide(color: colors.border),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.grey100),
+            borderSide: BorderSide(color: colors.border),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -272,12 +274,14 @@ class _ResendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           "Didn't receive the code? ",
-          style: AppTextStyles.font14Regular.copyWith(color: AppColors.grey500),
+          style: AppTextStyles.font14Regular.copyWith(
+              color: colors.textSecondary),
         ),
         GestureDetector(
           onTap: () {

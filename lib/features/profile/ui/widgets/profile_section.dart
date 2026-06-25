@@ -40,10 +40,10 @@ class ProfileSection extends StatelessWidget {
               for (int i = 0; i < children.length; i++) ...[
                 children[i],
                 if (i < children.length - 1)
-                  const Divider(
+                  Divider(
                     height: 1,
                     indent: 52,
-                    color: AppColors.grey100,
+                    color: colors.divider,
                   ),
               ],
             ],

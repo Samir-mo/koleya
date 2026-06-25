@@ -65,7 +65,7 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: context.customColors.background,
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             return SingleChildScrollView(
