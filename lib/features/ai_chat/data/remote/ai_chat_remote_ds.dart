@@ -18,7 +18,7 @@ class AssistantRemoteDs {
           'context': {},
         },
       );
-      final data = response.data['data'] as Map<String, dynamic>;
+      final data = response['data'] as Map<String, dynamic>;
       return AssistantReplyModel.fromJson(data);
     } catch (e) {
       ErrorHandler.handleException(e);
