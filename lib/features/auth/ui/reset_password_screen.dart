@@ -1,17 +1,154 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/di/dependency_injection.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/validators.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key});
+  final String resetToken;
+
+  const ResetPasswordScreen({super.key, required this.resetToken});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('Reset Password — coming soon'),
-          ],
+    return BlocProvider(
+      create: (_) => AuthCubit(repo: getIt()),
+      child: _ResetPasswordView(resetToken: resetToken),
+    );
+  }
+}
+
+class _ResetPasswordView extends StatefulWidget {
+  final String resetToken;
+  const _ResetPasswordView({required this.resetToken});
+
+  @override
+  State<_ResetPasswordView> createState() => _ResetPasswordViewState();
+}
+
+class _ResetPasswordViewState extends State<_ResetPasswordView> {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmController.dispose();
+    super.dispose();
+  }
+
+  void _onReset() {
+    if (!_formKey.currentState!.validate()) return;
+    context.read<AuthCubit>().resetPassword(
+          resetToken: widget.resetToken,
+          password: _passwordController.text,
+          passwordConfirm: _confirmController.text,
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.authenticated) {
+          context.pushNamedAndRemoveAll(Routes.mainScaffold);
+        } else if (state.status == AuthStatus.error && state.error != null) {
+          _showError(context, state.error!);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundLight,
+        body: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const AuthHeader(
+                    title: 'Reset Password',
+                    subtitle: 'Create a new secure password',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          _LockIllustration(),
+                          const SizedBox(height: 32),
+                          AuthTextField(
+                            controller: _passwordController,
+                            label: 'New Password',
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            validator: Validators.password,
+                          ),
+                          const SizedBox(height: 16),
+                          AuthTextField(
+                            controller: _confirmController,
+                            label: 'Confirm New Password',
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) => _onReset(),
+                            validator: (v) => Validators.confirmPassword(
+                                v, _passwordController.text),
+                          ),
+                          const SizedBox(height: 28),
+                          AuthPrimaryButton(
+                            label: 'Reset Password',
+                            isLoading: state.isLoading,
+                            onPressed: _onReset,
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.red200,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+}
+
+class _LockIllustration extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: const BoxDecoration(
+          color: AppColors.primary50,
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(
+          Icons.lock_reset_rounded,
+          size: 48,
+          color: AppColors.primary200,
         ),
       ),
     );

@@ -1,201 +1,304 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/di/dependency_injection.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/verify_code_state.dart';
+import 'package:gate_buddy/features/auth/ui/reset_password_screen.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
 
 class GetCodeScreen extends StatelessWidget {
-  final String? email;
-  GetCodeScreen({super.key, this.email});
+  final String email;
 
-  final TextEditingController codeController = TextEditingController();
+  const GetCodeScreen({super.key, required this.email});
 
-  void _showMessage(BuildContext context, String msg, {bool error = true}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: error ? Colors.redAccent : Colors.green,
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => VerifyCodeCubit(repo: getIt()),
+      child: _GetCodeView(email: email),
     );
+  }
+}
+
+class _GetCodeView extends StatefulWidget {
+  final String email;
+  const _GetCodeView({required this.email});
+
+  @override
+  State<_GetCodeView> createState() => _GetCodeViewState();
+}
+
+class _GetCodeViewState extends State<_GetCodeView> {
+  final List<TextEditingController> _controllers =
+      List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
+
+  @override
+  void dispose() {
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    for (final f in _focusNodes) {
+      f.dispose();
+    }
+    super.dispose();
+  }
+
+  String get _code => _controllers.map((c) => c.text).join();
+
+  void _onVerify() {
+    if (_code.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please enter all 6 digits'),
+          backgroundColor: AppColors.amber200,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+      return;
+    }
+    context.read<VerifyCodeCubit>().verifyCode(
+          email: widget.email,
+          code: _code,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-
-    return BlocProvider(
-      create: (_) => VerifyCodeCubit(),
+    return BlocListener<VerifyCodeCubit, VerifyCodeState>(
+      listener: (context, state) {
+        if (state.status == VerifyCodeStatus.success) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+                  ResetPasswordScreen(resetToken: state.resetToken ?? ''),
+            ),
+          );
+        } else if (state.status == VerifyCodeStatus.failure &&
+            state.error != null) {
+          _showError(context, state.error!);
+        }
+      },
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: BlocConsumer<VerifyCodeCubit, VerifyCodeState>(
-          listener: (context, state) {
-            if (state is VerifyCodeSuccess) {
-              _showMessage(context, state.message, error: false);
-              Navigator.pushNamed(context, Routes.resetPassword);
-            } else if (state is VerifyCodeFailure) {
-              _showMessage(context, state.error);
-            }
-          },
+        backgroundColor: AppColors.backgroundLight,
+        body: BlocBuilder<VerifyCodeCubit, VerifyCodeState>(
           builder: (context, state) {
-            final cubit = context.read<VerifyCodeCubit>();
-
-            return Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: height * 0.33,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: context.customColors.infoBackground,
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(130),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 60),
-                        child: Text(
-                          'Gate buddy',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const AuthHeader(
+                    title: 'Enter Reset Code',
+                    subtitle: 'Check your email for the 6-digit code',
                   ),
-                ),
-                Positioned(
-                  top: -60,
-                  right: -60,
-                  child: CircleAvatar(
-                    backgroundColor: context.customColors.infoBackground,
-                    radius: 80,
-                  ),
-                ),
-                Positioned(
-                  top: 50,
-                  left: 16,
-                  child: SafeArea(
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                ),
-                Positioned.fill(
-                  top: height * 0.30,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 20,
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Get your code',
-                          style: AppTextStyles.font20SemiBold,
+                        const SizedBox(height: 8),
+                        _CodeIllustration(),
+                        const SizedBox(height: 24),
+                        _EmailChip(email: widget.email),
+                        const SizedBox(height: 32),
+                        _OtpRow(
+                          controllers: _controllers,
+                          focusNodes: _focusNodes,
                         ),
-                        const SizedBox(height: 40),
-                        TextField(
-                          controller: codeController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            hintText: 'Enter your code',
-                            prefixIcon: Icon(
-                              Icons.confirmation_number,
-                              color: context.customColors.infoBackground,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: context.customColors.infoBackground,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: context.customColors.infoBackground,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
+                        const SizedBox(height: 12),
+                        _ResendButton(email: widget.email),
+                        const SizedBox(height: 32),
+                        AuthPrimaryButton(
+                          label: 'Verify Code',
+                          isLoading: state.isLoading,
+                          onPressed: _onVerify,
                         ),
-                        const SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              cubit.resendCode(email ?? '');
-                              _showMessage(
-                                context,
-                                'Verification code resent ✅',
-                                error: false,
-                              );
-                            },
-                            child: Text(
-                              'Resend code?',
-                              style: TextStyle(
-                                color: context.customColors.infoBackground,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        state is VerifyCodeLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : ElevatedButton(
-                                onPressed: () {
-                                  final code = codeController.text.trim();
-                                  if (code.isEmpty) {
-                                    _showMessage(
-                                      context,
-                                      'Please enter the verification code.',
-                                    );
-                                    return;
-                                  } else if (code.length < 4) {
-                                    _showMessage(
-                                      context,
-                                      'Invalid code. Please check and try again.',
-                                    );
-                                    return;
-                                  }
-                                  cubit.verifyCode(
-                                    email: email ?? '',
-                                    code: code,
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      context.customColors.infoBackground,
-                                  minimumSize: const Size(double.infinity, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Next',
-                                  style: AppTextStyles.font18Bold,
-                                ),
-                              ),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 24),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
       ),
+    );
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.red200,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+}
+
+class _OtpRow extends StatelessWidget {
+  final List<TextEditingController> controllers;
+  final List<FocusNode> focusNodes;
+
+  const _OtpRow({required this.controllers, required this.focusNodes});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(6, (i) => _OtpBox(
+        controller: controllers[i],
+        focusNode: focusNodes[i],
+        onChanged: (v) {
+          if (v.length == 1 && i < 5) {
+            focusNodes[i + 1].requestFocus();
+          } else if (v.isEmpty && i > 0) {
+            focusNodes[i - 1].requestFocus();
+          }
+        },
+      )),
+    );
+  }
+}
+
+class _OtpBox extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final void Function(String) onChanged;
+
+  const _OtpBox({
+    required this.controller,
+    required this.focusNode,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 48,
+      height: 56,
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+        maxLength: 1,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        onChanged: onChanged,
+        style: AppTextStyles.font20Bold.copyWith(color: AppColors.primary200),
+        decoration: InputDecoration(
+          counterText: '',
+          filled: true,
+          fillColor: AppColors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: AppColors.grey100),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: AppColors.grey100),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide:
+                const BorderSide(color: AppColors.primary200, width: 2),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CodeIllustration extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: const BoxDecoration(
+          color: AppColors.primary50,
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(
+          Icons.password_rounded,
+          size: 48,
+          color: AppColors.primary200,
+        ),
+      ),
+    );
+  }
+}
+
+class _EmailChip extends StatelessWidget {
+  final String email;
+  const _EmailChip({required this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.primary50,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.email_outlined,
+              size: 16, color: AppColors.primary200),
+          const SizedBox(width: 8),
+          Text(
+            email,
+            style: AppTextStyles.font14SemiBold.copyWith(
+                color: AppColors.primary200),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ResendButton extends StatelessWidget {
+  final String email;
+  const _ResendButton({required this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Didn't receive the code? ",
+          style: AppTextStyles.font14Regular.copyWith(color: AppColors.grey500),
+        ),
+        GestureDetector(
+          onTap: () {
+            context.read<VerifyCodeCubit>().resendCode(email);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Code resent successfully'),
+                backgroundColor: AppColors.green200,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+            );
+          },
+          child: Text(
+            'Resend',
+            style: AppTextStyles.font14SemiBold.copyWith(
+                color: AppColors.primary200),
+          ),
+        ),
+      ],
     );
   }
 }
