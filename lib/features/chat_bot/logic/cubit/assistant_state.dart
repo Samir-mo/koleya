@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import '../../../core/shared/models/assistant_message.dart';
+
+import '../../../../core/shared/models/assistant_message.dart';
 
 abstract class AssistantState extends Equatable {
   @override
@@ -8,11 +9,17 @@ abstract class AssistantState extends Equatable {
 
 class AssistantInitial extends AssistantState {}
 
-class AssistantLoading extends AssistantState {}
-
 class AssistantLoaded extends AssistantState {
   final List<AssistantMessage> messages;
-  AssistantLoaded(this.messages); // ← بدون const
+  AssistantLoaded(this.messages);
+
+  @override
+  List<Object?> get props => [messages];
+}
+
+class AssistantTyping extends AssistantState {
+  final List<AssistantMessage> messages;
+  AssistantTyping(this.messages);
 
   @override
   List<Object?> get props => [messages];
@@ -20,7 +27,7 @@ class AssistantLoaded extends AssistantState {
 
 class AssistantError extends AssistantState {
   final String message;
-  AssistantError(this.message); // ← بدون const
+  AssistantError(this.message);
 
   @override
   List<Object?> get props => [message];
