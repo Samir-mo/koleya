@@ -1,9 +1,15 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/features/chat_bot/ui/widgets/assistant_app_bar.dart';
+import 'package:gate_buddy/features/chat_bot/ui/widgets/input_bar.dart';
+import 'package:gate_buddy/features/chat_bot/ui/widgets/message_bubble.dart';
+import 'package:gate_buddy/features/chat_bot/ui/widgets/typing_indicator.dart';
 
-import '../../../core/shared/models/assistant_message.dart';
-import '../logic/assistant_cubit.dart';
-import '../logic/assistant_state.dart';
+import '../logic/cubit/assistant_cubit.dart';
+import '../logic/cubit/assistant_state.dart';
 
 class AssistantScreen extends StatelessWidget {
   const AssistantScreen({super.key});
@@ -20,103 +26,138 @@ class _AssistantView extends StatefulWidget {
 }
 
 class _AssistantViewState extends State<_AssistantView> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _inputController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _inputController.dispose();
+    _scrollController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
-  void _sendMessage() {
-    final text = _controller.text.trim();
+  void _send() {
+    final text = _inputController.text.trim();
     if (text.isEmpty) return;
     context.read<AssistantCubit>().sendMessage(text);
-    _controller.clear();
+    _inputController.clear();
+    _scrollToBottom();
   }
 
-  Widget _buildMessage(AssistantMessage msg) {
-    final isUser = msg.sender == 'user';
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isUser ? const Color(0xFF003366) : Colors.blue[50],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          msg.text,
-          style: TextStyle(
-            color: isUser ? Colors.white : Colors.black87,
-            fontSize: 15,
-          ),
-        ),
-      ),
-    );
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Expanded(
-            child: BlocBuilder<AssistantCubit, AssistantState>(
-              builder: (context, state) {
-                final messages = context.read<AssistantCubit>().messages;
-                if (messages.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'Say hi to your Gate Buddy ✈️',
-                      style: TextStyle(color: Colors.black45, fontSize: 16),
-                    ),
+    final colors = context.customColors;
+
+    return Column(
+      children: [
+        AssistantAppBar(),
+        Expanded(
+          child: BlocConsumer<AssistantCubit, AssistantState>(
+            listener: (context, state) {
+              if (state is AssistantLoaded || state is AssistantTyping) {
+                _scrollToBottom();
+              }
+            },
+            builder: (context, state) {
+              final messages = switch (state) {
+                AssistantLoaded s => s.messages,
+                AssistantTyping s => s.messages,
+                _ => context.read<AssistantCubit>().messages,
+              };
+              final isTyping = state is AssistantTyping;
+
+              if (messages.isEmpty) {
+                return _EmptyState(colors: colors);
+              }
+
+              return ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                itemCount: messages.length + (isTyping ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (isTyping && index == messages.length) {
+                    return const TypingIndicator();
+                  }
+                  return MessageBubble(
+                    message: messages[index],
+                    colors: colors,
                   );
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: messages.length,
-                  itemBuilder: (_, i) => _buildMessage(messages[i]),
-                );
-              },
+                },
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: InputBar(
+            controller: _inputController,
+            focusNode: _focusNode,
+            onSend: _send,
+            colors: colors,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final dynamic colors;
+
+  const _EmptyState({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: const BoxDecoration(
+              color: AppColors.primary50,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.smart_toy_rounded,
+              color: AppColors.primary200,
+              size: 40,
             ),
           ),
-          SafeArea(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.black12)),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        hintText: 'Type your message...',
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      onSubmitted: (_) => _sendMessage(),
-                      textInputAction: TextInputAction.send,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  CircleAvatar(
-                    backgroundColor: const Color(0xFF003366),
-                    child: IconButton(
-                      icon: const Icon(Icons.send, color: Colors.white, size: 20),
-                      onPressed: _sendMessage,
-                    ),
-                  ),
-                ],
-              ),
+          const SizedBox(height: 16),
+          Text(
+            'Hi! I\'m GateBuddy ✈️',
+            style: AppTextStyles.font18Bold.copyWith(
+              color: AppColors.primary200,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Ask me anything about your flight,\ngate, or airport services.',
+            textAlign: TextAlign.center,
+            style: AppTextStyles.font14Regular.copyWith(
+              color: colors.textSecondary,
+              height: 1.6,
             ),
           ),
         ],
