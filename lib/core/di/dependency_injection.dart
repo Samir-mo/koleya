@@ -5,8 +5,10 @@ import 'package:gate_buddy/core/api/dio_consumer.dart';
 import 'package:gate_buddy/features/auth/data/remote/auth_remote_ds.dart';
 import 'package:gate_buddy/features/auth/data/repo/auth_repo_impl.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/chat_bot/data/repo/assistant_repository.dart';
-import 'package:gate_buddy/features/chat_bot/logic/assistant_cubit.dart';
+import 'package:gate_buddy/features/chat_bot/data/remote/assistant_remote_ds.dart';
+import 'package:gate_buddy/features/chat_bot/data/repo/assistant_repo.dart';
+import 'package:gate_buddy/features/chat_bot/data/repo/assistant_repo_impl.dart';
+import 'package:gate_buddy/features/chat_bot/logic/cubit/assistant_cubit.dart';
 import 'package:gate_buddy/features/explore_places/data/remote/explore_places_remote_ds.dart';
 import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo_impl.dart';
 import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
@@ -72,10 +74,13 @@ Future<void> setUpDependencies() async {
 
   // ── Chat Bot / Assistant ──────────────────────────────────────────────────
   getIt.registerLazySingleton(
-    () => AssistantRepository(api: getIt<ApiConsumer>()),
+    () => AssistantRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<AssistantRepo>(
+    () => AssistantRepoImpl(remoteDs: getIt<AssistantRemoteDs>()),
   );
   getIt.registerLazySingleton(
-    () => AssistantCubit(assistantRepo: getIt<AssistantRepository>()),
+    () => AssistantCubit(repo: getIt<AssistantRepo>()),
   );
 
   // ── Indoor Map ────────────────────────────────────────────────────────────
