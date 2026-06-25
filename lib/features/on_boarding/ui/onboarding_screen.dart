@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/cubit/onboarding_cubit.dart';
-import 'package:gate_buddy/cubit/onboarding_state.dart';
 import 'package:gate_buddy/data/storage/storage_helper.dart';
+import 'package:gate_buddy/features/on_boarding/logic/cubit/onboarding_cubit.dart';
+import 'package:gate_buddy/features/on_boarding/logic/cubit/onboarding_state.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
