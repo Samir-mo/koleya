@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
-import 'package:gate_buddy/features/chat_bot/logic/assistant_cubit.dart';
+import 'package:gate_buddy/features/chat_bot/logic/cubit/assistant_cubit.dart';
 import 'package:gate_buddy/features/chat_bot/ui/assistant_screen.dart';
 import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
 import 'package:gate_buddy/features/explore_places/ui/explore_places_screen.dart';
@@ -109,7 +109,7 @@ class _MainScaffoldState extends State<MainScaffold> {
         border: Border(top: BorderSide(color: Colors.grey.shade200)),
       ),
       handleAndroidBackButtonPress: true,
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
     );
   }
 }
