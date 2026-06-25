@@ -112,7 +112,7 @@ Future<void> setUpDependencies() async {
   getIt.registerLazySingleton<FlightsRepo>(
     () => FlightsRepoImpl(remoteDs: getIt<FlightsRemoteDs>()),
   );
-  getIt.registerFactory(() => FlightsCubit());
+  getIt.registerFactory(() => FlightsCubit(repo: getIt<FlightsRepo>()));
 
   // ── Notifications ─────────────────────────────────────────────────────────
   getIt.registerFactory(() => NotificationsCubit());
