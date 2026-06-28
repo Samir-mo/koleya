@@ -8,6 +8,7 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/ui/dialogs/app_dialogs.dart';
 import 'package:gate_buddy/features/auth/data/models/user_model.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
@@ -124,68 +125,21 @@ class _ProfileView extends StatelessWidget {
   }
 
   void _showLogoutDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you want to log out?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              context.read<AuthCubit>().logout();
-            },
-            child: Text('Log Out',
-                style: AppTextStyles.font14SemiBold.copyWith(
-                    color: AppColors.white)),
-          ),
-        ],
-      ),
+    AppDialogs.showConfirm(
+      context,
+      title: 'profile.logout_title'.tr(),
+      message: 'profile.logout_message'.tr(),
+      confirmText: 'common.yes'.tr(),
+      cancelText: 'common.no'.tr(),
+      onConfirm: () => context.read<AuthCubit>().logout(),
     );
   }
 
   void _showDeleteDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Account'),
-        content: const Text(
-          'This action is irreversible. All your data will be permanently deleted.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.red200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              context.read<AuthCubit>().deleteAccount();
-            },
-            child: Text('Delete',
-                style: AppTextStyles.font14SemiBold.copyWith(
-                    color: AppColors.white)),
-          ),
-        ],
-      ),
+    AppDialogs.showWarning(
+      context,
+      message: 'profile.delete_account_message'.tr(),
+      onPressed: () => context.read<AuthCubit>().deleteAccount(),
     );
   }
 
@@ -310,45 +264,10 @@ class _ProfileView extends StatelessWidget {
   }
 
   void _showAboutDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.secondary200,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.flight_rounded,
-                  color: AppColors.white, size: 20),
-            ),
-            const SizedBox(width: 10),
-            const Text('GateBuddy'),
-          ],
-        ),
-        content: Text(
-          'GateBuddy is your AI-powered airport companion — helping you track flights, navigate terminals, and get real-time updates.\n\nVersion 1.0.0',
-          style: AppTextStyles.font14Regular,
-        ),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () => Navigator.pop(context),
-            child: Text('Close',
-                style: AppTextStyles.font14SemiBold.copyWith(
-                    color: AppColors.white)),
-          ),
-        ],
-      ),
+    AppDialogs.showInfo(
+      context,
+      title: 'profile.about_title'.tr(),
+      message: 'profile.about_message'.tr(),
     );
   }
 }

@@ -55,15 +55,7 @@ class _GetCodeViewState extends State<_GetCodeView> {
 
   void _onVerify() {
     if (_code.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('auth.get_code.error'.tr()),
-          backgroundColor: AppColors.amber200,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      context.showErrorSnackBar('auth.get_code.error'.tr());
       return;
     }
     context.read<VerifyCodeCubit>().verifyCode(
@@ -278,15 +270,7 @@ class _ResendButton extends StatelessWidget {
         GestureDetector(
           onTap: () {
             context.read<VerifyCodeCubit>().resendCode(email);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('auth.get_code.success'.tr()),
-                backgroundColor: AppColors.green200,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-            );
+            context.showSuccessSnackBar('auth.get_code.success'.tr());
           },
           child: Text(
             'auth.get_code.resend_link'.tr(),

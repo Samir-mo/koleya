@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
@@ -47,25 +48,9 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
       listener: (context, state) {
         if (state.status == AuthStatus.authenticated) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('profile.update_success'.tr()),
-              backgroundColor: AppColors.green200,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(rr(10))),
-            ),
-          );
+          context.showSuccessSnackBar('profile.update_success'.tr());
         } else if (state.status == AuthStatus.error && state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error!),
-              backgroundColor: AppColors.red200,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(rr(10))),
-            ),
-          );
+          context.showErrorSnackBar(state.error!);
         }
       },
       child: Padding(

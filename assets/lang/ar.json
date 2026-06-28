@@ -1,6 +1,14 @@
 {
   "app_title": "تطبيقي",
   "welcome": "مرحباً",
+  "common": {
+    "yes": "نعم",
+    "no": "لا",
+    "ok": "حسنا",
+    "cancel": "إلغاء",
+    "retry": "إعادة محاولة",
+    "close": "إغلاق"
+  },
   "errors": {
     "error_screen_title": "خطأ",
     "error_screen_desc": "حدث خطأ. يرجى المحاولة مرة أخرى.",
@@ -150,7 +158,12 @@
     "login_button": "تسجيل الدخول",
     "edit_title": "تحرير الملف الشخصي",
     "update_success": "تم تحديث الملف الشخصي",
-    "settings_coming_soon": "الإعدادات — قريباً"
+    "settings_coming_soon": "الإعدادات — قريباً",
+    "logout_title": "تسجيل الخروج",
+    "logout_message": "هل تأكد من رغبتك في تسجيل الخروج؟",
+    "delete_account_message": "هذا الإجراء لا يمكن عكسه. سيتم حذف جميع بيانات بشكل دائم.",
+    "about_title": "GateBuddy",
+    "about_message": "GateBuddy هو رفيقك في المطار القوي بالذكاء الاصطناعي — يساعدك على تتبع الرحلات والملاحة في الطرامات والحصول على التحديثات في الوقت الفعلي.\n\nالإصدار 1.0.0"
   },
   "flights": {
     "search_placeholder": "ابحث برقم الرحلة أو اسم شركة الطيران...",
