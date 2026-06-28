@@ -258,45 +258,81 @@ Text('...', style: style.copyWith(color: colors.textPrimary))
 
 All constants live in `lib/core/api/api_endpoints.dart`.
 
+**Base URLs:**
+- Dev: `http://localhost:3001/api/v1`
+- Prod: `https://gate-buddy-backend-production.up.railway.app/api/v1`
+
+**Auth:** Bearer JWT — `Authorization: Bearer {token}` (injected automatically by `AuthInterceptor`)  
+**Rate limit:** 100 req / 15 min  
+**Response format:** JSend
+
+```json
+// Success
+{ "status": "success", "data": { } }
+// Fail (client error)
+{ "status": "fail", "message": "...", "statusCode": 400 }
+// Error (server error)
+{ "status": "error", "message": "...", "statusCode": 500 }
 ```
-Auth
-  POST   /users/signup
-  POST   /users/login
-  POST   /users/logout
-  POST   /users/forgotPassword
-  POST   /users/verifyResetCode        → returns { data: { resetToken } }
-  PATCH  /users/resetPassword/:token
-  GET    /users/me                     → { data: { user: {...} } }
-  PATCH  /users/updateMe
-  DELETE /users/deleteMe
 
-Flights
-  GET    /flights                      → { data: { flights: [...] } }
-  GET    /flights/search?q=
-  GET    /flights/updated
-  GET    /flights/:id                  → { data: { flight: {...} } }
-  POST   /flights/:id/track
-  DELETE /flights/:id/track
+### Auth & Users (🔐 = requires Bearer token)
 
-Services
-  GET    /services?limit=200
-  GET    /services/:id
-  GET    /services/vip-lounges
+| Method | Path | Auth | Request body / Notes |
+|--------|------|------|----------------------|
+| POST | `/users/signup` | ❌ | `{ name, email, password, passwordConfirm }` — returns JWT |
+| POST | `/users/login` | ❌ | `{ email, password }` — returns JWT |
+| POST | `/users/logout` | 🔐 | Invalidates session |
+| POST | `/users/refreshToken` | ❌ | `{ refreshToken }` — returns new access token |
+| POST | `/users/oauth` | ❌ | `{ provider: "google"\|"github"\|"facebook", idToken }` |
+| GET | `/users/me` | 🔐 | Returns `{ data: { user: {...} } }` |
+| PATCH | `/users/updateMe` | 🔐 | `{ name?, photo? }` |
+| PATCH | `/users/updatePassword` | 🔐 | `{ passwordCurrent, password, passwordConfirm }` |
+| DELETE | `/users/deleteMe` | 🔐 | Soft-delete current user |
+| POST | `/users/forgotPassword` | ❌ | Sends reset email |
+| POST | `/users/resetPassword` | ❌ | Resets password with token |
 
-Places / Explore
-  GET    /places
+### Flights ✈️
 
-AI Chat
-  POST   /chat/query                   → { data: { reply, ... } }
+> **Note:** Flight times are shifted +6h for testing. Flights auto-expire 1h after scheduled departure (TTL).
 
-Search
-  GET    /search?q=
+| Method | Path | Auth | Notes |
+|--------|------|------|-------|
+| GET | `/flights` | 🔐 | Query: `limit`, `page`, `departure`, `status` |
+| GET | `/flights/search` | 🔐 | Query: `departure`, `arrival`, `date` (YYYY-MM-DD) |
+| POST | `/flights/filter` | 🔐 | Body: `{ filters: { status, delayMin, delayMax, gates[] } }` |
+| POST | `/flights/:id/track` | 🔐 | Body: `{ boardingPassNumber }` |
+| GET | `/flights/:id/updates` | 🔐 | Audit trail — query: `limit` |
+| POST | `/flights/scanBoardingPass` | 🔐 | Body: `{ boardingPassData }` — auto-tracks flight |
 
-Notifications
-  GET    /notifications
-  POST   /notifications/subscribe
-  PATCH  /notifications/:id/read
-```
+**Flight status values:** `scheduled` | `boarding` | `delayed` | `departed` | `landed` | `cancelled`
+
+### Services 🏢
+
+| Method | Path | Auth | Notes |
+|--------|------|------|-------|
+| GET | `/services` | 🔐 | Query: `airport`, `type`, `minRating`, `limit` |
+| GET | `/services/:id` | 🔐 | Query: `includeReviews=true` for reviews |
+| POST | `/services/search` | 🔐 | Body: `{ query, airport?, type? }` |
+| POST | `/services/filter` | 🔐 | Body: `{ filters: { type, minRating, priceLevel[], airport, cuisine[], hasWifi, hasUSB } }` |
+| POST | `/services/:id/rate` | 🔐 | Body: `{ rating: 1-5, review? }` |
+
+**Service type values:** `restaurant` | `lounge` | `shop` | `pharmacy` | `bank` | `prayer_room` | `accessibility`
+
+### Notifications 🔔
+
+| Method | Path | Auth | Notes |
+|--------|------|------|-------|
+| GET | `/notifications` | 🔐 | Query: `limit`, `unreadOnly`, `type` (`flight_update`\|`service_alert`\|`general`) |
+| PATCH | `/notifications/:id` | 🔐 | Body: `{ read: true }` |
+
+### Other
+
+| Method | Path | Auth | Notes |
+|--------|------|------|-------|
+| GET | `/chat/query` | 🔐 | AI assistant query |
+| GET | `/places` | 🔐 | Explore places |
+| GET | `/search` | 🔐 | Global search — query: `q` |
+| GET | `/stats/dashboard` | 🔐 (admin) | System-wide stats |
 
 ---
 
@@ -304,17 +340,23 @@ Notifications
 
 | Feature | API status | Notes |
 |---|---|---|
-| Auth (login/signup/forgot/reset) | ✅ wired | Full flow working |
-| Flights list + search | ✅ wired | Pagination: `page` + `limit` |
+| Auth — login / signup / forgot / reset | ✅ wired | Full flow working |
+| Auth — `updatePassword` | ⚠️ not wired | `PATCH /users/updatePassword` exists — add to profile settings |
+| Auth — `refreshToken` | ⚠️ not wired | `POST /users/refreshToken` — no auto-refresh interceptor yet |
+| Auth — OAuth | ⚠️ not wired | `POST /users/oauth` exists — not implemented |
+| Flights list + filter | ✅ wired | `GET /flights` + `POST /flights/filter`, pagination via `page` + `limit` |
+| Flights search | ✅ wired | `GET /flights/search?departure=&arrival=&date=` |
+| Flight tracking | ⚠️ stub | `POST /flights/:id/track` + `POST /flights/scanBoardingPass` exist — not wired |
+| Flight updates audit | ⚠️ not wired | `GET /flights/:id/updates` — not wired |
 | Explore Places | ✅ wired | `GET /places` |
-| Indoor Map | ✅ wired | `GET /services` (category filter) |
-| AI Assistant | ✅ wired | `POST /chat/query` |
-| Home dashboard | ⚠️ mock data | `HomeCubit.loadDashboard()` returns hardcoded data — not yet connected to `/home` |
-| Notifications | ⚠️ stub | `NotificationsCubit` registered but not wired to real API |
-| Tracked Flights | ⚠️ stub | `TrackedFlightCubit` registered, screen exists, API not wired |
-| Search | ⚠️ stub | `SearchCubit` registered, screen exists, API not wired |
-| Services detail screens | ⚠️ static | VIP / Accessibility / Financial / Counters show static UI |
-| Profile | ✅ wired | Uses `AuthCubit` directly — no separate ProfileCubit needed |
+| Indoor Map / Services | ✅ wired | `GET /services` with category filter |
+| Services search + filter | ⚠️ not wired | `POST /services/search` + `POST /services/filter` endpoints available |
+| Services rating | ⚠️ not wired | `POST /services/:id/rate` available |
+| AI Assistant | ✅ wired | `GET /chat/query` |
+| Home dashboard | ⚠️ mock data | No `/home` endpoint — `HomeCubit` returns hardcoded data |
+| Notifications | ⚠️ stub | `GET /notifications` + `PATCH /notifications/:id` — not wired |
+| Search | ⚠️ stub | `GET /search?q=` exists — `SearchCubit` not wired |
+| Profile (view + update name/photo) | ✅ wired | Uses `AuthCubit.updateMe()` → `PATCH /users/updateMe` |
 | Settings (theme/locale) | ✅ wired | Persisted via `HydratedBloc` |
 
 ---
@@ -499,14 +541,19 @@ getIt.registerFactory(() => FeatureCubit(repo: getIt<FeatureRepo>()));
 
 ## Pending Work
 
-| Item | Notes |
-|---|---|
-| Home dashboard | Wire `HomeCubit` to real `GET /home` API — currently returns hardcoded mock data |
-| NotificationsCubit | Connect to `GET /notifications`, `PATCH /notifications/:id/read` |
-| TrackedFlightCubit | Connect to `GET /flights/tracked`, `POST/DELETE /flights/:id/track` |
-| SearchCubit | Connect to `GET /search?q=` |
-| ServicesCubit | Connect to `GET /services?limit=200` |
-| ProfileCubit | Either implement or remove the stub DI registration |
-| Profile stats row | Tracked / Flights / Alerts show `—` — wire when those features are done |
-| `lib/data/storage/` | Stale path — migrate any files here to `lib/core/service/` |
-| Phase 3 UI | Waiting for Figma designs |
+| Item | API endpoint | Priority |
+|---|---|---|
+| Token refresh interceptor | `POST /users/refreshToken` | High — 401s mid-session |
+| Notifications list + mark read | `GET /notifications`, `PATCH /notifications/:id` | High |
+| Flight tracking (track + scan) | `POST /flights/:id/track`, `POST /flights/scanBoardingPass` | High |
+| Search | `GET /search?q=` | Medium |
+| Services search + filter | `POST /services/search`, `POST /services/filter` | Medium |
+| Services rating | `POST /services/:id/rate` | Medium |
+| Change password in profile settings | `PATCH /users/updatePassword` | Medium |
+| Flight updates audit trail | `GET /flights/:id/updates` | Low |
+| OAuth login | `POST /users/oauth` | Low |
+| Home dashboard | No backend endpoint — decide on design | Low |
+| Profile stats row | Wire Tracked/Flights/Alerts counts when above features done | Low |
+| Remove `ProfileCubit` stub from DI | Profile reads `AuthCubit` directly | Low |
+| Migrate `lib/data/storage/` | Move files to `lib/core/service/` | Cleanup |
+| Phase 3 UI | Waiting for Figma designs | Blocked |
