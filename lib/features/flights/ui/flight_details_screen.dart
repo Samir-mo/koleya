@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 import '../data/models/flight_model.dart';
 import '../logic/cubit/flights_cubit.dart';
@@ -44,32 +46,32 @@ class _FlightDetailsView extends StatelessWidget {
           _DetailAppBar(flight: flight, isTracking: isTracking),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(rw(16)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _StatusCard(flight: flight),
-                  const SizedBox(height: 16),
+                  SizedBox(height: rh(16)),
                   _RouteCard(flight: flight, colors: colors),
-                  const SizedBox(height: 16),
+                  SizedBox(height: rh(16)),
                   _ScheduleSection(
-                    title: 'Departure',
+                    title: 'flights.departure'.tr(),
                     icon: Icons.flight_takeoff_rounded,
                     schedule: flight.departure,
                     colors: colors,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: rh(12)),
                   _ScheduleSection(
-                    title: 'Arrival',
+                    title: 'flights.arrival'.tr(),
                     icon: Icons.flight_land_rounded,
                     schedule: flight.arrival,
                     colors: colors,
                   ),
                   if (flight.updates.isNotEmpty) ...[
-                    const SizedBox(height: 16),
+                    SizedBox(height: rh(16)),
                     _UpdatesSection(updates: flight.updates, colors: colors),
                   ],
-                  const SizedBox(height: 100),
+                  SizedBox(height: rh(100)),
                 ],
               ),
             ),

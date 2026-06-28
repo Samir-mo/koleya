@@ -151,5 +151,13 @@
     "edit_title": "تحرير الملف الشخصي",
     "update_success": "تم تحديث الملف الشخصي",
     "settings_coming_soon": "الإعدادات — قريباً"
+  },
+  "flights": {
+    "search_placeholder": "ابحث برقم الرحلة أو اسم شركة الطيران...",
+    "departure": "المغادرة",
+    "arrival": "الوصول"
+  },
+  "tracked_flight": {
+    "coming_soon": "الرحلة المتابعة — قريباً"
   }
 }

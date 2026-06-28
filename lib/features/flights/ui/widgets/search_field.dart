@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/flights/logic/cubit/flights_cubit.dart';
 
 class SearchField extends StatelessWidget {
@@ -10,33 +12,34 @@ class SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return TextField(
       controller: controller,
       autofocus: true,
-      style: AppTextStyles.font14Regular.copyWith(color: AppColors.grey700),
+      style: AppTextStyles.font14Regular.copyWith(color: colors.textPrimary),
       decoration: InputDecoration(
-        hintText: 'Search by flight number, airline...',
+        hintText: 'flights.search_placeholder'.tr(),
         hintStyle: AppTextStyles.font14Regular.copyWith(
-          color: AppColors.grey400,
+          color: colors.textHint,
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Icons.search,
-          color: AppColors.grey400,
+          color: colors.textHint,
           size: 20,
         ),
         filled: true,
-        fillColor: AppColors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 10),
+        fillColor: colors.surface,
+        contentPadding: EdgeInsets.symmetric(vertical: rh(10)),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(rr(12)),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(rr(12)),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(rr(12)),
           borderSide: BorderSide.none,
         ),
       ),

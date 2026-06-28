@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import '../../data/models/flight_model.dart';
 import '../../logic/cubit/flights_cubit.dart';
 
@@ -23,10 +24,10 @@ class FlightCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: rh(12)),
         decoration: BoxDecoration(
           color: colors.surface,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(rr(14)),
           border: Border.all(color: colors.border),
           boxShadow: [
             BoxShadow(
@@ -40,24 +41,24 @@ class FlightCard extends StatelessWidget {
           children: [
             // ── Status bar ──────────────────────────────────────────────────
             Container(
-              height: 5,
+              height: rh(5),
               decoration: BoxDecoration(
                 color: _statusColor(flight.status),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(14),
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(rr(14)),
                 ),
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(rw(14)),
               child: Column(
                 children: [
                   // ── Row 1: Airline + track button ────────────────────────
                   Row(
                     children: [
                       _AirlineLogo(logoUrl: flight.airline.logo),
-                      const SizedBox(width: 10),
+                      SizedBox(width: rw(10)),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +81,7 @@ class FlightCard extends StatelessWidget {
                         ),
                       ),
                       _StatusBadge(status: flight.status),
-                      const SizedBox(width: 8),
+                      SizedBox(width: rw(8)),
                       _TrackButton(
                         flight: flight,
                         isLoading: isTracking,
@@ -88,12 +89,12 @@ class FlightCard extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: rh(14)),
 
                   // ── Row 2: Route ─────────────────────────────────────────
                   _RouteRow(flight: flight, colors: colors),
 
-                  const SizedBox(height: 12),
+                  SizedBox(height: rh(12)),
 
                   // ── Row 3: Gate / Terminal / Type ────────────────────────
                   Row(
@@ -104,7 +105,7 @@ class FlightCard extends StatelessWidget {
                             'Gate ${flight.departure.gate ?? flight.arrival.gate ?? '—'}',
                         colors: colors,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: rw(8)),
                       _InfoChip(
                         icon: Icons.business_outlined,
                         label:
@@ -113,13 +114,13 @@ class FlightCard extends StatelessWidget {
                       ),
                       const Spacer(),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: rw(8),
+                          vertical: rh(3),
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.primary50,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(rr(6)),
                         ),
                         child: Text(
                           flight.type.toUpperCase(),
@@ -134,7 +135,7 @@ class FlightCard extends StatelessWidget {
 
                   // ── Updates badge ────────────────────────────────────────
                   if (flight.updates.isNotEmpty) ...[
-                    const SizedBox(height: 10),
+                    SizedBox(height: rh(10)),
                     _UpdatesBadge(update: flight.updates.first),
                   ],
                 ],

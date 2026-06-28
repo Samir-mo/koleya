@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 import 'package:gate_buddy/features/flights/logic/cubit/flights_cubit.dart';
 import 'package:gate_buddy/features/flights/logic/cubit/flights_state.dart';
@@ -26,7 +27,7 @@ class FlightList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (status == FlightsStatus.loading && flights.isEmpty) {
       return ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(rw(16)),
         itemCount: 5,
         itemBuilder: (_, __) => const FlightCardShimmer(),
       );
@@ -46,7 +47,7 @@ class FlightList extends StatelessWidget {
       color: AppColors.primary200,
       onRefresh: () => context.read<FlightsCubit>().loadFlights(),
       child: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(rw(16)),
         itemCount: flights.length,
         itemBuilder: (_, i) => FlightCard(
           flight: flights[i],

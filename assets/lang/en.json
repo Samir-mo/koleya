@@ -151,5 +151,13 @@
     "edit_title": "Edit Profile",
     "update_success": "Profile updated",
     "settings_coming_soon": "Settings — coming soon"
+  },
+  "flights": {
+    "search_placeholder": "Search by flight number, airline...",
+    "departure": "Departure",
+    "arrival": "Arrival"
+  },
+  "tracked_flight": {
+    "coming_soon": "Tracked Flight — coming soon"
   }
 }

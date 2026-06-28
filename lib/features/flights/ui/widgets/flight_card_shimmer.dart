@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class FlightCardShimmer extends StatefulWidget {
   const FlightCardShimmer({super.key});
@@ -36,10 +37,10 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
     return AnimatedBuilder(
       animation: _animation,
       builder: (_, __) => Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: rh(12)),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(rr(14)),
           border: Border.all(color: AppColors.grey100),
         ),
         child: Column(
