@@ -66,7 +66,7 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
           );
         } else if (state.status == ForgetPasswordStatus.failure &&
             state.error != null) {
-          _showError(context, state.error!);
+          context.showErrorSnackBar(state.error!);
         }
       },
       child: Scaffold(
@@ -131,16 +131,6 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
     );
   }
 
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.red200,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
 }
 
 class _EnvelopeIllustration extends StatelessWidget {

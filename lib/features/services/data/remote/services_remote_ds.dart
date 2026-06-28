@@ -1,32 +1,17 @@
 ﻿import 'package:gate_buddy/core/api/api_consumer.dart';
 import 'package:gate_buddy/core/api/api_endpoints.dart';
-import 'package:gate_buddy/core/errors/error_handler.dart';
+import 'package:gate_buddy/core/data/base_remote_ds.dart';
 
-class ServicesRemoteDs {
+class ServicesRemoteDs with BaseRemoteDs {
   final ApiConsumer api;
   ServicesRemoteDs({required this.api});
 
-  Future<dynamic> getServices() async {
-    try {
-      return await api.get(ApiEndpoints.services);
-    } catch (e) {
-      ErrorHandler.handle(e);
-    }
-  }
+  Future<dynamic> getServices() =>
+      execute(() => api.get(ApiEndpoints.services));
 
-  Future<dynamic> getServiceById(String id) async {
-    try {
-      return await api.get(ApiEndpoints.serviceById.replaceFirst(':id', id));
-    } catch (e) {
-      ErrorHandler.handle(e);
-    }
-  }
+  Future<dynamic> getServiceById(String id) =>
+      execute(() => api.get(ApiEndpoints.serviceById.replaceFirst(':id', id)));
 
-  Future<dynamic> getVipLounges() async {
-    try {
-      return await api.get(ApiEndpoints.vipLounges);
-    } catch (e) {
-      ErrorHandler.handle(e);
-    }
-  }
+  Future<dynamic> getVipLounges() =>
+      execute(() => api.get(ApiEndpoints.vipLounges));
 }

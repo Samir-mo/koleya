@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state.status == AuthStatus.authenticated) {
           context.pushNamedAndRemoveAll(Routes.mainScaffold);
         } else if (state.status == AuthStatus.error && state.error != null) {
-          _showError(context, state.error!);
+          context.showErrorSnackBar(state.error!);
         }
       },
       child: Scaffold(
@@ -164,15 +164,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.red200,
-        behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
 }

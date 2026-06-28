@@ -86,7 +86,7 @@ class _GetCodeViewState extends State<_GetCodeView> {
           );
         } else if (state.status == VerifyCodeStatus.failure &&
             state.error != null) {
-          _showError(context, state.error!);
+          context.showErrorSnackBar(state.error!);
         }
       },
       child: Scaffold(
@@ -134,16 +134,6 @@ class _GetCodeViewState extends State<_GetCodeView> {
     );
   }
 
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.red200,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
 }
 
 class _OtpRow extends StatelessWidget {
