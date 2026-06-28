@@ -3,6 +3,8 @@
   "welcome": "Welcome",
   "errors": {
     "error_screen_title": "Error",
+    "error_screen_desc": "Something went wrong. Please try again.",
+    "error_screen_button": "Retry",
     "no_internet": "No internet connection. Please check your network.",
     "timeout": "Request timeout. Please try again.",
     "connection_error": "Connection error. Please check your internet connection.",
@@ -28,6 +30,33 @@
     "file_too_large": "File is too large.",
     "user_disabled": "This account has been disabled.",
     "operation_not_allowed": "This operation is not allowed."
+  },
+  "validators": {
+    "required": "{} is required",
+    "email_required": "Email is required",
+    "email_invalid": "Please enter a valid email address",
+    "password_required": "Password is required",
+    "password_min_length": "Password must be at least {} characters",
+    "password_uppercase": "Password must contain at least one uppercase letter",
+    "password_lowercase": "Password must contain at least one lowercase letter",
+    "password_number": "Password must contain at least one number",
+    "password_special_char": "Password must contain at least one special character",
+    "password_confirm_required": "Please confirm your password",
+    "password_mismatch": "Passwords do not match",
+    "phone_required": "Phone number is required",
+    "phone_invalid": "Please enter a valid phone number",
+    "min_length": "{} must be at least {} characters",
+    "max_length": "{} must not exceed {} characters",
+    "numeric": "{} must be a number",
+    "url_required": "URL is required",
+    "url_invalid": "Please enter a valid URL",
+    "credit_card_required": "Credit card number is required",
+    "credit_card_invalid": "Please enter a valid credit card number",
+    "date_required": "Date is required",
+    "date_format": "Please enter date in format dd/MM/yyyy",
+    "date_invalid": "Invalid date",
+    "date_month_invalid": "Invalid month",
+    "date_day_invalid": "Invalid day"
   },
   "about": {
     "sections": {

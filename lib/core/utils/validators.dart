@@ -1,21 +1,20 @@
+import 'package:easy_localization/easy_localization.dart';
+
 /// Form Validators
 /// Provides validation functions for common form fields
 class Validators {
-  // Private constructor to prevent instantiation
   Validators._();
 
-  /// Validates if field is not empty
   static String? required(final String? value, {final String? fieldName}) {
     if (value == null || value.trim().isEmpty) {
-      return '${fieldName ?? 'This field'} is required';
+      return 'validators.required'.tr(args: [fieldName ?? 'field']);
     }
     return null;
   }
 
-  /// Validates email format
   static String? email(final String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required';
+      return 'validators.email_required'.tr();
     }
 
     final emailRegex = RegExp(
@@ -23,87 +22,83 @@ class Validators {
     );
 
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return 'validators.email_invalid'.tr();
     }
 
     return null;
   }
 
-  /// Validates password strength
   static String? password(final String? value, {final int minLength = 8}) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return 'validators.password_required'.tr();
     }
 
     if (value.length < minLength) {
-      return 'Password must be at least $minLength characters';
+      return 'validators.password_min_length'.tr(args: [minLength.toString()]);
     }
 
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'Password must contain at least one uppercase letter';
+      return 'validators.password_uppercase'.tr();
     }
 
     if (!value.contains(RegExp(r'[a-z]'))) {
-      return 'Password must contain at least one lowercase letter';
+      return 'validators.password_lowercase'.tr();
     }
 
     if (!value.contains(RegExp(r'[0-9]'))) {
-      return 'Password must contain at least one number';
+      return 'validators.password_number'.tr();
     }
 
     if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      return 'Password must contain at least one special character';
+      return 'validators.password_special_char'.tr();
     }
 
     return null;
   }
 
-  /// Validates if passwords match
   static String? confirmPassword(final String? value, final String? password) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return 'validators.password_confirm_required'.tr();
     }
 
     if (value != password) {
-      return 'Passwords do not match';
+      return 'validators.password_mismatch'.tr();
     }
 
     return null;
   }
 
-  /// Validates phone number
   static String? phone(final String? value) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required';
+      return 'validators.phone_required'.tr();
     }
 
     final phoneRegex = RegExp(r'^\+?[0-9]{10,15}$');
 
     if (!phoneRegex.hasMatch(value.replaceAll(RegExp(r'[\s-]'), ''))) {
-      return 'Please enter a valid phone number';
+      return 'validators.phone_invalid'.tr();
     }
 
     return null;
   }
 
-  /// Validates minimum length
   static String? minLength(
     final String? value,
     final int length, {
     final String? fieldName,
   }) {
     if (value == null || value.isEmpty) {
-      return '${fieldName ?? 'This field'} is required';
+      return 'validators.required'.tr(args: [fieldName ?? 'field']);
     }
 
     if (value.length < length) {
-      return '${fieldName ?? 'This field'} must be at least $length characters';
+      return 'validators.min_length'
+          .tr(args: [fieldName ?? 'field', length.toString()]);
     }
 
     return null;
   }
 
-  /// Validates maximum length
   static String? maxLength(
     final String? value,
     final int length, {
@@ -114,29 +109,28 @@ class Validators {
     }
 
     if (value.length > length) {
-      return '${fieldName ?? 'This field'} must not exceed $length characters';
+      return 'validators.max_length'
+          .tr(args: [fieldName ?? 'field', length.toString()]);
     }
 
     return null;
   }
 
-  /// Validates numeric input
   static String? numeric(final String? value, {final String? fieldName}) {
     if (value == null || value.isEmpty) {
-      return '${fieldName ?? 'This field'} is required';
+      return 'validators.required'.tr(args: [fieldName ?? 'field']);
     }
 
     if (double.tryParse(value) == null) {
-      return '${fieldName ?? 'This field'} must be a number';
+      return 'validators.numeric'.tr(args: [fieldName ?? 'field']);
     }
 
     return null;
   }
 
-  /// Validates URL format
   static String? url(final String? value) {
     if (value == null || value.isEmpty) {
-      return 'URL is required';
+      return 'validators.url_required'.tr();
     }
 
     final urlRegex = RegExp(
@@ -144,25 +138,23 @@ class Validators {
     );
 
     if (!urlRegex.hasMatch(value)) {
-      return 'Please enter a valid URL';
+      return 'validators.url_invalid'.tr();
     }
 
     return null;
   }
 
-  /// Validates credit card number
   static String? creditCard(final String? value) {
     if (value == null || value.isEmpty) {
-      return 'Credit card number is required';
+      return 'validators.credit_card_required'.tr();
     }
 
     final cardNumber = value.replaceAll(RegExp(r'[\s-]'), '');
 
     if (cardNumber.length < 13 || cardNumber.length > 19) {
-      return 'Please enter a valid credit card number';
+      return 'validators.credit_card_invalid'.tr();
     }
 
-    // Luhn algorithm
     int sum = 0;
     bool alternate = false;
 
@@ -181,22 +173,21 @@ class Validators {
     }
 
     if (sum % 10 != 0) {
-      return 'Please enter a valid credit card number';
+      return 'validators.credit_card_invalid'.tr();
     }
 
     return null;
   }
 
-  /// Validates date format (dd/MM/yyyy)
   static String? date(final String? value) {
     if (value == null || value.isEmpty) {
-      return 'Date is required';
+      return 'validators.date_required'.tr();
     }
 
     final dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
 
     if (!dateRegex.hasMatch(value)) {
-      return 'Please enter date in format dd/MM/yyyy';
+      return 'validators.date_format'.tr();
     }
 
     final parts = value.split('/');
@@ -205,21 +196,20 @@ class Validators {
     final year = int.tryParse(parts[2]);
 
     if (day == null || month == null || year == null) {
-      return 'Invalid date';
+      return 'validators.date_invalid'.tr();
     }
 
     if (month < 1 || month > 12) {
-      return 'Invalid month';
+      return 'validators.date_month_invalid'.tr();
     }
 
     if (day < 1 || day > 31) {
-      return 'Invalid day';
+      return 'validators.date_day_invalid'.tr();
     }
 
     return null;
   }
 
-  /// Combines multiple validators
   static String? Function(String?) combine(
     final List<String? Function(String?)> validators,
   ) {
