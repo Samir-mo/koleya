@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../themes/app_colors.dart';
 import '../themes/app_text_styles.dart';
 import '../utils/extensions/context_ext.dart';
+import '../utils/spacing.dart';
 
 /// AppTextField — reusable outlined text field
 /// ─────────────────────────────────────────────
@@ -135,7 +136,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
         counterText: '',
         contentPadding:
             widget.contentPadding ??
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
+            EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(18)),
 
         // ─── Prefix / Suffix ───────────────────────────────────────
         prefixIcon: widget.prefixIcon,

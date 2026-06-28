@@ -99,9 +99,9 @@ class CustomTextButton extends StatelessWidget {
 
   // ─── Resolved sizes ───────────────────────────────────────────────────
   double get _height => switch (size) {
-    CustomButtonSize.small => 40,
-    CustomButtonSize.medium => 52,
-    CustomButtonSize.large => 56,
+    CustomButtonSize.small => rh(40),
+    CustomButtonSize.medium => rh(52),
+    CustomButtonSize.large => rh(56),
   };
 
   double get _iconSize => size == CustomButtonSize.small ? 18 : 20;
