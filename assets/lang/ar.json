@@ -29,7 +29,8 @@
     "service_unavailable": "الخدمة غير متاحة مؤقتاً. يرجى المحاولة مرة أخرى.",
     "file_too_large": "الملف كبير جداً.",
     "user_disabled": "تم تعطيل هذا الحساب.",
-    "operation_not_allowed": "هذه العملية غير مسموح بها."
+    "operation_not_allowed": "هذه العملية غير مسموح بها.",
+    "parse_error": "فشل تحليل بيانات الرد."
   },
   "validators": {
     "required": "{} مطلوب",

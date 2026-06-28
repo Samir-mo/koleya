@@ -29,7 +29,8 @@
     "service_unavailable": "Service temporarily unavailable. Please try again.",
     "file_too_large": "File is too large.",
     "user_disabled": "This account has been disabled.",
-    "operation_not_allowed": "This operation is not allowed."
+    "operation_not_allowed": "This operation is not allowed.",
+    "parse_error": "Failed to parse response data."
   },
   "validators": {
     "required": "{} is required",

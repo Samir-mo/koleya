@@ -93,3 +93,52 @@ ui/
 - Don't use `MediaQuery.of(context).size` — use ScreenUtil extensions or `context.screenWidth` / `context.screenHeight`.
 - Don't hardcode strings displayed to users — always use localization keys.
 - Don't import feature A directly from feature B — communicate through shared models in `lib/core/shared/models/` or navigation arguments.
+
+## Error Handling
+
+All errors flow through a single pipeline: `DioException` → `AppException` → `Failure` → UI.
+
+**Remote Data Source layer:**
+```dart
+try {
+  final response = await api.get(...);
+  return Model.fromJson(response);
+} catch (e) {
+  ErrorHandler.handle(e); // throws AppException; DioException → AppException
+}
+```
+
+**Repository layer:**
+```dart
+@override
+Future<Model> fetch() => remoteDs.fetch(); // propagate AppException to cubit
+// OR convert to Failure if you need Either<Failure, T>:
+// try {
+//   return await remoteDs.fetch();
+// } catch (e) {
+//   return ErrorHandler.handleFailure(e); // AppException → Failure
+// }
+```
+
+**Cubit layer:**
+```dart
+try {
+  final result = await _repo.fetch();
+  emit(state.copyWith(status: Status.success, data: result));
+} on AppException catch (e) {
+  emit(state.copyWith(status: Status.failure, error: e.message));
+}
+```
+
+**Error classes:**
+- `AppException` — base; thrown by RemoteDs. Has `message` (localization key) and `statusCode`.
+  - Subclasses: `ServerException`, `NetworkException`, `UnauthorizedException`, `ForbiddenException`, `NotFoundException`, `TimeoutException`, `ValidationException`, `ParseException`, `ConflictException`, `TooManyRequestsException`.
+- `Failure` — base; returned by repos. Has `message` (localization key) and `code`.
+  - Subclasses: `ServerFailure`, `NetworkFailure`, `UnauthorizedFailure`, `ForbiddenFailure`, `NotFoundFailure`, `ValidationFailure`, `TimeoutFailure`, `ConflictFailure`, `TooManyRequestsFailure`, `UnknownFailure`.
+- `DioHandler` — maps `DioException` to `AppException`; extracts JSend `response.data['message']` if available.
+- `ErrorHandler` — three entry points:
+  - `ErrorHandler.handle(e)` → throws `AppException` (for RemoteDs)
+  - `ErrorHandler.handleFailure(e)` → returns `Failure` (for repos)
+  - `ErrorHandler.handleException(e)` → deprecated; use `handle()` instead (kept for backward compatibility)
+
+All default error messages are localization keys under `errors.*` in both `en.json` and `ar.json`. Never hardcode error strings.
