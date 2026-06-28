@@ -1,4 +1,3 @@
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -96,27 +95,31 @@ extension NavigationExt on BuildContext {
     if (mounted) Navigator.pop(this, result);
   }
 
-  Future<T?> pushNamed<T>(final String routeName, {final Object? arguments}) =>
-      Navigator.pushNamed(this, routeName, arguments: arguments);
+  Future<T?> pushNamed<T>(
+    final String routeName, {
+    final Object? arguments,
+    final bool rootNavigator = false,
+  }) => Navigator.of(
+    this,
+    rootNavigator: rootNavigator,
+  ).pushNamed(routeName, arguments: arguments);
 
   Future<T?> pushReplacementNamed<T, TO>(
     final String routeName, {
     final Object? arguments,
     final TO? result,
-  }) =>
-      Navigator.pushReplacementNamed(
-        this,
-        routeName,
-        arguments: arguments,
-        result: result,
-      );
+    final bool rootNavigator = false,
+  }) => Navigator.of(
+    this,
+    rootNavigator: rootNavigator,
+  ).pushReplacementNamed(routeName, arguments: arguments, result: result);
 
   Future<T?> pushNamedAndRemoveAll<T>(
     final String routeName, {
     final Object? arguments,
+    final bool rootNavigator = false,
   }) =>
-      Navigator.pushNamedAndRemoveUntil(
-        this,
+      Navigator.of(this, rootNavigator: rootNavigator).pushNamedAndRemoveUntil(
         routeName,
         (final _) => false,
         arguments: arguments,

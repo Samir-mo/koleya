@@ -70,6 +70,8 @@ class AuthInterceptor extends Interceptor {
     final token = await getToken();
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
+    } else if (kDebugMode) {
+      debugPrint('⚠️  AuthInterceptor: no token in storage — request sent without Authorization');
     }
     handler.next(options);
   }

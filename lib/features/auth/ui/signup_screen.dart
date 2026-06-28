@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/cubit/signup_cubit.dart';
-import 'package:gate_buddy/cubit/signup_state.dart';
-import 'package:gate_buddy/features/auth/ui/login_screen.dart';
+import 'package:gate_buddy/core/utils/validators.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,271 +19,148 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
 
   @override
   void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmController.dispose();
     super.dispose();
   }
 
-  void _onSignupPressed(BuildContext context) {
-    final name = nameController.text.trim();
-    final email = emailController.text.trim();
-    final pass = passwordController.text.trim();
-    final confirm = confirmController.text.trim();
-
-    if (name.isEmpty || email.isEmpty || pass.isEmpty || confirm.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("❌ من فضلك املا كل الحقول")));
-      return;
-    }
-
-    if (pass != confirm) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ كلمة المرور وتأكيدها مش متطابقين")),
-      );
-      return;
-    }
-
-    context.read<SignupCubit>().signup(
-      name: name,
-      email: email,
-      password: pass,
-    );
+  void _onSignup() {
+    if (!_formKey.currentState!.validate()) return;
+    context.read<AuthCubit>().signup(
+          name: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          passwordConfirm: _confirmController.text,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SignupCubit(),
-      child: BlocConsumer<SignupCubit, SignupState>(
-        listener: (context, state) {
-          if (state is SignupSuccess) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("✅ ${state.message}")));
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => LoginScreen()),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.authenticated) {
+          context.pushNamedAndRemoveAll(Routes.mainScaffold);
+        } else if (state.status == AuthStatus.error && state.error != null) {
+          _showError(context, state.error!);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: context.customColors.background,
+        body: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const AuthHeader(
+                    title: 'Create Account',
+                    subtitle: 'Join GateBuddy to track your flights',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 8),
+                          AuthTextField(
+                            controller: _nameController,
+                            label: 'Full Name',
+                            hint: 'John Doe',
+                            prefixIcon: Icons.person_outline_rounded,
+                            validator: (v) => Validators.minLength(v, 3,
+                                fieldName: 'Name'),
+                          ),
+                          const SizedBox(height: 16),
+                          AuthTextField(
+                            controller: _emailController,
+                            label: 'Email',
+                            hint: 'john@example.com',
+                            prefixIcon: Icons.email_outlined,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: Validators.email,
+                          ),
+                          const SizedBox(height: 16),
+                          AuthTextField(
+                            controller: _passwordController,
+                            label: 'Password',
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            validator: Validators.password,
+                          ),
+                          const SizedBox(height: 16),
+                          AuthTextField(
+                            controller: _confirmController,
+                            label: 'Confirm Password',
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) => _onSignup(),
+                            validator: (v) => Validators.confirmPassword(
+                                v, _passwordController.text),
+                          ),
+                          const SizedBox(height: 28),
+                          AuthPrimaryButton(
+                            label: 'Create Account',
+                            isLoading: state.isLoading,
+                            onPressed: _onSignup,
+                          ),
+                          const SizedBox(height: 24),
+                          _buildLoginRow(context),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
-          } else if (state is SignupFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("❌ ${state.error}")));
-          }
-        },
-        builder: (context, state) {
-          final loading = state is SignupLoading;
-
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Stack(
-              children: [
-                // الخلفية الزرقاء
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 250,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: context.customColors.infoBackground,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(130),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 60),
-                      child: Center(
-                        child: Text(
-                          "Gate buddy",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // الدائرة الذهبية
-                Positioned(
-                  top: -60,
-                  right: -60,
-                  child: CircleAvatar(
-                    backgroundColor: context.customColors.infoBackground,
-                    radius: 80,
-                  ),
-                ),
-
-                // المحتوى
-                SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 300,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: context.customColors.infoBackground,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 30),
-                      _buildTextField(
-                        Icons.person,
-                        "User Name",
-                        controller: nameController,
-                      ),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                        Icons.email,
-                        "Email",
-                        controller: emailController,
-                      ),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                        Icons.lock,
-                        "Password",
-                        controller: passwordController,
-                        isPassword: true,
-                      ),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                        Icons.lock,
-                        "Confirm Password",
-                        controller: confirmController,
-                        isPassword: true,
-                      ),
-                      SizedBox(height: 30),
-
-                      _buildButton(
-                        context,
-                        loading ? "Signing Up..." : "Sign Up",
-                        enabled: !loading,
-                        onPressed: () => _onSignupPressed(context),
-                      ),
-
-                      SizedBox(height: 20),
-                      _buildBottomText(
-                        context,
-                        "You already have an account? ",
-                        "Login",
-                        LoginScreen(),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // زر الرجوع
-                Positioned(
-                  top: 50,
-                  left: 16,
-                  child: SafeArea(
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    IconData icon,
-    String hint, {
-    bool isPassword = false,
-    TextEditingController? controller,
-  }) {
-    return TextField(
-      controller: controller,
-      obscureText: isPassword,
-      decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: context.customColors.infoBackground),
-        hintText: hint,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: context.customColors.infoBackground),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: context.customColors.infoBackground),
-          borderRadius: BorderRadius.circular(8),
+          },
         ),
       ),
     );
   }
 
-  Widget _buildButton(
-    BuildContext context,
-    String text, {
-    required bool enabled,
-    required VoidCallback onPressed,
-  }) {
-    return ElevatedButton(
-      onPressed: enabled ? onPressed : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: context.customColors.infoBackground,
-        minimumSize: Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: context.customColors.infoBackground,
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomText(
-    BuildContext context,
-    String text,
-    String action,
-    Widget screen,
-  ) {
+  Widget _buildLoginRow(BuildContext context) {
+    final colors = context.customColors;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(text, style: TextStyle(color: Colors.black54)),
+        Text(
+          'Already have an account? ',
+          style: AppTextStyles.font14Regular.copyWith(
+              color: colors.textSecondary),
+        ),
         GestureDetector(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
-          },
+          onTap: () => Navigator.pop(context),
           child: Text(
-            action,
-            style: TextStyle(
-              color: context.customColors.infoBackground,
-              fontWeight: FontWeight.bold,
-            ),
+            'Log In',
+            style: AppTextStyles.font14SemiBold.copyWith(
+                color: AppColors.primary200),
           ),
         ),
       ],
+    );
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.red200,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
   }
 }

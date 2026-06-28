@@ -2,7 +2,8 @@ import 'dart:math' as math;
 
 import 'package:latlong2/latlong.dart';
 
-import '../data/models/service_location_model.dart';
+import 'package:gate_buddy/core/shared/models/service_model.dart';
+
 import '../domain/airport_waypoints.dart';
 
 /// Builds indoor routes between the user's position and any service.
@@ -15,7 +16,7 @@ class IndoorRoutingService {
   /// Main entry point — builds a route from [userPos] to [destination]
   static IndoorRoute buildRoute({
     required LatLng userPos,
-    required ServiceLocationModel destination,
+    required ServiceModel destination,
   }) {
     final destLatLng = LatLng(destination.latitude, destination.longitude);
 
@@ -46,7 +47,7 @@ class IndoorRoutingService {
   static List<LatLng> _selectPath(
     LatLng from,
     LatLng to,
-    ServiceLocationModel dest,
+    ServiceModel dest,
   ) {
     final zone = dest.zone;
     final category = dest.category.toUpperCase();

@@ -51,9 +51,7 @@ class _UserPositionMarkerState extends State<UserPositionMarker>
             height: 40 * _pulse.value,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(
-                0xFF2196F3,
-              ).withOpacity(0.2 * (1 - _pulse.value + 0.3)),
+              color: Color.fromRGBO(33, 150, 243, 0.2 * (1 - _pulse.value + 0.3)),
             ),
           ),
           // Inner accuracy ring
@@ -62,9 +60,9 @@ class _UserPositionMarkerState extends State<UserPositionMarker>
             height: 22,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFF2196F3).withOpacity(0.18),
+              color: const Color(0xFF2196F3).withValues(alpha: 0.18),
               border: Border.all(
-                color: const Color(0xFF2196F3).withOpacity(0.4),
+                color: const Color(0xFF2196F3).withValues(alpha: 0.4),
                 width: 1,
               ),
             ),
@@ -79,7 +77,7 @@ class _UserPositionMarkerState extends State<UserPositionMarker>
               border: Border.all(color: Colors.white, width: 2.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF2196F3).withOpacity(0.5),
+                  color: const Color(0xFF2196F3).withValues(alpha: 0.5),
                   blurRadius: 6,
                   spreadRadius: 1,
                 ),

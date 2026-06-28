@@ -1,0 +1,14 @@
+import '../models/ai_chat_reply_model.dart';
+import '../remote/ai_chat_remote_ds.dart';
+import 'ai_chat_repo.dart';
+
+class AssistantRepoImpl implements AssistantRepo {
+  final AssistantRemoteDs remoteDs;
+
+  AssistantRepoImpl({required this.remoteDs});
+
+  @override
+  Future<AssistantReplyModel> sendMessage(String message) {
+    return remoteDs.sendMessage(message);
+  }
+}

@@ -1,207 +1,120 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/di/dependency_injection.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/cubit/reset_password_cubit.dart';
-import 'package:gate_buddy/cubit/reset_password_state.dart';
-
-import 'login_screen.dart';
+import 'package:gate_buddy/core/utils/validators.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
+import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  ResetPasswordScreen({super.key});
+  final String resetToken;
 
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  const ResetPasswordScreen({super.key, required this.resetToken});
 
-  void _showMessage(BuildContext context, String msg, {bool error = true}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: error ? Colors.redAccent : Colors.green,
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => AuthCubit(repo: getIt()),
+      child: _ResetPasswordView(resetToken: resetToken),
     );
+  }
+}
+
+class _ResetPasswordView extends StatefulWidget {
+  final String resetToken;
+  const _ResetPasswordView({required this.resetToken});
+
+  @override
+  State<_ResetPasswordView> createState() => _ResetPasswordViewState();
+}
+
+class _ResetPasswordViewState extends State<_ResetPasswordView> {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmController.dispose();
+    super.dispose();
+  }
+
+  void _onReset() {
+    if (!_formKey.currentState!.validate()) return;
+    context.read<AuthCubit>().resetPassword(
+          resetToken: widget.resetToken,
+          password: _passwordController.text,
+          passwordConfirm: _confirmController.text,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-
-    return BlocProvider(
-      create: (_) => ResetPasswordCubit(),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.authenticated) {
+          context.pushNamedAndRemoveAll(Routes.mainScaffold);
+        } else if (state.status == AuthStatus.error && state.error != null) {
+          _showError(context, state.error!);
+        }
+      },
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
-          listener: (context, state) {
-            if (state is ResetPasswordSuccess) {
-              _showMessage(context, state.message, error: false);
-
-              // يتم نقل المستخدم إلى شاشة تسجيل الدخول بعد نجاح العملية
-              Future.delayed(const Duration(seconds: 1), () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => LoginScreen()),
-                  (route) => false,
-                );
-              });
-            } else if (state is ResetPasswordFailure) {
-              _showMessage(context, state.error);
-            }
-          },
+        backgroundColor: context.customColors.background,
+        body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
-            final cubit = context.read<ResetPasswordCubit>();
-
-            return Stack(
-              children: [
-                // الجزء العلوي
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: height * 0.33,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: context.customColors.infoBackground,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(130),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 60),
-                        child: Text(
-                          "Gate buddy",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const AuthHeader(
+                    title: 'Reset Password',
+                    subtitle: 'Create a new secure password',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          _LockIllustration(),
+                          const SizedBox(height: 32),
+                          AuthTextField(
+                            controller: _passwordController,
+                            label: 'New Password',
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            validator: Validators.password,
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // الدائرة الذهبية
-                Positioned(
-                  top: -60,
-                  right: -60,
-                  child: CircleAvatar(
-                    backgroundColor: context.customColors.infoBackground,
-                    radius: 80,
-                  ),
-                ),
-
-                // زر الرجوع
-                Positioned(
-                  top: 50,
-                  left: 16,
-                  child: SafeArea(
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                ),
-
-                // المحتوى القابل للتمرير
-                Positioned.fill(
-                  top: height * 0.30,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 20,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Reset password",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: context.customColors.infoBackground,
+                          const SizedBox(height: 16),
+                          AuthTextField(
+                            controller: _confirmController,
+                            label: 'Confirm New Password',
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) => _onReset(),
+                            validator: (v) => Validators.confirmPassword(
+                                v, _passwordController.text),
                           ),
-                        ),
-                        const SizedBox(height: 40),
-
-                        // الحقول
-                        _buildPasswordField(
-                          context,
-                          controller: newPasswordController,
-                          hint: "Enter new password",
-                        ),
-                        const SizedBox(height: 20),
-                        _buildPasswordField(
-                          context,
-                          controller: confirmPasswordController,
-                          hint: "Confirm password",
-                        ),
-                        const SizedBox(height: 30),
-
-                        // الزر
-                        state is ResetPasswordLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : ElevatedButton(
-                                onPressed: () {
-                                  final newPass = newPasswordController.text
-                                      .trim();
-                                  final confirmPass = confirmPasswordController
-                                      .text
-                                      .trim();
-
-                                  if (newPass.isEmpty || confirmPass.isEmpty) {
-                                    _showMessage(
-                                      context,
-                                      "Please fill in both fields.",
-                                    );
-                                    return;
-                                  }
-                                  if (newPass.length < 6) {
-                                    _showMessage(
-                                      context,
-                                      "Password must be at least 6 characters.",
-                                    );
-                                    return;
-                                  }
-                                  if (newPass != confirmPass) {
-                                    _showMessage(
-                                      context,
-                                      "Passwords do not match.",
-                                    );
-                                    return;
-                                  }
-
-                                  cubit.resetPassword(
-                                    newPassword: newPass,
-                                    confirmPassword: confirmPass,
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      context.customColors.infoBackground,
-                                  minimumSize: const Size(double.infinity, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Confirm",
-                                  style: TextStyle(
-                                    color: context.customColors.infoBackground,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                        const SizedBox(height: 20),
-                      ],
+                          const SizedBox(height: 28),
+                          AuthPrimaryButton(
+                            label: 'Reset Password',
+                            isLoading: state.isLoading,
+                            onPressed: _onReset,
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
@@ -209,27 +122,33 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordField(
-    context, {
-    required TextEditingController controller,
-    required String hint,
-  }) {
-    return TextField(
-      controller: controller,
-      obscureText: true,
-      decoration: InputDecoration(
-        hintText: hint,
-        prefixIcon: Icon(
-          Icons.lock,
-          color: context.customColors.infoBackground,
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.red200,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+}
+
+class _LockIllustration extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: const BoxDecoration(
+          color: AppColors.primary50,
+          shape: BoxShape.circle,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: context.customColors.infoBackground),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: context.customColors.infoBackground),
-          borderRadius: BorderRadius.circular(8),
+        child: const Icon(
+          Icons.lock_reset_rounded,
+          size: 48,
+          color: AppColors.primary200,
         ),
       ),
     );

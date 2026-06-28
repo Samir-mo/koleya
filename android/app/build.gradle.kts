@@ -13,7 +13,8 @@ plugins {
 android {
     namespace = "com.example.gate_buddy"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -42,13 +43,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-        flavorDimensions += "default"
+    flavorDimensions += "default"
 
     productFlavors {
         create("development") {
             dimension = "default"
             applicationIdSuffix = ".dev"
-            // Fixed the missing quote below
             resValue("string", "app_name", "Gate Buddy Dev") 
         }
         create("production") {
@@ -58,9 +58,6 @@ android {
     }
 }
 
-
 flutter {
     source = "../.."
 }
-
-// ✅ حالياً مش محتاج google-services.json لأننا معطلين Google Services plugin فوق

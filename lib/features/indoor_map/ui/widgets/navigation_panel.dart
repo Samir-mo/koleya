@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
 
 class NavigationPanel extends StatelessWidget {
@@ -13,8 +14,7 @@ class NavigationPanel extends StatelessWidget {
     required this.onNextStep,
   });
 
-  static const _primaryBlue = Color(0xFF013F82);
-  static const _accentGold = Color(0xFFF3A623);
+  // Use AppColors constants — not hardcoded values
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class NavigationPanel extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.14),
+            color: Colors.black.withValues(alpha:0.14),
             blurRadius: 20,
             offset: const Offset(0, -2),
           ),
@@ -47,7 +47,7 @@ class NavigationPanel extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
             decoration: const BoxDecoration(
-              color: _primaryBlue,
+              color: AppColors.primary200,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(
@@ -57,7 +57,7 @@ class NavigationPanel extends StatelessWidget {
                   children: [
                     const Icon(
                       Icons.navigation_rounded,
-                      color: _accentGold,
+                      color: AppColors.secondary200,
                       size: 18,
                     ),
                     const SizedBox(width: 8),
@@ -78,7 +78,7 @@ class NavigationPanel extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha:0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
@@ -107,7 +107,7 @@ class NavigationPanel extends StatelessWidget {
                     Text(
                       '${state.currentStepIndex + 1} / ${route.steps.length} steps',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha:0.7),
                         fontSize: 11,
                       ),
                     ),
@@ -119,9 +119,9 @@ class NavigationPanel extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: progress.clamp(0.0, 1.0),
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      _accentGold,
+                    backgroundColor: Colors.white.withValues(alpha:0.2),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.secondary200,
                     ),
                     minHeight: 5,
                   ),
@@ -145,7 +145,7 @@ class NavigationPanel extends StatelessWidget {
                     ),
                     child: Icon(
                       _iconForStep(step.instruction),
-                      color: _primaryBlue,
+                      color: AppColors.primary200,
                       size: 20,
                     ),
                   ),
@@ -202,7 +202,7 @@ class NavigationPanel extends StatelessWidget {
                               color: isDone
                                   ? Colors.green.shade400
                                   : isCurrent
-                                  ? _primaryBlue
+                                  ? AppColors.primary200
                                   : Colors.grey.shade200,
                             ),
                             child: Icon(
@@ -285,7 +285,7 @@ class _MetaChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withValues(alpha:0.15),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

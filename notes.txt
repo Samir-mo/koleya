@@ -1,0 +1,11 @@
+ now lets foucas on feature by feature to build it and finsh it ,i want you to always use the 
+  context.customColors to set the colors and use the AppColors to if it needed @lib/core/themes\
+  this have all you need and have the app main colors so aluse use them and dont use the colors 
+  code dirictly and use the text style class to to set the textStykes for the app    
+  and use the custom wedgets here @lib/core/widgets\ and if there is any repeted widget or widgets
+  are simmiller build it globlly and set here too and use the utils on @lib/core/utils\ make sure
+  to apply on the rules that i send you in the beigen use the as your rules to implement this
+  about the ui , in the data alaways use the @lib/core/errors\ to handle the errors and expetions
+  and always seperate the the repo and repo_impl be on the same roules on the begin you will do
+  the same in all the implemnetasens and features so make sure to remember this unitl i give yo
+  new role or edit on exsit one ,

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/features/indoor_map/data/models/service_location_model.dart';
+import 'package:gate_buddy/core/shared/models/service_model.dart';
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo.dart';
 import 'package:gate_buddy/features/indoor_map/domain/airport_waypoints.dart';
 import 'package:gate_buddy/features/indoor_map/domain/indoor_routing_service.dart';
@@ -15,46 +15,55 @@ class IndoorMapCubit extends Cubit<IndoorMapState> {
 
   IndoorMapCubit({required this.indoorMapRepo}) : super(IndoorMapInitial());
 
-  // ─── Load services ────────────────────────────────────────────────────────
+  // ─── Load ─────────────────────────────────────────────────────────────────
 
   Future<void> loadServices() async {
     emit(IndoorMapLoading());
     try {
       final services = await indoorMapRepo.getServicesWithLocation();
-      emit(
-        IndoorMapLoaded(
-          allServices: services,
-          filteredServices: services,
-          selectedCategory: MapCategory.all,
-        ),
-      );
+      emit(IndoorMapLoaded(
+        allServices: services,
+        filteredServices: services,
+        selectedCategory: MapCategory.all,
+      ));
     } catch (e) {
       emit(IndoorMapError(e.toString()));
     }
   }
 
-  // ─── Filter ───────────────────────────────────────────────────────────────
+  // ─── Filter — hits API with category param just like Explore Places ─────
 
-  void filterByCategory(MapCategory category) {
+  Future<void> filterByCategory(MapCategory category) async {
     final s = state;
     if (s is! IndoorMapLoaded) return;
-    final filtered = category == MapCategory.all
-        ? s.allServices
-        : s.allServices
-              .where((x) => x.category.toUpperCase() == category.label)
-              .toList();
-    emit(
-      s.copyWith(
-        filteredServices: filtered,
+
+    // Optimistic UI: show selected chip immediately, keep current markers
+    emit(s.copyWith(
+      selectedCategory: category,
+      clearSelected: true,
+    ));
+
+    try {
+      final categoryParam = category == MapCategory.all ? null : category.value;
+      final services = await indoorMapRepo.getServicesWithLocation(
+        category: categoryParam,
+      );
+
+      final loaded = state;
+      if (loaded is! IndoorMapLoaded) return;
+      emit(loaded.copyWith(
+        allServices: category == MapCategory.all ? services : loaded.allServices,
+        filteredServices: services,
         selectedCategory: category,
-        clearSelected: true,
-      ),
-    );
+      ));
+    } catch (e) {
+      emit(IndoorMapError(e.toString()));
+    }
   }
 
-  // ─── Marker selection ─────────────────────────────────────────────────────
+  // ─── Selection ────────────────────────────────────────────────────────────
 
-  void selectService(ServiceLocationModel service) {
+  void selectService(ServiceModel service) {
     final s = state;
     if (s is! IndoorMapLoaded) return;
     if (s.selectedService?.id == service.id) {
@@ -72,7 +81,7 @@ class IndoorMapCubit extends Cubit<IndoorMapState> {
 
   // ─── Navigation ───────────────────────────────────────────────────────────
 
-  void startNavigation(ServiceLocationModel destination) {
+  void startNavigation(ServiceModel destination) {
     final s = state;
     if (s is! IndoorMapLoaded) return;
 
@@ -81,16 +90,14 @@ class IndoorMapCubit extends Cubit<IndoorMapState> {
       destination: destination,
     );
 
-    emit(
-      s.copyWith(
-        navigationMode: NavigationMode.navigating,
-        activeRoute: route,
-        navigationDestination: destination,
-        currentStepIndex: 0,
-        simulationPointIndex: 0,
-        clearSelected: true,
-      ),
-    );
+    emit(s.copyWith(
+      navigationMode: NavigationMode.navigating,
+      activeRoute: route,
+      navigationDestination: destination,
+      currentStepIndex: 0,
+      simulationPointIndex: 0,
+      clearSelected: true,
+    ));
 
     _startSimulation();
   }
@@ -99,16 +106,14 @@ class IndoorMapCubit extends Cubit<IndoorMapState> {
     _simulationTimer?.cancel();
     final s = state;
     if (s is! IndoorMapLoaded) return;
-    emit(
-      s.copyWith(
-        navigationMode: NavigationMode.none,
-        clearRoute: true,
-        clearDestination: true,
-        currentStepIndex: 0,
-        simulationPointIndex: 0,
-        userPosition: AirportWaypoints.userStart,
-      ),
-    );
+    emit(s.copyWith(
+      navigationMode: NavigationMode.none,
+      clearRoute: true,
+      clearDestination: true,
+      currentStepIndex: 0,
+      simulationPointIndex: 0,
+      userPosition: AirportWaypoints.userStart,
+    ));
   }
 
   void nextStep() {
@@ -139,8 +144,6 @@ class IndoorMapCubit extends Cubit<IndoorMapState> {
       }
 
       final nextPos = route.polylinePoints[nextIdx];
-
-      // Advance step if we passed a step's waypoint
       int stepIdx = s.currentStepIndex;
       if (stepIdx < route.steps.length - 1) {
         final stepPoint = route.steps[stepIdx].point;
@@ -149,13 +152,11 @@ class IndoorMapCubit extends Cubit<IndoorMapState> {
         }
       }
 
-      emit(
-        s.copyWith(
-          userPosition: nextPos,
-          simulationPointIndex: nextIdx,
-          currentStepIndex: stepIdx,
-        ),
-      );
+      emit(s.copyWith(
+        userPosition: nextPos,
+        simulationPointIndex: nextIdx,
+        currentStepIndex: stepIdx,
+      ));
     });
   }
 
@@ -163,8 +164,6 @@ class IndoorMapCubit extends Cubit<IndoorMapState> {
     return (a.latitude - b.latitude).abs() < thresholdDeg &&
         (a.longitude - b.longitude).abs() < thresholdDeg;
   }
-
-  // ─── Retry ────────────────────────────────────────────────────────────────
 
   Future<void> retry() => loadServices();
 

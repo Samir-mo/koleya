@@ -2,7 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gate_buddy/core/di/dependency_injection.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
 import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
+import 'package:gate_buddy/features/on_boarding/ui/onboarding_screen.dart';
 
 import 'core/config/app_config.dart';
 import 'core/router/app_router.dart';
@@ -21,35 +26,105 @@ class GateBuddyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (final BuildContext context, final Widget? child) {
-        return BlocProvider(
-          create: (final _) => AppSettingsCubit(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<AppSettingsCubit>(
+              create: (final _) => AppSettingsCubit(),
+            ),
+            // checkAuth() runs once on startup to validate any stored token
+            BlocProvider<AuthCubit>(
+              create: (final _) => getIt<AuthCubit>()..checkAuth(),
+            ),
+          ],
           child: BlocBuilder<AppSettingsCubit, AppSettingsState>(
             builder:
                 (final BuildContext context, final AppSettingsState settings) {
-                  return MaterialApp(
-                    localizationsDelegates: context.localizationDelegates,
-                    supportedLocales: context.supportedLocales,
-                    locale: settings.locale, // driven by cubit
-                    debugShowCheckedModeBanner: false,
-                    home: MainScaffold(),
-                    onGenerateRoute: AppRouter.generateRoute,
-                    title: AppConfig.appName,
-                    theme: getLightTheme().copyWith(
-                      textTheme: getLightTheme().textTheme.apply(
+              return MaterialApp(
+                localizationsDelegates: context.localizationDelegates,
+                supportedLocales: context.supportedLocales,
+                locale: settings.locale,
+                debugShowCheckedModeBanner: false,
+                home: const _AppBootstrap(),
+                onGenerateRoute: AppRouter.generateRoute,
+                title: AppConfig.appName,
+                theme: getLightTheme().copyWith(
+                  textTheme: getLightTheme().textTheme.apply(
                         fontFamily: settings.fontFamily,
                       ),
-                    ),
-                    darkTheme: getDarkTheme().copyWith(
-                      textTheme: getDarkTheme().textTheme.apply(
+                ),
+                darkTheme: getDarkTheme().copyWith(
+                  textTheme: getDarkTheme().textTheme.apply(
                         fontFamily: settings.fontFamily,
                       ),
-                    ),
-                    themeMode: settings.themeMode,
-                  );
-                },
+                ),
+                themeMode: settings.themeMode,
+              );
+            },
           ),
         );
       },
+    );
+  }
+}
+
+/// Decides the initial screen based on stored token validity.
+/// Shows a branded splash while [AuthCubit.checkAuth()] is in-flight.
+class _AppBootstrap extends StatelessWidget {
+  const _AppBootstrap();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      // Only rebuild when the coarse status bucket changes
+      buildWhen: (prev, curr) => prev.status != curr.status,
+      builder: (context, state) {
+        switch (state.status) {
+          case AuthStatus.initial:
+          case AuthStatus.loading:
+            return const _SplashView();
+
+          case AuthStatus.authenticated:
+            return const MainScaffold();
+
+          case AuthStatus.unauthenticated:
+          case AuthStatus.error:
+            return const OnboardingScreen();
+        }
+      },
+    );
+  }
+}
+
+class _SplashView extends StatelessWidget {
+  const _SplashView();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: AppColors.primary200,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.flight_rounded, color: AppColors.secondary200, size: 64),
+            SizedBox(height: 16),
+            Text(
+              'GateBuddy',
+              style: TextStyle(
+                color: AppColors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
+            ),
+            SizedBox(height: 48),
+            CircularProgressIndicator(
+              color: AppColors.secondary200,
+              strokeWidth: 2,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

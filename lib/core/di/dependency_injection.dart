@@ -1,12 +1,33 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gate_buddy/core/api/api_consumer.dart';
 import 'package:gate_buddy/core/api/dio_consumer.dart';
-import 'package:gate_buddy/data/repositories/dashboard_repository.dart';
-import 'package:gate_buddy/features/indoor_map/data/remote/indoor_map_remote_ds.dart';
+import 'package:gate_buddy/features/auth/data/remote/auth_remote_ds.dart';
+import 'package:gate_buddy/features/auth/data/repo/auth_repo.dart';
+import 'package:gate_buddy/features/auth/data/repo/auth_repo_impl.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/forget_password_cubit.dart';
+import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
+import 'package:gate_buddy/features/ai_chat/data/remote/ai_chat_remote_ds.dart';
+import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo.dart';
+import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo_impl.dart';
+import 'package:gate_buddy/features/ai_chat/logic/cubit/ai_chat_cubit.dart';
+import 'package:gate_buddy/core/shared/data/services_data_source.dart';
+import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo.dart';
+import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo_impl.dart';
+import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
+import 'package:gate_buddy/features/flights/data/remote/flights_remote_ds.dart';
+import 'package:gate_buddy/features/flights/data/repo/flights_repo.dart';
+import 'package:gate_buddy/features/flights/data/repo/flights_repo_impl.dart';
+import 'package:gate_buddy/features/flights/logic/cubit/flights_cubit.dart';
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo.dart';
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo_impl.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
+import 'package:gate_buddy/features/notifications/logic/cubit/notifications_cubit.dart';
+import 'package:gate_buddy/features/profile/logic/cubit/profile_cubit.dart';
+import 'package:gate_buddy/features/search/logic/cubit/search_cubit.dart';
+import 'package:gate_buddy/features/services/logic/cubit/services_cubit.dart';
+import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -17,46 +38,105 @@ import '../service/secure_storage.dart';
 import '../utils/app_constants.dart';
 
 final getIt = GetIt.instance;
+
 Future<void> setUpDependencies() async {
-  // External
-  getIt.registerLazySingleton(() => InternetConnectionChecker.createInstance());
+  // ── External ────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton(
+    () => InternetConnectionChecker.createInstance(),
+  );
 
-  final storage = FlutterSecureStorage();
-
+  const storage = FlutterSecureStorage();
   getIt.registerLazySingleton<SecureStorage>(() => SecureStorage(storage));
 
-  // Core Network
+  // ── Core Network ─────────────────────────────────────────────────────────
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(getIt()));
 
-  // Dio
+  // ── Dio ──────────────────────────────────────────────────────────────────
   getIt.registerLazySingleton<Dio>(
     () => DioFactory.create(
       baseUrl: AppConfig.baseUrl,
-      getToken: () async {
-        return await getIt<SecureStorage>().read(key: AppConstants.userDataKey);
-      },
+      getToken: () async =>
+          await getIt<SecureStorage>().read(key: AppConstants.accessTokenKey),
       enableLogging: AppConfig.enableLogging,
     ),
   );
 
-  // --- Repositories ---
-  getIt.registerLazySingleton(() => DashboardRepository());
-
-  // --- Api ---
+  // ── ApiConsumer — MUST be registered before any repository ───────────────
   getIt.registerLazySingleton<ApiConsumer>(() => DioConsumer(getIt()));
 
-  // --- Remote Data Source ---
-  getIt.registerLazySingleton<IndoorMapRemoteDs>(
-    () => IndoorMapRemoteDs(api: getIt()),
+  // ── Auth ─────────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton(
+    () => AuthRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<AuthRepo>(
+    () => AuthRepoImpl(
+      remoteDs: getIt<AuthRemoteDs>(),
+      storage: getIt<SecureStorage>(),
+    ),
+  );
+  getIt.registerLazySingleton(
+    () => AuthCubit(repo: getIt<AuthRepo>()),
+  );
+  getIt.registerFactory(
+    () => ForgetPasswordCubit(repo: getIt<AuthRepo>()),
+  );
+  getIt.registerFactory(
+    () => VerifyCodeCubit(repo: getIt<AuthRepo>()),
   );
 
-  // Repositories
+  // ── Chat Bot / Assistant ──────────────────────────────────────────────────
+  getIt.registerLazySingleton(
+    () => AssistantRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<AssistantRepo>(
+    () => AssistantRepoImpl(remoteDs: getIt<AssistantRemoteDs>()),
+  );
+  getIt.registerLazySingleton(
+    () => AssistantCubit(repo: getIt<AssistantRepo>()),
+  );
+
+  // ── Indoor Map ────────────────────────────────────────────────────────────
   getIt.registerLazySingleton<IndoorMapRepo>(
-    () => IndoorMapRepoImpl(remoteDs: getIt()),
+    () => IndoorMapRepoImpl(dataSource: getIt<ServicesDataSource>()),
   );
-
-  // Cubits
   getIt.registerLazySingleton<IndoorMapCubit>(
     () => IndoorMapCubit(indoorMapRepo: getIt()),
   );
+
+  // ── Shared Services Data Source (used by Explore + Indoor Map) ──────────
+  getIt.registerLazySingleton(
+    () => ServicesDataSource(api: getIt<ApiConsumer>()),
+  );
+
+  // ── Explore Places ────────────────────────────────────────────────────────
+  getIt.registerLazySingleton<ExplorePlacesRepo>(
+    () => ExplorePlacesRepoImpl(dataSource: getIt<ServicesDataSource>()),
+  );
+  getIt.registerFactory(
+    () => ExploreCubit(repo: getIt<ExplorePlacesRepo>()),
+  );
+
+  // ── Flights ───────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton(
+    () => FlightsRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<FlightsRepo>(
+    () => FlightsRepoImpl(remoteDs: getIt<FlightsRemoteDs>()),
+  );
+  getIt.registerFactory(() => FlightsCubit(repo: getIt<FlightsRepo>()));
+
+  // ── Notifications ─────────────────────────────────────────────────────────
+  getIt.registerFactory(() => NotificationsCubit());
+
+  // ── Services ──────────────────────────────────────────────────────────────
+  getIt.registerFactory(() => ServicesCubit());
+
+  // ── Profile ───────────────────────────────────────────────────────────────
+  getIt.registerFactory(() => ProfileCubit());
+
+  // ── Search ────────────────────────────────────────────────────────────────
+  getIt.registerFactory(() => SearchCubit());
+
+  // ── Tracked Flight ────────────────────────────────────────────────────────
+  getIt.registerFactory(() => TrackedFlightCubit());
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:gate_buddy/core/shared/models/service_model.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../data/models/service_location_model.dart';
 import 'widgets/map_category_filter.dart';
 import 'widgets/navigation_panel.dart';
 import 'widgets/service_detail_sheet.dart';
@@ -15,9 +16,7 @@ class IndoorMapScreen extends StatelessWidget {
   const IndoorMapScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return _IndoorMapView();
-  }
+  Widget build(BuildContext context) => const _IndoorMapView();
 }
 
 class _IndoorMapView extends StatefulWidget {
@@ -30,10 +29,6 @@ class _IndoorMapView extends StatefulWidget {
 class _IndoorMapViewState extends State<_IndoorMapView> {
   late final MapController _mapController;
 
-  static const _primaryBlue = Color(0xFF013F82);
-  static const _accentGold = Color(0xFFF3A623);
-
-  // Airport center — based on real service coordinates
   static const _airportCenter = LatLng(52.3090, 4.7620);
   static const _defaultZoom = 16.5;
 
@@ -49,8 +44,6 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     super.dispose();
   }
 
-  // ─── Fit map to show entire route ─────────────────────────────────────────
-
   void _fitRoute(List<LatLng> points) {
     if (points.isEmpty) return;
     final bounds = LatLngBounds.fromPoints(points);
@@ -59,32 +52,30 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     );
   }
 
-  // ─── Marker icon by category ──────────────────────────────────────────────
+  // ─── Marker appearance by category ───────────────────────────────────────
 
-  Color _markerColor(String category) {
-    return switch (category.toUpperCase()) {
-      'SHOPS' => const Color(0xFF7C3AED),
-      'RESTAURANTS' => const Color(0xFFEA580C),
-      'VIP' => const Color(0xFFF3A623),
-      'SERVICES' => const Color(0xFF059669),
-      _ => _primaryBlue,
-    };
-  }
+  Color _markerColor(String category) => switch (category.toUpperCase()) {
+        'RESTAURANTS' => const Color(0xFFEA580C),
+        'SHOPS' => const Color(0xFF7C3AED),
+        'VIP_SERVICES' => AppColors.secondary200,
+        'FINANCIAL' => const Color(0xFF059669),
+        'COUNTERS' => const Color(0xFF0284C7),
+        'ACCESSIBILITY' => const Color(0xFF0891B2),
+        _ => AppColors.primary200,
+      };
 
-  IconData _markerIcon(String category) {
-    return switch (category.toUpperCase()) {
-      'SHOPS' => Icons.storefront_rounded,
-      'RESTAURANTS' => Icons.restaurant_rounded,
-      'VIP' => Icons.workspace_premium_rounded,
-      'SERVICES' => Icons.miscellaneous_services_rounded,
-      _ => Icons.place_rounded,
-    };
-  }
-
-  // ─── Build a service marker ───────────────────────────────────────────────
+  IconData _markerIcon(String category) => switch (category.toUpperCase()) {
+        'RESTAURANTS' => Icons.restaurant_rounded,
+        'SHOPS' => Icons.storefront_rounded,
+        'VIP_SERVICES' => Icons.workspace_premium_rounded,
+        'FINANCIAL' => Icons.account_balance_rounded,
+        'COUNTERS' => Icons.confirmation_number_rounded,
+        'ACCESSIBILITY' => Icons.accessibility_new_rounded,
+        _ => Icons.place_rounded,
+      };
 
   Marker _buildServiceMarker(
-    ServiceLocationModel service,
+    ServiceModel service,
     bool isSelected,
     VoidCallback onTap,
   ) {
@@ -95,43 +86,40 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
       height: isSelected ? 62 : 50,
       child: GestureDetector(
         onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: isSelected ? 44 : 34,
-                height: isSelected ? 44 : 34,
-                decoration: BoxDecoration(
-                  color: isSelected ? color : Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: color, width: isSelected ? 0 : 2.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: color.withOpacity(isSelected ? 0.45 : 0.25),
-                      blurRadius: isSelected ? 14 : 6,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  _markerIcon(service.category),
-                  size: isSelected ? 22 : 17,
-                  color: isSelected ? Colors.white : color,
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: isSelected ? 44 : 34,
+              height: isSelected ? 44 : 34,
+              decoration: BoxDecoration(
+                color: isSelected ? color : Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: color, width: isSelected ? 0 : 2.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withValues(alpha: isSelected ? 0.45 : 0.25),
+                    blurRadius: isSelected ? 14 : 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              // Pin tip
-              Container(
-                width: 2,
-                height: isSelected ? 10 : 8,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(1),
-                ),
+              child: Icon(
+                _markerIcon(service.category),
+                size: isSelected ? 22 : 17,
+                color: isSelected ? Colors.white : color,
               ),
-            ],
-          ),
+            ),
+            Container(
+              width: 2,
+              height: isSelected ? 10 : 8,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -140,9 +128,8 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _primaryBlue,
+      backgroundColor: AppColors.primary200,
       body: BlocConsumer<IndoorMapCubit, IndoorMapState>(
-        // Only rebuild map layer when route changes, not on every sim tick
         listenWhen: (prev, curr) {
           if (prev is IndoorMapLoaded && curr is IndoorMapLoaded) {
             return prev.activeRoute != curr.activeRoute;
@@ -159,16 +146,11 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
             bottom: false,
             child: Column(
               children: [
-                // ── App bar ───────────────────────────────────────────────
                 _buildAppBar(context, state),
-
-                // ── Map + overlays ────────────────────────────────────────
                 Expanded(
                   child: Stack(
                     children: [
                       _buildMap(context, state),
-
-                      // Category filter chips — hidden during navigation
                       if (state is IndoorMapLoaded && !state.isNavigating)
                         Positioned(
                           top: 12,
@@ -176,17 +158,16 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                           right: 0,
                           child: MapCategoryFilter(
                             selected: state.selectedCategory,
-                            onSelected: (cat) => context
-                                .read<IndoorMapCubit>()
-                                .filterByCategory(cat),
+                            onSelected: (cat) =>
+                                context.read<IndoorMapCubit>().filterByCategory(cat),
                           ),
                         ),
-
-                      // Legend (bottom-left)
                       if (state is IndoorMapLoaded && !state.isNavigating)
-                        Positioned(bottom: 14, left: 12, child: _buildLegend()),
-
-                      // Bottom sheet area
+                        Positioned(
+                          bottom: 14,
+                          left: 12,
+                          child: _buildLegend(),
+                        ),
                       Positioned(
                         bottom: 0,
                         left: 0,
@@ -211,18 +192,10 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     return Container(
       height: 56,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: _primaryBlue,
+      color: AppColors.primary200,
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: const Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -233,34 +206,34 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 16,
+                    fontSize: 17,
+                    letterSpacing: 0.2,
                   ),
                 ),
                 if (state is IndoorMapLoaded)
                   Text(
                     isNav
-                        ? 'Navigation mode'
+                        ? 'Navigation active'
                         : '${state.filteredServices.length} services nearby',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 11,
                     ),
                   ),
               ],
             ),
           ),
-          // Re-center button
           GestureDetector(
             onTap: () => _mapController.move(_airportCenter, _defaultZoom),
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(9),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(10),
+                color: Colors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(11),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.my_location_rounded,
-                color: _accentGold,
+                color: AppColors.secondary200,
                 size: 18,
               ),
             ),
@@ -289,35 +262,31 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
         },
       ),
       children: [
-        // OSM tile layer
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.gate_buddy.app',
         ),
 
-        // Route polyline
+        // Route polyline layers
         if (loaded?.activeRoute != null)
           PolylineLayer(
             polylines: [
-              // Background shadow line
               Polyline(
                 points: loaded!.activeRoute!.polylinePoints,
                 strokeWidth: 9,
-                color: _primaryBlue.withOpacity(0.18),
+                color: AppColors.primary200.withValues(alpha: 0.18),
               ),
-              // Main route line
               Polyline(
                 points: loaded.activeRoute!.polylinePoints,
                 strokeWidth: 5,
-                color: _primaryBlue,
+                color: AppColors.primary200,
                 strokeCap: StrokeCap.round,
                 strokeJoin: StrokeJoin.round,
               ),
-              // Animated dashes on top
               Polyline(
                 points: loaded.activeRoute!.polylinePoints,
                 strokeWidth: 3,
-                color: _accentGold.withOpacity(0.85),
+                color: AppColors.secondary200.withValues(alpha: 0.85),
                 pattern: StrokePattern.dashed(segments: [12, 8]),
                 strokeCap: StrokeCap.round,
               ),
@@ -337,11 +306,11 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
             }).toList(),
           ),
 
-        // User position dot
+        // User position
         if (loaded != null)
           MarkerLayer(markers: [buildUserMarker(loaded.userPosition)]),
 
-        // Destination marker when navigating
+        // Destination pin
         if (loaded?.navigationDestination != null)
           MarkerLayer(
             markers: [
@@ -359,23 +328,20 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: _accentGold,
+                        color: AppColors.secondary200,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: _accentGold.withOpacity(0.45),
+                            color: AppColors.secondary200.withValues(alpha: 0.45),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.place_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+                      child: const Icon(Icons.place_rounded,
+                          color: Colors.white, size: 20),
                     ),
-                    Container(width: 2, height: 10, color: _accentGold),
+                    Container(width: 2, height: 10, color: AppColors.secondary200),
                   ],
                 ),
               ),
@@ -385,7 +351,7 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     );
   }
 
-  // ─── Bottom sheet area ────────────────────────────────────────────────────
+  // ─── Bottom area ──────────────────────────────────────────────────────────
 
   Widget _buildBottomArea(BuildContext context, IndoorMapState state) {
     if (state is IndoorMapLoading) {
@@ -405,11 +371,11 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.error_outline, color: Colors.red),
+            Icon(Icons.error_outline, color: AppColors.red200),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(state.message, style: const TextStyle(fontSize: 13)),
-            ),
+                child: Text(state.message,
+                    style: const TextStyle(fontSize: 13))),
             TextButton(
               onPressed: () => context.read<IndoorMapCubit>().retry(),
               child: const Text('Retry'),
@@ -421,7 +387,6 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
 
     if (state is! IndoorMapLoaded) return const SizedBox.shrink();
 
-    // Navigation panel takes priority
     if (state.isNavigating) {
       return NavigationPanel(
         state: state,
@@ -430,14 +395,12 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
       );
     }
 
-    // Service detail sheet
     if (state.selectedService != null) {
       return ServiceDetailSheet(
         service: state.selectedService!,
         onClose: () => context.read<IndoorMapCubit>().clearSelection(),
-        onNavigate: () => context.read<IndoorMapCubit>().startNavigation(
-          state.selectedService!,
-        ),
+        onNavigate: () =>
+            context.read<IndoorMapCubit>().startNavigation(state.selectedService!),
       );
     }
 
@@ -448,18 +411,22 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
 
   Widget _buildLegend() {
     final items = [
+      ('Dining', const Color(0xFFEA580C)),
       ('Shops', const Color(0xFF7C3AED)),
-      ('Food', const Color(0xFFEA580C)),
-      ('VIP', const Color(0xFFF3A623)),
-      ('Services', const Color(0xFF059669)),
+      ('VIP', AppColors.secondary200),
+      ('Finance', const Color(0xFF059669)),
+      ('Counters', const Color(0xFF0284C7)),
     ];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
+        color: Colors.white.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+          ),
         ],
       ),
       child: Column(
@@ -476,17 +443,15 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: item.$2,
-                        shape: BoxShape.circle,
-                      ),
+                          color: item.$2, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       item.$1,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF1A1A2E),
+                        color: AppColors.primary200,
                       ),
                     ),
                   ],

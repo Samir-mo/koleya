@@ -2,7 +2,7 @@
   "app_title": "My App",
   "welcome": "Welcome",
   "errors": {
-    "error_screen_title":"Error",
+    "error_screen_title": "Error",
     "no_internet": "No internet connection. Please check your network.",
     "timeout": "Request timeout. Please try again.",
     "connection_error": "Connection error. Please check your internet connection.",
@@ -57,5 +57,13 @@
     "footer": {
       "made_with_love": "Made with ❤ by"
     }
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "get_started": "Get Started",
+    "page1_title": "Easy to locate location via map",
+    "page2_title": "Ready get real time flight information and updates",
+    "page3_title": "Easy Assistance Request disabled passenger and chatbot support"
   }
 }
