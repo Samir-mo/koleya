@@ -1,47 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({super.key, required this.primaryBlue});
-
-  final Color primaryBlue;
-  static const Color iconGold = Color(0xFFF3A623);
+  const HomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: primaryBlue,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(rw(20), rh(12), rw(20), rh(12)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, Routes.search);
-            },
-            child: const Icon(Icons.search, color: iconGold, size: 28),
+          _IconBtn(
+            icon: Icons.search_rounded,
+            onTap: () => Navigator.pushNamed(context, Routes.search),
           ),
-          const Text(
-            'Gate buddy',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.2,
-            ),
+          const Spacer(),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.flight_rounded,
+                  color: AppColors.secondary200, size: rw(18)),
+              horizontalSpacing(6),
+              Text(
+                'GateBuddy',
+                style:
+                    AppTextStyles.font20Bold.copyWith(color: AppColors.white),
+              ),
+            ],
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(
-                context,
-                rootNavigator: true,
-              ).pushNamed(Routes.profile);
-            },
-            child: const Icon(Icons.person_outline, color: iconGold, size: 28),
+          const Spacer(),
+          _IconBtn(
+            icon: Icons.person_outline_rounded,
+            onTap: () => Navigator.of(context, rootNavigator: true)
+                .pushNamed(Routes.profile),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _IconBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _IconBtn({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: rw(40),
+        height: rw(40),
+        decoration: const BoxDecoration(
+          color: AppColors.primary300,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: AppColors.secondary200, size: rw(20)),
       ),
     );
   }

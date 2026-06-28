@@ -1,54 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:gate_buddy/core/errors/exceptions.dart';
+import '../../data/repo/home_repo.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(const HomeInitial(0));
+  final HomeRepo repo;
 
-  int currentIndex = 0;
-
-  void changeTab(int index) {
-    currentIndex = index;
-    emit(HomeTabChanged(index));
-  }
+  HomeCubit({required this.repo}) : super(const HomeState());
 
   Future<void> loadDashboard() async {
-    emit(HomeLoading());
-    await Future.delayed(const Duration(milliseconds: 800));
-    emit(HomeLoaded({
-      'updatedFlights': [
-        {
-          'route': 'Cairo → Dubai',
-          'status': 'Delayed',
-          'time': 'Departure 10:30 AM · Gate A12',
-          'airline': 'Egypt Air',
-          'flight_no': 'MS804',
-        },
-        {
-          'route': 'Cairo → Paris',
-          'status': 'Gate changed',
-          'time': 'Departure 01:15 PM · Gate B5',
-          'airline': 'Air France',
-          'flight_no': 'AF123',
-        },
-      ],
-      'highlightedServices': [
-        {
-          'title': 'VIP Experience',
-          'description':
-              'Access exclusive lounges, fast track and premium services before your flight.',
-        },
-        {
-          'title': 'Accessibility & Assistance',
-          'description':
-              'Request wheelchairs, escort services and tailored support at any time.',
-        },
-      ],
-      'trackedFlight': {
-        'flight_no': 'MS915',
-        'route': 'Cairo → London',
-        'status': 'Boarding in 20 minutes',
-      },
-    }));
+    emit(state.copyWith(status: HomeStatus.loading, clearError: true));
+    try {
+      final data = await repo.getHomeData();
+      emit(state.copyWith(status: HomeStatus.success, data: data));
+    } on AppException catch (e) {
+      emit(state.copyWith(status: HomeStatus.failure, error: e.message));
+    } catch (e) {
+      emit(state.copyWith(status: HomeStatus.failure, error: e.toString()));
+    }
   }
+
+  Future<void> refresh() => loadDashboard();
 }

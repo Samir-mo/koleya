@@ -30,6 +30,10 @@ import 'package:gate_buddy/features/notifications/logic/cubit/notifications_cubi
 import 'package:gate_buddy/features/profile/logic/cubit/profile_cubit.dart';
 import 'package:gate_buddy/features/search/logic/cubit/search_cubit.dart';
 import 'package:gate_buddy/features/services/logic/cubit/services_cubit.dart';
+import 'package:gate_buddy/features/home/data/remote/home_remote_ds.dart';
+import 'package:gate_buddy/features/home/data/repo/home_repo.dart';
+import 'package:gate_buddy/features/home/data/repo/home_repo_impl.dart';
+import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
 import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -145,6 +149,15 @@ Future<void> setUpDependencies() async {
 
   // ── Search ────────────────────────────────────────────────────────────────
   getIt.registerFactory(() => SearchCubit());
+
+  // ── Home ──────────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton(
+    () => HomeRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<HomeRepo>(
+    () => HomeRepoImpl(remoteDs: getIt<HomeRemoteDs>()),
+  );
+  getIt.registerFactory(() => HomeCubit(repo: getIt<HomeRepo>()));
 
   // ── Tracked Flight ────────────────────────────────────────────────────────
   getIt.registerFactory(() => TrackedFlightCubit());

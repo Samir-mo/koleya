@@ -32,7 +32,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   void initState() {
     super.initState();
     _controller = PersistentTabController(initialIndex: initialIndex);
-    _homeCubit = HomeCubit()..loadDashboard();
+    _homeCubit = getIt<HomeCubit>()..loadDashboard();
   }
 
   @override

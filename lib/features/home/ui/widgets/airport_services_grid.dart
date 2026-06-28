@@ -1,99 +1,132 @@
-// import 'package:flutter/material.dart';
-// import 'package:gate_buddy/features/home/data/model/service_item.dart';
-// import 'package:gate_buddy/features/home/ui/widgets/service_card.dart';
-// import 'package:gate_buddy/ui/screens/accessibility_screen.dart';
-// import 'package:gate_buddy/ui/screens/financial_services_screen.dart';
-// import 'package:gate_buddy/ui/screens/flight_counters_screen.dart';
-// import 'package:gate_buddy/ui/screens/vip_experience_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:gate_buddy/core/router/routes.dart';
+import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
-// class AirportServicesGrid extends StatelessWidget {
-//   final Color primaryBlue;
-//   final Color accentOrange;
+class AirportServicesGrid extends StatelessWidget {
+  const AirportServicesGrid({super.key});
 
-//   const AirportServicesGrid({
-//     super.key,
-//     required this.primaryBlue,
-//     required this.accentOrange,
-//   });
+  @override
+  Widget build(BuildContext context) {
+    final services = _services();
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: rw(12),
+        mainAxisSpacing: rh(12),
+        childAspectRatio: 2.4,
+      ),
+      itemCount: services.length,
+      itemBuilder: (_, i) => _ServiceTile(item: services[i]),
+    );
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final items = [
-//       ServiceItem(
-//         title: 'Counters',
-//         icon: Icons.flight_takeoff_outlined,
-//         onTap: () {
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (_) => const FlightCountersScreen()),
-//           );
-//         },
-//       ),
-//       ServiceItem(
-//         title: 'Vip Experience',
-//         icon: Icons.workspace_premium_outlined,
-//         onTap: () {
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (_) => const VipExperienceScreen()),
-//           );
-//         },
-//       ),
-//       ServiceItem(
-//         title: 'Financial Services',
-//         icon: Icons.show_chart_outlined,
-//         onTap: () {
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (_) => const FinancialServicesScreen()),
-//           );
-//         },
-//       ),
-//       ServiceItem(
-//         title: 'Accessibility',
-//         icon: Icons.accessible_outlined,
-//         onTap: () {
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (_) => const AccessibilityScreen()),
-//           );
-//         },
-//       ),
-//       ServiceItem(
-//         title: 'Shops',
-//         icon: Icons.storefront_outlined,
-//         onTap: () {},
-//       ),
-//       ServiceItem(
-//         title: 'Restaurant',
-//         icon: Icons.restaurant_outlined,
-//         onTap: () {},
-//       ),
-//     ];
+  List<_ServiceItem> _services() => [
+        _ServiceItem(
+          icon: Icons.confirmation_number_outlined,
+          labelKey: 'home.service_counters',
+          color: AppColors.primary200,
+          route: Routes.counters,
+        ),
+        _ServiceItem(
+          icon: Icons.star_outline_rounded,
+          labelKey: 'home.service_vip',
+          color: AppColors.secondary200,
+          route: Routes.vipExperience,
+        ),
+        _ServiceItem(
+          icon: Icons.account_balance_outlined,
+          labelKey: 'home.service_financial',
+          color: AppColors.green200,
+          route: Routes.financial,
+        ),
+        _ServiceItem(
+          icon: Icons.accessible_outlined,
+          labelKey: 'home.service_accessibility',
+          color: AppColors.blue200,
+          route: Routes.accessibility,
+        ),
+        _ServiceItem(
+          icon: Icons.shopping_bag_outlined,
+          labelKey: 'home.service_shops',
+          color: AppColors.amber200,
+          route: Routes.explorePlacesScreen,
+        ),
+        _ServiceItem(
+          icon: Icons.restaurant_outlined,
+          labelKey: 'home.service_restaurants',
+          color: AppColors.red200,
+          route: Routes.explorePlacesScreen,
+        ),
+      ];
+}
 
-//     return Container(
-//       width: double.infinity,
-//       padding: const EdgeInsets.all(10),
-//       decoration: BoxDecoration(
-//         color: const Color(0xFFFFFCF8),
-//         borderRadius: BorderRadius.circular(20),
-//         border: Border.all(color: const Color(0xFFE3E7F1)),
-//       ),
-//       child: Column(
-//         children: [
-//           for (int row = 0; row < 3; row++)
-//             Padding(
-//               padding: EdgeInsets.only(bottom: row == 2 ? 0 : 8),
-//               child: Row(
-//                 children: [
-//                   Expanded(child: ServiceCard(item: items[row * 2])),
-//                   const SizedBox(width: 8),
-//                   Expanded(child: ServiceCard(item: items[row * 2 + 1])),
-//                 ],
-//               ),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+class _ServiceItem {
+  final IconData icon;
+  final String labelKey;
+  final Color color;
+  final String route;
+  const _ServiceItem({
+    required this.icon,
+    required this.labelKey,
+    required this.color,
+    required this.route,
+  });
+}
+
+class _ServiceTile extends StatelessWidget {
+  final _ServiceItem item;
+  const _ServiceTile({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.customColors;
+
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, item.route),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.circular(rr(14)),
+          border: Border.all(color: colors.border),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: rw(36),
+              height: rw(36),
+              decoration: BoxDecoration(
+                color: item.color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(rr(10)),
+              ),
+              child: Icon(item.icon, size: rw(18), color: item.color),
+            ),
+            horizontalSpacing(10),
+            Expanded(
+              child: Text(
+                item.labelKey.tr(),
+                style: AppTextStyles.font14SemiBold
+                    .copyWith(color: colors.textPrimary),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

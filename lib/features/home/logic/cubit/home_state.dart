@@ -1,42 +1,35 @@
 import 'package:equatable/equatable.dart';
+import '../../data/models/home_model.dart';
 
-abstract class HomeState extends Equatable {
-  const HomeState();
+enum HomeStatus { initial, loading, success, failure }
 
-  @override
-  List<Object?> get props => [];
-}
+class HomeState extends Equatable {
+  final HomeStatus status;
+  final HomeModel? data;
+  final String? error;
 
-class HomeInitial extends HomeState {
-  final int index;
-  const HomeInitial(this.index);
+  const HomeState({
+    this.status = HomeStatus.initial,
+    this.data,
+    this.error,
+  });
 
-  @override
-  List<Object?> get props => [index];
-}
+  bool get isLoading => status == HomeStatus.loading;
+  bool get isSuccess => status == HomeStatus.success;
+  bool get isFailure => status == HomeStatus.failure;
 
-class HomeTabChanged extends HomeState {
-  final int index;
-  const HomeTabChanged(this.index);
-
-  @override
-  List<Object?> get props => [index];
-}
-
-class HomeLoading extends HomeState {}
-
-class HomeLoaded extends HomeState {
-  final Map<String, dynamic> data;
-  const HomeLoaded(this.data);
-
-  @override
-  List<Object?> get props => [data];
-}
-
-class HomeError extends HomeState {
-  final String error;
-  const HomeError(this.error);
+  HomeState copyWith({
+    HomeStatus? status,
+    HomeModel? data,
+    String? error,
+    bool clearError = false,
+  }) =>
+      HomeState(
+        status: status ?? this.status,
+        data: data ?? this.data,
+        error: clearError ? null : error ?? this.error,
+      );
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [status, data, error];
 }
