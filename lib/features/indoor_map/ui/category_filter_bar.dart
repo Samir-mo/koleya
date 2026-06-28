@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 
-
 class CategoryFilterBar extends StatelessWidget {
   final String? selectedCategory;
   final ValueChanged<String?> onCategoryChanged;
@@ -28,11 +27,11 @@ class CategoryFilterBar extends StatelessWidget {
 
   static const categoryLabels = {
     null: 'All',
-    'SHOPS': 'Shops',
-    'RESTAURANTS': 'Restaurants',
-    'SERVICES': 'Services',
+    'SHOPS': 'SHOPS',
+    'RESTAURANTS': 'RESTAURANTS',
+    'SERVICES': 'SERVICES',
     'ATM': 'ATM',
-    'LOUNGE': 'Lounge',
+    'LOUNGE': 'LOUNGE',
   };
 
   const CategoryFilterBar({
@@ -67,7 +66,7 @@ class CategoryFilterBar extends StatelessWidget {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: AppColors.primary200.withOpacity(0.3),
+                          color: AppColors.primary200.withValues(alpha: 0.3),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),

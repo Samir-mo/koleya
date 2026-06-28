@@ -1,17 +1,29 @@
 import 'package:equatable/equatable.dart';
-import 'package:gate_buddy/features/indoor_map/data/models/service_location_model.dart';
+import 'package:gate_buddy/core/shared/models/service_model.dart';
 import 'package:gate_buddy/features/indoor_map/domain/airport_waypoints.dart';
 import 'package:latlong2/latlong.dart';
 
 enum MapCategory {
   all('ALL'),
-  shops('SHOPS'),
   restaurants('RESTAURANTS'),
-  vip('VIP'),
-  services('SERVICES');
+  shops('SHOPS'),
+  vipServices('VIP_SERVICES'),
+  financial('FINANCIAL'),
+  counters('COUNTERS'),
+  accessibility('ACCESSIBILITY');
 
-  const MapCategory(this.label);
-  final String label;
+  const MapCategory(this.value);
+  final String value;
+
+  String get label => switch (this) {
+        MapCategory.all => 'All',
+        MapCategory.restaurants => 'Dining',
+        MapCategory.shops => 'Shops',
+        MapCategory.vipServices => 'VIP',
+        MapCategory.financial => 'Finance',
+        MapCategory.counters => 'Counters',
+        MapCategory.accessibility => 'Access',
+      };
 }
 
 enum NavigationMode { none, routing, navigating }
@@ -27,13 +39,13 @@ class IndoorMapInitial extends IndoorMapState {}
 class IndoorMapLoading extends IndoorMapState {}
 
 class IndoorMapLoaded extends IndoorMapState {
-  final List<ServiceLocationModel> allServices;
-  final List<ServiceLocationModel> filteredServices;
+  final List<ServiceModel> allServices;
+  final List<ServiceModel> filteredServices;
   final MapCategory selectedCategory;
-  final ServiceLocationModel? selectedService;
+  final ServiceModel? selectedService;
   final NavigationMode navigationMode;
   final IndoorRoute? activeRoute;
-  final ServiceLocationModel? navigationDestination;
+  final ServiceModel? navigationDestination;
   final int currentStepIndex;
   final LatLng userPosition;
   final int simulationPointIndex;
@@ -68,15 +80,15 @@ class IndoorMapLoaded extends IndoorMapState {
   }
 
   IndoorMapLoaded copyWith({
-    List<ServiceLocationModel>? allServices,
-    List<ServiceLocationModel>? filteredServices,
+    List<ServiceModel>? allServices,
+    List<ServiceModel>? filteredServices,
     MapCategory? selectedCategory,
-    ServiceLocationModel? selectedService,
+    ServiceModel? selectedService,
     bool clearSelected = false,
     NavigationMode? navigationMode,
     IndoorRoute? activeRoute,
     bool clearRoute = false,
-    ServiceLocationModel? navigationDestination,
+    ServiceModel? navigationDestination,
     bool clearDestination = false,
     int? currentStepIndex,
     LatLng? userPosition,
@@ -86,9 +98,8 @@ class IndoorMapLoaded extends IndoorMapState {
       allServices: allServices ?? this.allServices,
       filteredServices: filteredServices ?? this.filteredServices,
       selectedCategory: selectedCategory ?? this.selectedCategory,
-      selectedService: clearSelected
-          ? null
-          : (selectedService ?? this.selectedService),
+      selectedService:
+          clearSelected ? null : (selectedService ?? this.selectedService),
       navigationMode: navigationMode ?? this.navigationMode,
       activeRoute: clearRoute ? null : (activeRoute ?? this.activeRoute),
       navigationDestination: clearDestination
@@ -102,17 +113,17 @@ class IndoorMapLoaded extends IndoorMapState {
 
   @override
   List<Object?> get props => [
-    allServices,
-    filteredServices,
-    selectedCategory,
-    selectedService,
-    navigationMode,
-    activeRoute,
-    navigationDestination,
-    currentStepIndex,
-    userPosition,
-    simulationPointIndex,
-  ];
+        allServices,
+        filteredServices,
+        selectedCategory,
+        selectedService,
+        navigationMode,
+        activeRoute,
+        navigationDestination,
+        currentStepIndex,
+        userPosition,
+        simulationPointIndex,
+      ];
 }
 
 class IndoorMapError extends IndoorMapState {
