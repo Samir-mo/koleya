@@ -13,6 +13,9 @@ import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo.dart';
 import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo_impl.dart';
 import 'package:gate_buddy/features/ai_chat/logic/cubit/ai_chat_cubit.dart';
 import 'package:gate_buddy/core/shared/data/services_data_source.dart';
+import 'package:gate_buddy/features/profile/data/remote/profile_remote_ds.dart';
+import 'package:gate_buddy/features/profile/data/repo/profile_repo.dart';
+import 'package:gate_buddy/features/profile/data/repo/profile_repo_impl.dart';
 import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo.dart';
 import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo_impl.dart';
 import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
@@ -132,6 +135,12 @@ Future<void> setUpDependencies() async {
   getIt.registerFactory(() => ServicesCubit());
 
   // ── Profile ───────────────────────────────────────────────────────────────
+  getIt.registerLazySingleton(
+    () => ProfileRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<ProfileRepo>(
+    () => ProfileRepoImpl(remoteDs: getIt<ProfileRemoteDs>()),
+  );
   getIt.registerFactory(() => ProfileCubit());
 
   // ── Search ────────────────────────────────────────────────────────────────

@@ -20,8 +20,8 @@ class ResetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AuthCubit(repo: getIt()),
+    return BlocProvider.value(
+      value: getIt<AuthCubit>(),
       child: _ResetPasswordView(resetToken: resetToken),
     );
   }

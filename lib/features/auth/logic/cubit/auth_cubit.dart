@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/errors/failure.dart';
 
 import '../../data/repo/auth_repo.dart';
 import 'auth_state.dart';
@@ -116,6 +117,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   static String _message(Object e) {
+    if (e is Failure) return e.message;
     final s = e.toString();
     if (s.startsWith('Exception:')) return s.replaceFirst('Exception: ', '');
     return s;

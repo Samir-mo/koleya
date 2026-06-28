@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/errors/failure.dart';
 
 import '../../data/models/flight_model.dart';
 import '../../data/repo/flights_repo.dart';
@@ -21,7 +22,7 @@ class FlightsCubit extends Cubit<FlightsState> {
     } catch (e) {
       emit(state.copyWith(
         status: FlightsStatus.failure,
-        error: e.toString(),
+        error: _errorMessage(e),
       ));
     }
   }
@@ -45,7 +46,7 @@ class FlightsCubit extends Cubit<FlightsState> {
     } catch (e) {
       emit(state.copyWith(
         status: FlightsStatus.failure,
-        error: e.toString(),
+        error: _errorMessage(e),
       ));
     }
   }
@@ -64,8 +65,13 @@ class FlightsCubit extends Cubit<FlightsState> {
       }
       _updateTrackedState(flight.id, !flight.isTracked);
     } catch (e) {
-      emit(state.copyWith(clearTracking: true, error: e.toString()));
+      emit(state.copyWith(clearTracking: true, error: _errorMessage(e)));
     }
+  }
+
+  String _errorMessage(Object e) {
+    if (e is Failure) return e.message;
+    return e.toString();
   }
 
   void _updateTrackedState(String id, bool isTracked) {
