@@ -182,5 +182,13 @@
     "financial_currency_exchange": "صرف العملات",
     "financial_insurance": "التأمين",
     "top_picks": "أفضل الاختيارات اليوم"
+  },
+  "indoor_map": {
+    "category_all": "الكل",
+    "category_shops": "المحلات",
+    "category_restaurants": "المطاعم",
+    "category_services": "الخدمات",
+    "category_atm": "الصراف الآلي",
+    "category_lounge": "الصالة"
   }
 }

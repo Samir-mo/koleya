@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/shared/models/service_model.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class ServiceDetailSheet extends StatelessWidget {
   final ServiceModel service;
@@ -16,11 +18,12 @@ class ServiceDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      margin: EdgeInsets.fromLTRB(rw(12), 0, rw(12), rh(12)),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(20)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.12),
@@ -34,18 +37,18 @@ class ServiceDetailSheet extends StatelessWidget {
         children: [
           // Drag handle
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(top: rh(10)),
             child: Container(
-              width: 36,
-              height: 4,
+              width: rw(36),
+              height: rh(4),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
+                color: colors.border,
+                borderRadius: BorderRadius.circular(rr(2)),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            padding: EdgeInsets.fromLTRB(rw(16), rh(12), rw(16), rh(16)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

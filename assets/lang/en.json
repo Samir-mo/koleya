@@ -182,5 +182,13 @@
     "financial_currency_exchange": "Currency Exchange",
     "financial_insurance": "Insurance",
     "top_picks": "Top Picks of the Day"
+  },
+  "indoor_map": {
+    "category_all": "All",
+    "category_shops": "Shops",
+    "category_restaurants": "Restaurants",
+    "category_services": "Services",
+    "category_atm": "ATM",
+    "category_lounge": "Lounge"
   }
 }

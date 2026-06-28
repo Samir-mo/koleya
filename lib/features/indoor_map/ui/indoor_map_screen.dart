@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:gate_buddy/core/shared/models/service_model.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
 import 'package:latlong2/latlong.dart';
@@ -48,15 +49,15 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     if (points.isEmpty) return;
     final bounds = LatLngBounds.fromPoints(points);
     _mapController.fitCamera(
-      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(60)),
+      CameraFit.bounds(bounds: bounds, padding: EdgeInsets.all(rw(60))),
     );
   }
 
   // ─── Marker appearance by category ───────────────────────────────────────
 
   Color _markerColor(String category) => switch (category.toUpperCase()) {
-        'RESTAURANTS' => const Color(0xFFEA580C),
-        'SHOPS' => const Color(0xFF7C3AED),
+        'RESTAURANTS' => AppColors.primary200,
+        'SHOPS' => AppColors.primary300,
         'VIP_SERVICES' => AppColors.secondary200,
         'FINANCIAL' => const Color(0xFF059669),
         'COUNTERS' => const Color(0xFF0284C7),

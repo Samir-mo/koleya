@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
 
 class NavigationPanel extends StatelessWidget {
@@ -18,6 +20,7 @@ class NavigationPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     final route = state.activeRoute;
     final dest = state.navigationDestination;
     final step = state.currentStep;
@@ -28,13 +31,13 @@ class NavigationPanel extends StatelessWidget {
         (route.polylinePoints.length - 1).clamp(1, double.infinity);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      margin: EdgeInsets.fromLTRB(rw(12), 0, rw(12), rh(12)),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(20)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha:0.14),
+            color: Colors.black.withValues(alpha: 0.14),
             blurRadius: 20,
             offset: const Offset(0, -2),
           ),
@@ -45,7 +48,7 @@ class NavigationPanel extends StatelessWidget {
         children: [
           // ── Blue header ──────────────────────────────────────────────────
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+            padding: EdgeInsets.fromLTRB(rw(16), rh(14), rw(16), rh(12)),
             decoration: const BoxDecoration(
               color: AppColors.primary200,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

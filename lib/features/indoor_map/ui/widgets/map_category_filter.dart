@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
 
 class MapCategoryFilter extends StatelessWidget {
@@ -14,28 +16,29 @@ class MapCategoryFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return SizedBox(
-      height: 38,
+      height: rh(38),
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: rw(16)),
         children: MapCategory.values.map((cat) {
           final isActive = selected == cat;
           return Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(right: rw(8)),
             child: GestureDetector(
               onTap: () => onSelected(cat),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(8)),
                 decoration: BoxDecoration(
-                  color: isActive ? AppColors.primary200 : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  color: isActive ? AppColors.primary200 : colors.surface,
+                  borderRadius: BorderRadius.circular(rr(20)),
                   border: Border.all(
                     color: isActive
                         ? AppColors.primary200
-                        : const Color(0xFFE3E7F1),
+                        : colors.border,
                     width: 1.5,
                   ),
                   boxShadow: isActive
