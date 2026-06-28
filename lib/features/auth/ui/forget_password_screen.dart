@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/forget_password_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/forget_password_state.dart';
@@ -74,23 +76,23 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const AuthHeader(
-                    title: 'Forgot Password?',
-                    subtitle: "Enter your email and we'll send a reset code",
+                  AuthHeader(
+                    title: 'auth.forget_password.title'.tr(),
+                    subtitle: 'auth.forget_password.subtitle'.tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(rw(24)),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 8),
+                          verticalSpacing(8),
                           _EnvelopeIllustration(),
-                          const SizedBox(height: 32),
+                          verticalSpacing(32),
                           AuthTextField(
                             controller: _emailController,
-                            label: 'Email',
+                            label: 'auth.forget_password.email'.tr(),
                             hint: 'john@example.com',
                             prefixIcon: Icons.email_outlined,
                             keyboardType: TextInputType.emailAddress,
@@ -98,24 +100,24 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
                             onFieldSubmitted: (_) => _onSend(),
                             validator: Validators.email,
                           ),
-                          const SizedBox(height: 28),
+                          verticalSpacing(28),
                           AuthPrimaryButton(
-                            label: 'Send Reset Code',
+                            label: 'auth.forget_password.button'.tr(),
                             isLoading: state.isLoading,
                             onPressed: _onSend,
                           ),
-                          const SizedBox(height: 24),
+                          verticalSpacing(24),
                           Center(
                             child: GestureDetector(
-                              onTap: () => Navigator.pop(context),
+                              onTap: () => context.pop(),
                               child: Text(
-                                'Back to Login',
+                                'auth.forget_password.back'.tr(),
                                 style: AppTextStyles.font14SemiBold.copyWith(
                                     color: AppColors.primary200),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          verticalSpacing(24),
                         ],
                       ),
                     ),

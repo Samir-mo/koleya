@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
@@ -56,62 +58,61 @@ class _LoginScreenState extends State<LoginScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const AuthHeader(
-                    title: 'Welcome Back',
-                    subtitle: 'Sign in to continue your journey',
+                  AuthHeader(
+                    title: 'auth.login.title'.tr(),
+                    subtitle: 'auth.login.subtitle'.tr(),
                     showBack: false,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(rw(24)),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 8),
+                          verticalSpacing(8),
                           AuthTextField(
                             controller: _emailController,
-                            label: 'Email',
+                            label: 'auth.login.email'.tr(),
                             hint: 'john@example.com',
                             prefixIcon: Icons.email_outlined,
                             keyboardType: TextInputType.emailAddress,
                             validator: Validators.email,
                           ),
-                          const SizedBox(height: 16),
+                          verticalSpacing(16),
                           AuthTextField(
                             controller: _passwordController,
-                            label: 'Password',
+                            label: 'auth.login.password'.tr(),
                             prefixIcon: Icons.lock_outline_rounded,
                             isPassword: true,
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (_) => _onLogin(),
                             validator: (v) =>
-                                Validators.required(v, fieldName: 'Password'),
+                                Validators.required(v, fieldName: 'auth.login.password'.tr()),
                           ),
-                          const SizedBox(height: 4),
+                          verticalSpacing(4),
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () => Navigator.pushNamed(
-                                  context, Routes.forgetPassword),
+                              onPressed: () => context.pushNamed(Routes.forgetPassword),
                               child: Text(
-                                'Forgot password?',
+                                'auth.login.forgot_password'.tr(),
                                 style: AppTextStyles.font14SemiBold.copyWith(
                                     color: AppColors.primary200),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          verticalSpacing(8),
                           AuthPrimaryButton(
-                            label: 'Log In',
+                            label: 'auth.login.button'.tr(),
                             isLoading: state.isLoading,
                             onPressed: _onLogin,
                           ),
-                          const SizedBox(height: 28),
+                          verticalSpacing(28),
                           _buildDivider(colors),
-                          const SizedBox(height: 28),
+                          verticalSpacing(28),
                           _buildSignupRow(context, colors),
-                          const SizedBox(height: 24),
+                          verticalSpacing(24),
                         ],
                       ),
                     ),
@@ -130,9 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Expanded(child: Divider(color: colors.divider)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(horizontal: rw(12)),
           child: Text(
-            'or',
+            'auth.login.divider'.tr(),
             style: AppTextStyles.font12Regular.copyWith(
                 color: colors.textHint),
           ),
@@ -147,14 +148,14 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account? ",
+          'auth.login.signup_prompt'.tr(),
           style: AppTextStyles.font14Regular.copyWith(
               color: colors.textSecondary),
         ),
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, Routes.signup),
+          onTap: () => context.pushNamed(Routes.signup),
           child: Text(
-            'Sign Up',
+            'auth.login.signup_link'.tr(),
             style: AppTextStyles.font14SemiBold.copyWith(
                 color: AppColors.primary200),
           ),

@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
@@ -61,47 +63,47 @@ class _SignupScreenState extends State<SignupScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const AuthHeader(
-                    title: 'Create Account',
-                    subtitle: 'Join GateBuddy to track your flights',
+                  AuthHeader(
+                    title: 'auth.signup.title'.tr(),
+                    subtitle: 'auth.signup.subtitle'.tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(rw(24)),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 8),
+                          verticalSpacing(8),
                           AuthTextField(
                             controller: _nameController,
-                            label: 'Full Name',
+                            label: 'auth.signup.full_name'.tr(),
                             hint: 'John Doe',
                             prefixIcon: Icons.person_outline_rounded,
                             validator: (v) => Validators.minLength(v, 3,
-                                fieldName: 'Name'),
+                                fieldName: 'auth.signup.full_name'.tr()),
                           ),
-                          const SizedBox(height: 16),
+                          verticalSpacing(16),
                           AuthTextField(
                             controller: _emailController,
-                            label: 'Email',
+                            label: 'auth.signup.email'.tr(),
                             hint: 'john@example.com',
                             prefixIcon: Icons.email_outlined,
                             keyboardType: TextInputType.emailAddress,
                             validator: Validators.email,
                           ),
-                          const SizedBox(height: 16),
+                          verticalSpacing(16),
                           AuthTextField(
                             controller: _passwordController,
-                            label: 'Password',
+                            label: 'auth.signup.password'.tr(),
                             prefixIcon: Icons.lock_outline_rounded,
                             isPassword: true,
                             validator: Validators.password,
                           ),
-                          const SizedBox(height: 16),
+                          verticalSpacing(16),
                           AuthTextField(
                             controller: _confirmController,
-                            label: 'Confirm Password',
+                            label: 'auth.signup.confirm_password'.tr(),
                             prefixIcon: Icons.lock_outline_rounded,
                             isPassword: true,
                             textInputAction: TextInputAction.done,
@@ -109,15 +111,15 @@ class _SignupScreenState extends State<SignupScreen> {
                             validator: (v) => Validators.confirmPassword(
                                 v, _passwordController.text),
                           ),
-                          const SizedBox(height: 28),
+                          verticalSpacing(28),
                           AuthPrimaryButton(
-                            label: 'Create Account',
+                            label: 'auth.signup.button'.tr(),
                             isLoading: state.isLoading,
                             onPressed: _onSignup,
                           ),
-                          const SizedBox(height: 24),
+                          verticalSpacing(24),
                           _buildLoginRow(context),
-                          const SizedBox(height: 24),
+                          verticalSpacing(24),
                         ],
                       ),
                     ),
@@ -137,14 +139,14 @@ class _SignupScreenState extends State<SignupScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Already have an account? ',
+          'auth.signup.login_prompt'.tr(),
           style: AppTextStyles.font14Regular.copyWith(
               color: colors.textSecondary),
         ),
         GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => context.pop(),
           child: Text(
-            'Log In',
+            'auth.signup.login_link'.tr(),
             style: AppTextStyles.font14SemiBold.copyWith(
                 color: AppColors.primary200),
           ),

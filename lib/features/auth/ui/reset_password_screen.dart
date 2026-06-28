@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
@@ -71,30 +73,30 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const AuthHeader(
-                    title: 'Reset Password',
-                    subtitle: 'Create a new secure password',
+                  AuthHeader(
+                    title: 'auth.reset_password.title'.tr(),
+                    subtitle: 'auth.reset_password.subtitle'.tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(rw(24)),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
-                          const SizedBox(height: 8),
+                          verticalSpacing(8),
                           _LockIllustration(),
-                          const SizedBox(height: 32),
+                          verticalSpacing(32),
                           AuthTextField(
                             controller: _passwordController,
-                            label: 'New Password',
+                            label: 'auth.reset_password.new_password'.tr(),
                             prefixIcon: Icons.lock_outline_rounded,
                             isPassword: true,
                             validator: Validators.password,
                           ),
-                          const SizedBox(height: 16),
+                          verticalSpacing(16),
                           AuthTextField(
                             controller: _confirmController,
-                            label: 'Confirm New Password',
+                            label: 'auth.reset_password.confirm_password'.tr(),
                             prefixIcon: Icons.lock_outline_rounded,
                             isPassword: true,
                             textInputAction: TextInputAction.done,
@@ -102,13 +104,13 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
                             validator: (v) => Validators.confirmPassword(
                                 v, _passwordController.text),
                           ),
-                          const SizedBox(height: 28),
+                          verticalSpacing(28),
                           AuthPrimaryButton(
-                            label: 'Reset Password',
+                            label: 'auth.reset_password.button'.tr(),
                             isLoading: state.isLoading,
                             onPressed: _onReset,
                           ),
-                          const SizedBox(height: 24),
+                          verticalSpacing(24),
                         ],
                       ),
                     ),

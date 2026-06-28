@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/verify_code_state.dart';
 import 'package:gate_buddy/features/auth/ui/reset_password_screen.dart';
@@ -55,7 +57,7 @@ class _GetCodeViewState extends State<_GetCodeView> {
     if (_code.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please enter all 6 digits'),
+          content: Text('auth.get_code.error'.tr()),
           backgroundColor: AppColors.amber200,
           behavior: SnackBarBehavior.floating,
           shape:
@@ -94,32 +96,32 @@ class _GetCodeViewState extends State<_GetCodeView> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const AuthHeader(
-                    title: 'Enter Reset Code',
-                    subtitle: 'Check your email for the 6-digit code',
+                  AuthHeader(
+                    title: 'auth.get_code.title'.tr(),
+                    subtitle: 'auth.get_code.subtitle'.tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(rw(24)),
                     child: Column(
                       children: [
-                        const SizedBox(height: 8),
+                        verticalSpacing(8),
                         _CodeIllustration(),
-                        const SizedBox(height: 24),
+                        verticalSpacing(24),
                         _EmailChip(email: widget.email),
-                        const SizedBox(height: 32),
+                        verticalSpacing(32),
                         _OtpRow(
                           controllers: _controllers,
                           focusNodes: _focusNodes,
                         ),
-                        const SizedBox(height: 12),
+                        verticalSpacing(12),
                         _ResendButton(email: widget.email),
-                        const SizedBox(height: 32),
+                        verticalSpacing(32),
                         AuthPrimaryButton(
-                          label: 'Verify Code',
+                          label: 'auth.get_code.button'.tr(),
                           isLoading: state.isLoading,
                           onPressed: _onVerify,
                         ),
-                        const SizedBox(height: 24),
+                        verticalSpacing(24),
                       ],
                     ),
                   ),
@@ -184,8 +186,8 @@ class _OtpBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.customColors;
     return SizedBox(
-      width: 48,
-      height: 56,
+      width: rw(48),
+      height: rh(56),
       child: TextField(
         controller: controller,
         focusNode: focusNode,
@@ -246,17 +248,17 @@ class _EmailChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(10)),
       decoration: BoxDecoration(
         color: AppColors.primary50,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(rr(10)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.email_outlined,
               size: 16, color: AppColors.primary200),
-          const SizedBox(width: 8),
+          SizedBox(width: rw(8)),
           Text(
             email,
             style: AppTextStyles.font14SemiBold.copyWith(
@@ -279,7 +281,7 @@ class _ResendButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Didn't receive the code? ",
+          'auth.get_code.resend_prompt'.tr(),
           style: AppTextStyles.font14Regular.copyWith(
               color: colors.textSecondary),
         ),
@@ -288,7 +290,7 @@ class _ResendButton extends StatelessWidget {
             context.read<VerifyCodeCubit>().resendCode(email);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('Code resent successfully'),
+                content: Text('auth.get_code.success'.tr()),
                 backgroundColor: AppColors.green200,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
@@ -297,7 +299,7 @@ class _ResendButton extends StatelessWidget {
             );
           },
           child: Text(
-            'Resend',
+            'auth.get_code.resend_link'.tr(),
             style: AppTextStyles.font14SemiBold.copyWith(
                 color: AppColors.primary200),
           ),

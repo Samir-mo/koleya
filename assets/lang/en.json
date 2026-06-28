@@ -95,5 +95,52 @@
     "page1_title": "Easy to locate location via map",
     "page2_title": "Ready get real time flight information and updates",
     "page3_title": "Easy Assistance Request disabled passenger and chatbot support"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue your journey",
+      "email": "Email",
+      "password": "Password",
+      "forgot_password": "Forgot password?",
+      "button": "Log In",
+      "divider": "or",
+      "signup_prompt": "Don't have an account? ",
+      "signup_link": "Sign Up"
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Join GateBuddy to track your flights",
+      "full_name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "button": "Create Account",
+      "login_prompt": "Already have an account? ",
+      "login_link": "Log In"
+    },
+    "forget_password": {
+      "title": "Forgot Password?",
+      "subtitle": "Enter your email and we'll send a reset code",
+      "email": "Email",
+      "button": "Send Reset Code",
+      "back": "Back to Login"
+    },
+    "get_code": {
+      "title": "Enter Reset Code",
+      "subtitle": "Check your email for the 6-digit code",
+      "error": "Please enter all 6 digits",
+      "resend_prompt": "Didn't receive the code? ",
+      "resend_link": "Resend",
+      "success": "Code resent successfully",
+      "button": "Verify Code"
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "subtitle": "Create a new secure password",
+      "new_password": "New Password",
+      "confirm_password": "Confirm New Password",
+      "button": "Reset Password"
+    }
   }
 }
