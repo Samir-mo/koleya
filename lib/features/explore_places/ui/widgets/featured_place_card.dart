@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/shared/models/service_model.dart';
 
 class FeaturedPlaceCard extends StatelessWidget {
@@ -21,11 +22,11 @@ class FeaturedPlaceCard extends StatelessWidget {
         arguments: {'place': place},
       ),
       child: Container(
-        width: 200.w,
-        margin: EdgeInsets.only(right: 14.w),
+        width: rw(200),
+        margin: EdgeInsets.only(right: rw(14)),
         decoration: BoxDecoration(
           color: colors.surface,
-          borderRadius: BorderRadius.circular(18.r),
+          borderRadius: BorderRadius.circular(rr(18)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.08),
@@ -42,10 +43,10 @@ class FeaturedPlaceCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(18.r)),
+                      BorderRadius.vertical(top: Radius.circular(rr(18))),
                   child: CachedNetworkImage(
                     imageUrl: place.primaryImage ?? '',
-                    height: 130.h,
+                    height: rh(130),
                     width: double.infinity,
                     fit: BoxFit.cover,
                     placeholder: (_, __) => Container(

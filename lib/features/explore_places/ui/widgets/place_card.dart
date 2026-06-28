@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/shared/models/service_model.dart';
 
 class PlaceCard extends StatelessWidget {
@@ -21,10 +22,10 @@ class PlaceCard extends StatelessWidget {
         arguments: {'place': place},
       ),
       child: Container(
-        margin: EdgeInsets.only(bottom: 14.h),
+        margin: EdgeInsets.only(bottom: rh(14)),
         decoration: BoxDecoration(
           color: colors.surface,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(rr(16)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.06),
@@ -38,12 +39,12 @@ class PlaceCard extends StatelessWidget {
             // Image
             ClipRRect(
               borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(16.r),
+                left: Radius.circular(rr(16)),
               ),
               child: CachedNetworkImage(
                 imageUrl: place.primaryImage ?? '',
-                width: 110.w,
-                height: 110.h,
+                width: rw(110),
+                height: rh(110),
                 fit: BoxFit.cover,
                 placeholder: (_, __) => _placeholder(colors.surfaceVariant),
                 errorWidget: (_, __, ___) =>
@@ -54,7 +55,7 @@ class PlaceCard extends StatelessWidget {
             // Info
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(12)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -65,7 +66,7 @@ class PlaceCard extends StatelessWidget {
                           child: Text(
                             place.name,
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: rf(14),
                               fontWeight: FontWeight.w700,
                               color: colors.textPrimary,
                             ),
@@ -73,7 +74,7 @@ class PlaceCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(width: 6.w),
+                        SizedBox(width: rw(6)),
                         _StatusBadge(isOpen: place.isOpen),
                       ],
                     ),

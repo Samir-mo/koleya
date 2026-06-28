@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class ServiceTypeChip extends StatelessWidget {
   final String label;
@@ -24,11 +24,11 @@ class ServiceTypeChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin: EdgeInsets.only(right: 10.w),
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+        margin: EdgeInsets.only(right: rw(10)),
+        padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary200 : colors.surface,
-          borderRadius: BorderRadius.circular(30.r),
+          borderRadius: BorderRadius.circular(rr(30)),
           border: Border.all(
             color: isSelected ? AppColors.primary200 : colors.border,
           ),
@@ -47,14 +47,14 @@ class ServiceTypeChip extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 16.r,
+              size: 16,
               color: isSelected ? AppColors.white : colors.iconPrimary,
             ),
-            SizedBox(width: 6.w),
+            SizedBox(width: rw(6)),
             Text(
               label,
               style: TextStyle(
-                fontSize: 13.sp,
+                fontSize: rf(13),
                 fontWeight:
                     isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected ? AppColors.white : colors.textPrimary,

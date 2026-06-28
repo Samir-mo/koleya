@@ -167,5 +167,20 @@
     "financial_services_coming_soon": "الخدمات المالية — قريباً",
     "vip_experience_coming_soon": "تجربة VIP — قريباً",
     "details_coming_soon": "تفاصيل الخدمة — قريباً"
+  },
+  "explore_places": {
+    "search_placeholder": "ابحث بالاسم أو الفئة...",
+    "category_all": "الكل",
+    "category_restaurants": "المطاعم",
+    "category_shops": "المحلات",
+    "category_vip": "VIP",
+    "category_financial": "خدمات مالية",
+    "category_counters": "العدادات",
+    "category_accessibility": "إمكانية الوصول",
+    "financial_all": "الكل",
+    "financial_atms": "أجهزة الصراف الآلي",
+    "financial_currency_exchange": "صرف العملات",
+    "financial_insurance": "التأمين",
+    "top_picks": "أفضل الاختيارات اليوم"
   }
 }

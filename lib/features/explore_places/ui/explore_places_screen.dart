@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,37 +22,37 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
   bool _showSearch = false;
 
   // Values must match the backend's 'category' field exactly (uppercase)
-  static const _types = [
-    (label: 'All', value: null, icon: Icons.grid_view_rounded),
+  late final _types = [
+    (label: 'explore_places.category_all'.tr(), value: null, icon: Icons.grid_view_rounded),
     (
-      label: 'Restaurants',
+      label: 'explore_places.category_restaurants'.tr(),
       value: 'RESTAURANTS',
       icon: Icons.restaurant_rounded,
     ),
-    (label: 'Shops', value: 'SHOPS', icon: Icons.shopping_bag_rounded),
-    (label: 'VIP', value: 'VIP_SERVICES', icon: Icons.stars_rounded),
+    (label: 'explore_places.category_shops'.tr(), value: 'SHOPS', icon: Icons.shopping_bag_rounded),
+    (label: 'explore_places.category_vip'.tr(), value: 'VIP_SERVICES', icon: Icons.stars_rounded),
     (
-      label: 'Financial',
+      label: 'explore_places.category_financial'.tr(),
       value: 'FINANCIAL',
       icon: Icons.account_balance_rounded,
     ),
     (
-      label: 'Counters',
+      label: 'explore_places.category_counters'.tr(),
       value: 'COUNTERS',
       icon: Icons.confirmation_number_rounded,
     ),
     (
-      label: 'Accessibility',
+      label: 'explore_places.category_accessibility'.tr(),
       value: 'ACCESSIBILITY',
       icon: Icons.accessibility_new_rounded,
     ),
   ];
 
-  static const _financialSubCategories = [
-    (label: 'All', value: null),
-    (label: 'ATMs', value: 'ATMs'),
-    (label: 'Currency Exchange', value: 'Currency Exchange'),
-    (label: 'Insurance', value: 'Insurance'),
+  late final _financialSubCategories = [
+    (label: 'explore_places.financial_all'.tr(), value: null),
+    (label: 'explore_places.financial_atms'.tr(), value: 'ATMs'),
+    (label: 'explore_places.financial_currency_exchange'.tr(), value: 'Currency Exchange'),
+    (label: 'explore_places.financial_insurance'.tr(), value: 'Insurance'),
   ];
 
   @override

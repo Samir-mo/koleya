@@ -167,5 +167,20 @@
     "financial_services_coming_soon": "Financial Services — coming soon",
     "vip_experience_coming_soon": "VIP Experience — coming soon",
     "details_coming_soon": "Service Details — coming soon"
+  },
+  "explore_places": {
+    "search_placeholder": "Search by name or category...",
+    "category_all": "All",
+    "category_restaurants": "Restaurants",
+    "category_shops": "Shops",
+    "category_vip": "VIP",
+    "category_financial": "Financial",
+    "category_counters": "Counters",
+    "category_accessibility": "Accessibility",
+    "financial_all": "All",
+    "financial_atms": "ATMs",
+    "financial_currency_exchange": "Currency Exchange",
+    "financial_insurance": "Insurance",
+    "top_picks": "Top Picks of the Day"
   }
 }
