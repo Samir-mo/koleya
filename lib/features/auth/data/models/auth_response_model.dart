@@ -9,11 +9,9 @@ class AuthResponseModel extends Equatable {
   const AuthResponseModel({required this.token, required this.user});
 
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
-    // Try every location the token could live in across common API shapes:
-    //   { token, data: { user } }
-    //   { data: { token, user } }
-    //   { accessToken, data: { user } }
-    //   { data: { accessToken, user } }
+    // Supports multiple API shapes:
+    //   { token, data: { user } }  |  { data: { token, user } }
+    //   { accessToken, data: { user } }  |  { token, name, email, ... }
     final nested = json['data'] as Map<String, dynamic>?;
 
     final token = (json['token']
@@ -22,10 +20,11 @@ class AuthResponseModel extends Equatable {
             ?? nested?['accessToken']
             ?? '') as String;
 
-    final userMap = (nested?['user']
-            ?? json['user']
+    // Walk every plausible location for the user object; fall back to root.
+    final userMap = nested?['user'] as Map<String, dynamic>?
+            ?? json['user'] as Map<String, dynamic>?
             ?? nested
-            ?? <String, dynamic>{}) as Map<String, dynamic>;
+            ?? json;
 
     return AuthResponseModel(token: token, user: UserModel.fromJson(userMap));
   }

@@ -8,11 +8,14 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/core/widgets/ui/dialogs/app_dialogs.dart';
 import 'package:gate_buddy/features/auth/data/models/user_model.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
+import 'package:gate_buddy/features/on_boarding/ui/onboarding_screen.dart';
 import 'package:gate_buddy/features/profile/ui/widgets/edit_profile_sheet.dart';
+import 'package:gate_buddy/features/profile/ui/widgets/profile_app_bar.dart';
 import 'package:gate_buddy/features/profile/ui/widgets/profile_avatar.dart';
 import 'package:gate_buddy/features/profile/ui/widgets/profile_section.dart';
 
@@ -25,8 +28,17 @@ class ProfileScreen extends StatelessWidget {
       builder: (context, authState) {
         final user = authState.user;
 
+        // While the cubit is resolving the stored token, show nothing to avoid
+        // flashing the unauthenticated view momentarily.
+        if (authState.status == AuthStatus.loading ||
+            authState.status == AuthStatus.initial) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
         if (!authState.isAuthenticated || user == null) {
-          return _UnauthenticatedView();
+          return OnboardingScreen();
         }
 
         return _ProfileView(user: user);
@@ -34,76 +46,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-// ── Unauthenticated ───────────────────────────────────────────────────────────
-
-class _UnauthenticatedView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.customColors;
-    final top = MediaQuery.of(context).padding.top;
-
-    return Scaffold(
-      backgroundColor: colors.background,
-      body: Column(
-        children: [
-          _ProfileAppBar(
-              title: 'profile.title'.tr(), top: top, showEdit: false),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: rw(80),
-                    height: rh(80),
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary50,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.person_off_outlined,
-                        color: AppColors.primary200, size: 40),
-                  ),
-                  verticalSpacing(20),
-                  Text('profile.unauthenticated_title'.tr(),
-                      style: AppTextStyles.font18Bold.copyWith(
-                          color: AppColors.primary200)),
-                  verticalSpacing(8),
-                  Text('profile.unauthenticated_subtitle'.tr(),
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.font14Regular.copyWith(
-                          color: colors.textSecondary)),
-                  verticalSpacing(32),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: rw(40)),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: rh(52),
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            context.pushNamed(Routes.login),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary200,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(rr(14))),
-                        ),
-                        child: Text('profile.login_button'.tr(),
-                            style: AppTextStyles.font16SemiBold.copyWith(
-                                color: AppColors.white)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Authenticated ─────────────────────────────────────────────────────────────
 
 class _ProfileView extends StatelessWidget {
   final UserModel user;
@@ -124,39 +66,14 @@ class _ProfileView extends StatelessWidget {
     );
   }
 
-  void _showLogoutDialog(BuildContext context) {
-    AppDialogs.showConfirm(
-      context,
-      title: 'profile.logout_title'.tr(),
-      message: 'profile.logout_message'.tr(),
-      confirmText: 'common.yes'.tr(),
-      cancelText: 'common.no'.tr(),
-      onConfirm: () => context.read<AuthCubit>().logout(),
-    );
-  }
-
-  void _showDeleteDialog(BuildContext context) {
-    AppDialogs.showWarning(
-      context,
-      message: 'profile.delete_account_message'.tr(),
-      onPressed: () => context.read<AuthCubit>().deleteAccount(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final colors = context.customColors;
-    final top = MediaQuery.of(context).padding.top;
-
     return Scaffold(
-      backgroundColor: colors.background,
       body: CustomScrollView(
         slivers: [
-          // ── App Bar ──────────────────────────────────────────────────────
           SliverToBoxAdapter(
-            child: _ProfileAppBar(
-              title: 'My Profile',
-              top: top,
+            child: ProfileAppBar(
+              title: 'profile.title'.tr(),
               showEdit: true,
               onEdit: () => _showEditSheet(context),
             ),
@@ -164,7 +81,10 @@ class _ProfileView extends StatelessWidget {
 
           // ── Header Card ──────────────────────────────────────────────────
           SliverToBoxAdapter(
-            child: _HeaderCard(user: user, onEdit: () => _showEditSheet(context)),
+            child: _HeaderCard(
+              user: user,
+              onEdit: () => _showEditSheet(context),
+            ),
           ),
 
           // ── Sections ─────────────────────────────────────────────────────
@@ -172,26 +92,27 @@ class _ProfileView extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
+                verticalSpacing(20),
                 // Account
                 ProfileSection(
-                  title: 'Account',
+                  title: 'profile.account'.tr(),
                   children: [
                     ProfileTile(
                       icon: Icons.person_outline_rounded,
-                      label: 'Edit Name',
+                      label: 'profile.edit_name'.tr(),
                       value: user.name,
                       iconColor: AppColors.primary200,
                       onTap: () => _showEditSheet(context),
                     ),
                     ProfileTile(
                       icon: Icons.email_outlined,
-                      label: 'Email',
+                      label: 'profile.email'.tr(),
                       value: user.email,
                       iconColor: AppColors.blue200,
                     ),
                     ProfileTile(
                       icon: Icons.lock_outline_rounded,
-                      label: 'Change Password',
+                      label: 'profile.change_password'.tr(),
                       iconColor: AppColors.amber200,
                       onTap: () =>
                           Navigator.pushNamed(context, Routes.forgetPassword),
@@ -206,18 +127,18 @@ class _ProfileView extends StatelessWidget {
 
                 // Tracked Flights shortcut
                 ProfileSection(
-                  title: 'Activity',
+                  title: 'profile.activity'.tr(),
                   children: [
                     ProfileTile(
                       icon: Icons.bookmark_outline_rounded,
-                      label: 'Tracked Flights',
+                      label: 'profile.tracked_flights'.tr(),
                       iconColor: AppColors.secondary200,
                       onTap: () =>
                           Navigator.pushNamed(context, Routes.trackedFlight),
                     ),
                     ProfileTile(
                       icon: Icons.notifications_outlined,
-                      label: 'Notifications',
+                      label: 'profile.notifications'.tr(),
                       iconColor: AppColors.green200,
                       onTap: () =>
                           Navigator.pushNamed(context, Routes.notifications),
@@ -228,22 +149,22 @@ class _ProfileView extends StatelessWidget {
 
                 // Support
                 ProfileSection(
-                  title: 'Support',
+                  title: 'profile.support'.tr(),
                   children: [
                     ProfileTile(
                       icon: Icons.info_outline_rounded,
-                      label: 'About GateBuddy',
+                      label: 'profile.about'.tr(),
                       iconColor: AppColors.primary200,
                       onTap: () => _showAboutDialog(context),
                     ),
                     ProfileTile(
                       icon: Icons.privacy_tip_outlined,
-                      label: 'Privacy Policy',
+                      label: 'profile.privacy_policy'.tr(),
                       iconColor: AppColors.grey400,
                     ),
                     ProfileTile(
                       icon: Icons.description_outlined,
-                      label: 'Terms of Service',
+                      label: 'profile.terms_of_service'.tr(),
                       iconColor: AppColors.grey400,
                     ),
                   ],
@@ -251,10 +172,34 @@ class _ProfileView extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Actions
-                _LogoutButton(onTap: () => _showLogoutDialog(context)),
-                const SizedBox(height: 12),
-                _DeleteButton(onTap: () => _showDeleteDialog(context)),
-                const SizedBox(height: 32),
+                CustomTextButton.outlined(
+                  borderColor: AppColors.red200.withValues(alpha: 12),
+                  isFullWidth: false,
+                  text: "profile.logout".tr(),
+                  onPressed: () => AppDialogs.showConfirm(
+                    context,
+                    title: 'profile.logout_confirmation_title'.tr(),
+                    message: 'profile.logout_confirmation_message'.tr(),
+                    confirmText: 'profile.logout'.tr(),
+                    onConfirm: () => context.read<AuthCubit>().logout(),
+                  ),
+                  size: CustomButtonSize.small,
+                ),
+                verticalSpacing(16),
+                CustomTextButton.outlined(
+                  borderColor: AppColors.red200,
+                  isFullWidth: false,
+                  text: "profile.delete_account".tr(),
+                  onPressed: () => AppDialogs.showConfirm(
+                    context,
+                    title: 'profile.delete_account_confirmation_title'.tr(),
+                    message: 'profile.delete_account_confirmation_message'.tr(),
+                    confirmText: 'profile.delete_account'.tr(),
+                    onConfirm: () => context.read<AuthCubit>().deleteAccount(),
+                  ),
+                  size: CustomButtonSize.small,
+                ),
+                verticalSpacing(16),
               ]),
             ),
           ),
@@ -268,61 +213,6 @@ class _ProfileView extends StatelessWidget {
       context,
       title: 'profile.about_title'.tr(),
       message: 'profile.about_message'.tr(),
-    );
-  }
-}
-
-// ── Sub-widgets ───────────────────────────────────────────────────────────────
-
-class _ProfileAppBar extends StatelessWidget {
-  final String title;
-  final double top;
-  final bool showEdit;
-  final VoidCallback? onEdit;
-
-  const _ProfileAppBar({
-    required this.title,
-    required this.top,
-    required this.showEdit,
-    this.onEdit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.primary200,
-      padding: EdgeInsets.fromLTRB(20, top + 14, 20, 14),
-      child: Row(
-        children: [
-          Text(title,
-              style: AppTextStyles.font20Bold.copyWith(
-                  color: AppColors.white)),
-          const Spacer(),
-          if (showEdit)
-            GestureDetector(
-              onTap: onEdit,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary300,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.edit_outlined,
-                        size: 14, color: AppColors.secondary200),
-                    const SizedBox(width: 4),
-                    Text('Edit',
-                        style: AppTextStyles.font12Medium.copyWith(
-                            color: AppColors.secondary200)),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
@@ -353,11 +243,7 @@ class _HeaderCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ProfileAvatar(
-                photoUrl: user.photo,
-                name: user.name,
-                radius: 48,
-              ),
+              ProfileAvatar(photoUrl: user.photo, name: user.name, radius: 48),
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -370,8 +256,11 @@ class _HeaderCard extends StatelessWidget {
                       color: AppColors.secondary200,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.edit_rounded,
-                        size: 14, color: AppColors.white),
+                    child: const Icon(
+                      Icons.edit_rounded,
+                      size: 14,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
               ),
@@ -380,14 +269,14 @@ class _HeaderCard extends StatelessWidget {
           const SizedBox(height: 14),
           Text(
             user.name,
-            style:
-                AppTextStyles.font20Bold.copyWith(color: AppColors.white),
+            style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
           ),
           const SizedBox(height: 4),
           Text(
             user.email,
             style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.primary50),
+              color: AppColors.primary50,
+            ),
           ),
           const SizedBox(height: 16),
           _StatsRow(),
@@ -409,12 +298,23 @@ class _StatsRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _StatItem(label: 'Tracked', value: '—', icon: Icons.bookmark_rounded),
+          _StatItem(
+            label: 'profile.stat_tracked'.tr(),
+            value: '—',
+            icon: Icons.bookmark_rounded,
+          ),
           _VerticalDivider(),
-          _StatItem(label: 'Flights', value: '—', icon: Icons.flight_rounded),
+          _StatItem(
+            label: 'profile.stat_flights'.tr(),
+            value: '—',
+            icon: Icons.flight_rounded,
+          ),
           _VerticalDivider(),
-          _StatItem(label: 'Alerts', value: '—',
-              icon: Icons.notifications_rounded),
+          _StatItem(
+            label: 'profile.stat_alerts'.tr(),
+            value: '—',
+            icon: Icons.notifications_rounded,
+          ),
         ],
       ),
     );
@@ -438,12 +338,16 @@ class _StatItem extends StatelessWidget {
       children: [
         Icon(icon, color: AppColors.secondary200, size: 18),
         const SizedBox(height: 4),
-        Text(value,
-            style: AppTextStyles.font16Bold.copyWith(
-                color: AppColors.white)),
-        Text(label,
-            style: AppTextStyles.font12Regular.copyWith(
-                color: AppColors.primary50)),
+        Text(
+          value,
+          style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
+        ),
+        Text(
+          label,
+          style: AppTextStyles.font12Regular.copyWith(
+            color: AppColors.primary50,
+          ),
+        ),
       ],
     );
   }
@@ -465,13 +369,11 @@ class _PreferencesSection extends StatelessWidget {
         final isDark = settings.themeMode == ThemeMode.dark;
 
         return ProfileSection(
-          title: 'Preferences',
+          title: 'profile.preferences'.tr(),
           children: [
             ProfileTile(
-              icon: isDark
-                  ? Icons.dark_mode_rounded
-                  : Icons.light_mode_rounded,
-              label: 'Dark Mode',
+              icon: isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+              label: 'profile.dark_mode'.tr(),
               iconColor: isDark ? AppColors.grey700 : AppColors.amber200,
               trailing: Switch(
                 value: isDark,
@@ -482,8 +384,10 @@ class _PreferencesSection extends StatelessWidget {
             ),
             ProfileTile(
               icon: Icons.language_rounded,
-              label: 'Language',
-              value: settings.isArabic ? 'Arabic' : 'English',
+              label: 'profile.language'.tr(),
+              value: settings.isArabic
+                  ? 'profile.language_arabic'.tr()
+                  : 'profile.language_english'.tr(),
               iconColor: AppColors.blue200,
               trailing: _LanguageToggle(
                 isArabic: settings.isArabic,
@@ -516,61 +420,9 @@ class _LanguageToggle extends StatelessWidget {
         child: Text(
           isArabic ? 'AR → EN' : 'EN → AR',
           style: AppTextStyles.font12Medium.copyWith(
-              color: AppColors.primary200),
+            color: AppColors.primary200,
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class _LogoutButton extends StatelessWidget {
-  final VoidCallback onTap;
-  const _LogoutButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52,
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary200,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-          elevation: 0,
-        ),
-        icon: const Icon(Icons.logout_rounded,
-            color: AppColors.white, size: 18),
-        label: Text('Log Out',
-            style: AppTextStyles.font16SemiBold.copyWith(
-                color: AppColors.white)),
-      ),
-    );
-  }
-}
-
-class _DeleteButton extends StatelessWidget {
-  final VoidCallback onTap;
-  const _DeleteButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52,
-      child: OutlinedButton.icon(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.red200,
-          side: const BorderSide(color: AppColors.red200),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-        ),
-        icon: const Icon(Icons.delete_outline_rounded, size: 18),
-        label: Text('Delete Account',
-            style: AppTextStyles.font16SemiBold.copyWith(
-                color: AppColors.red200)),
       ),
     );
   }

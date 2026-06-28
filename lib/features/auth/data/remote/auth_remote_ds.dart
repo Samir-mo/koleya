@@ -44,17 +44,23 @@ class AuthRemoteDs with BaseRemoteDs {
   Future<UserModel> getMe() =>
       execute(() async {
         final response = await api.get(ApiEndpoints.getProfile);
-        final data = (response as Map<String, dynamic>)['data'];
-        final userMap = data is Map ? data['user'] ?? data : data;
-        return UserModel.fromJson(userMap as Map<String, dynamic>);
+        final map = response as Map<String, dynamic>;
+        final data = map['data'];
+        final userMap = data is Map<String, dynamic>
+            ? (data['user'] as Map<String, dynamic>? ?? data)
+            : (map['user'] as Map<String, dynamic>? ?? map);
+        return UserModel.fromJson(userMap);
       });
 
   Future<UserModel> updateMe(Map<String, dynamic> fields) =>
       execute(() async {
         final response = await api.patch(ApiEndpoints.updateMe, body: fields);
-        final data = (response as Map<String, dynamic>)['data'];
-        final userMap = data is Map ? data['user'] ?? data : data;
-        return UserModel.fromJson(userMap as Map<String, dynamic>);
+        final map = response as Map<String, dynamic>;
+        final data = map['data'];
+        final userMap = data is Map<String, dynamic>
+            ? (data['user'] as Map<String, dynamic>? ?? data)
+            : (map['user'] as Map<String, dynamic>? ?? map);
+        return UserModel.fromJson(userMap);
       });
 
   Future<void> deleteMe() =>
