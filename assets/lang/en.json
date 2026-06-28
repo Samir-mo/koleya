@@ -142,5 +142,14 @@
       "confirm_password": "Confirm New Password",
       "button": "Reset Password"
     }
+  },
+  "profile": {
+    "title": "Profile",
+    "unauthenticated_title": "You're not logged in",
+    "unauthenticated_subtitle": "Log in to manage your profile and preferences",
+    "login_button": "Log In",
+    "edit_title": "Edit Profile",
+    "update_success": "Profile updated",
+    "settings_coming_soon": "Settings — coming soon"
   }
 }

@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
@@ -47,11 +49,11 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Profile updated'),
+              content: Text('profile.update_success'.tr()),
               backgroundColor: AppColors.green200,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(rr(10))),
             ),
           );
         } else if (state.status == AuthStatus.error && state.error != null) {
@@ -61,13 +63,13 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
               backgroundColor: AppColors.red200,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(rr(10))),
             ),
           );
         }
       },
       child: Padding(
-        padding: EdgeInsets.fromLTRB(24, 24, 24, bottom + 24),
+        padding: EdgeInsets.fromLTRB(rw(24), rh(24), rw(24), bottom + rh(24)),
         child: Form(
           key: _formKey,
           child: Column(
@@ -76,7 +78,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
             children: [
               Row(
                 children: [
-                  Text('Edit Profile',
+                  Text('profile.edit_title'.tr(),
                       style: AppTextStyles.font18Bold.copyWith(
                           color: AppColors.primary200)),
                   const Spacer(),
@@ -87,33 +89,33 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              verticalSpacing(24),
               AuthTextField(
                 controller: _nameController,
                 label: 'Full Name',
                 prefixIcon: Icons.person_outline_rounded,
                 validator: (v) =>
-                    Validators.minLength(v, 3, fieldName: 'Name'),
+                    Validators.minLength(v, 3, fieldName: 'Full Name'),
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _onSave(),
               ),
-              const SizedBox(height: 24),
+              verticalSpacing(24),
               BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) => SizedBox(
                   width: double.infinity,
-                  height: 52,
+                  height: rh(52),
                   child: ElevatedButton(
                     onPressed: state.isLoading ? null : _onSave,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary200,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(rr(12))),
                     ),
                     child: state.isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
+                        ? SizedBox(
+                            width: rw(20),
+                            height: rh(20),
+                            child: const CircularProgressIndicator(
                                 strokeWidth: 2, color: AppColors.white),
                           )
                         : Text('Save Changes',

@@ -142,5 +142,14 @@
       "confirm_password": "تأكيد كلمة المرور الجديدة",
       "button": "إعادة تعيين كلمة المرور"
     }
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "unauthenticated_title": "أنت لم تقم بتسجيل الدخول",
+    "unauthenticated_subtitle": "قم بتسجيل الدخول لإدارة ملفك الشخصي والتفضيلات",
+    "login_button": "تسجيل الدخول",
+    "edit_title": "تحرير الملف الشخصي",
+    "update_success": "تم تحديث الملف الشخصي",
+    "settings_coming_soon": "الإعدادات — قريباً"
   }
 }

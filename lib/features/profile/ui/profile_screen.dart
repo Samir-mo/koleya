@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/router/routes.dart';
@@ -6,6 +7,7 @@ import 'package:gate_buddy/core/settings/cubit/app_settings_state.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/auth/data/models/user_model.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
@@ -44,15 +46,16 @@ class _UnauthenticatedView extends StatelessWidget {
       backgroundColor: colors.background,
       body: Column(
         children: [
-          _ProfileAppBar(title: 'Profile', top: top, showEdit: false),
+          _ProfileAppBar(
+              title: 'profile.title'.tr(), top: top, showEdit: false),
           Expanded(
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 80,
-                    height: 80,
+                    width: rw(80),
+                    height: rh(80),
                     decoration: const BoxDecoration(
                       color: AppColors.primary50,
                       shape: BoxShape.circle,
@@ -60,30 +63,30 @@ class _UnauthenticatedView extends StatelessWidget {
                     child: const Icon(Icons.person_off_outlined,
                         color: AppColors.primary200, size: 40),
                   ),
-                  const SizedBox(height: 20),
-                  Text('You\'re not logged in',
+                  verticalSpacing(20),
+                  Text('profile.unauthenticated_title'.tr(),
                       style: AppTextStyles.font18Bold.copyWith(
                           color: AppColors.primary200)),
-                  const SizedBox(height: 8),
-                  Text('Log in to manage your profile and preferences',
+                  verticalSpacing(8),
+                  Text('profile.unauthenticated_subtitle'.tr(),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.font14Regular.copyWith(
                           color: colors.textSecondary)),
-                  const SizedBox(height: 32),
+                  verticalSpacing(32),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    padding: EdgeInsets.symmetric(horizontal: rw(40)),
                     child: SizedBox(
                       width: double.infinity,
-                      height: 52,
+                      height: rh(52),
                       child: ElevatedButton(
                         onPressed: () =>
-                            Navigator.pushNamed(context, Routes.login),
+                            context.pushNamed(Routes.login),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary200,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
+                              borderRadius: BorderRadius.circular(rr(14))),
                         ),
-                        child: Text('Log In',
+                        child: Text('profile.login_button'.tr(),
                             style: AppTextStyles.font16SemiBold.copyWith(
                                 color: AppColors.white)),
                       ),

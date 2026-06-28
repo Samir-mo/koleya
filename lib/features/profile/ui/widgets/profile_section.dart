@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class ProfileSection extends StatelessWidget {
   final String title;
@@ -20,7 +21,7 @@ class ProfileSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(4, 0, 0, 10),
+          padding: EdgeInsets.fromLTRB(rw(4), 0, 0, rh(10)),
           child: Text(
             title.toUpperCase(),
             style: AppTextStyles.font12Medium.copyWith(
@@ -32,7 +33,7 @@ class ProfileSection extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: colors.surface,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(rr(14)),
             border: Border.all(color: colors.border),
           ),
           child: Column(
@@ -84,20 +85,20 @@ class ProfileTile extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(rr(14)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(rr(14)),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(14)),
           child: Row(
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: rw(36),
+                height: rh(36),
                 decoration: BoxDecoration(
                   color: bgColor,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(rr(10)),
                 ),
                 child: Icon(
                   icon,
@@ -105,7 +106,7 @@ class ProfileTile extends StatelessWidget {
                   color: isDestructive ? AppColors.red200 : iconColor,
                 ),
               ),
-              const SizedBox(width: 14),
+              horizontalSpacing(14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +115,7 @@ class ProfileTile extends StatelessWidget {
                         style: AppTextStyles.font14Regular
                             .copyWith(color: labelColor)),
                     if (value != null) ...[
-                      const SizedBox(height: 2),
+                      verticalSpacing(2),
                       Text(value!,
                           style: AppTextStyles.font12Regular.copyWith(
                               color: colors.textHint)),
