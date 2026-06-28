@@ -26,9 +26,11 @@ class ApiEndpoints {
   static const String untrackFlight = "/flights/:id/track"; // DELETE
 
   // ======================= Services =======================
-  static const String services = "/services?limit=200";
+  static const String services = "/services";
   static const String serviceById = "/services/:id";
-  static const String serviceLocation = "/services/:id/location";
+  static const String servicesSearch = "/services/search";
+  static const String servicesFilter = "/services/filter";
+  static const String rateService = "/services/:id/rate";
   static const String vipLounges = "/services/vip-lounges";
   static const String vipLoungeById = "/services/vip-lounges/:id";
 

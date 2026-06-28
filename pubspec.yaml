@@ -49,6 +49,7 @@ dependencies:
   flutter_map: ^8.3.0
   latlong2: ^0.9.1
   cached_network_image: ^3.4.1
+  dartz: ^0.10.1
 
 # ----------------------------------------------------------------
 # DEV DEPENDENCIES

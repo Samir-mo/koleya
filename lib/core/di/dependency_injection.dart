@@ -12,14 +12,14 @@ import 'package:gate_buddy/features/ai_chat/data/remote/ai_chat_remote_ds.dart';
 import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo.dart';
 import 'package:gate_buddy/features/ai_chat/data/repo/ai_chat_repo_impl.dart';
 import 'package:gate_buddy/features/ai_chat/logic/cubit/ai_chat_cubit.dart';
-import 'package:gate_buddy/features/explore_places/data/remote/explore_places_remote_ds.dart';
+import 'package:gate_buddy/core/shared/data/services_data_source.dart';
+import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo.dart';
 import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo_impl.dart';
 import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
 import 'package:gate_buddy/features/flights/data/remote/flights_remote_ds.dart';
 import 'package:gate_buddy/features/flights/data/repo/flights_repo.dart';
 import 'package:gate_buddy/features/flights/data/repo/flights_repo_impl.dart';
 import 'package:gate_buddy/features/flights/logic/cubit/flights_cubit.dart';
-import 'package:gate_buddy/features/indoor_map/data/remote/indoor_map_remote_ds.dart';
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo.dart';
 import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo_impl.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
@@ -96,25 +96,24 @@ Future<void> setUpDependencies() async {
   );
 
   // ── Indoor Map ────────────────────────────────────────────────────────────
-  getIt.registerLazySingleton<IndoorMapRemoteDs>(
-    () => IndoorMapRemoteDs(api: getIt()),
-  );
   getIt.registerLazySingleton<IndoorMapRepo>(
-    () => IndoorMapRepoImpl(remoteDs: getIt()),
+    () => IndoorMapRepoImpl(dataSource: getIt<ServicesDataSource>()),
   );
   getIt.registerLazySingleton<IndoorMapCubit>(
     () => IndoorMapCubit(indoorMapRepo: getIt()),
   );
 
+  // ── Shared Services Data Source (used by Explore + Indoor Map) ──────────
+  getIt.registerLazySingleton(
+    () => ServicesDataSource(api: getIt<ApiConsumer>()),
+  );
+
   // ── Explore Places ────────────────────────────────────────────────────────
-  getIt.registerLazySingleton(
-    () => ExplorePlacesRemoteDs(api: getIt<ApiConsumer>()),
+  getIt.registerLazySingleton<ExplorePlacesRepo>(
+    () => ExplorePlacesRepoImpl(dataSource: getIt<ServicesDataSource>()),
   );
-  getIt.registerLazySingleton(
-    () => ExplorePlacesRepoImpl(remoteDs: getIt<ExplorePlacesRemoteDs>()),
-  );
-  getIt.registerLazySingleton(
-    () => ExploreCubit(repo: getIt<ExplorePlacesRepoImpl>()),
+  getIt.registerFactory(
+    () => ExploreCubit(repo: getIt<ExplorePlacesRepo>()),
   );
 
   // ── Flights ───────────────────────────────────────────────────────────────
