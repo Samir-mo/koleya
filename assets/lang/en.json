@@ -159,5 +159,13 @@
   },
   "tracked_flight": {
     "coming_soon": "Tracked Flight — coming soon"
+  },
+  "services": {
+    "coming_soon": "Services — coming soon",
+    "accessibility_coming_soon": "Accessibility & Assistance — coming soon",
+    "flight_counters_coming_soon": "Flight Counters — coming soon",
+    "financial_services_coming_soon": "Financial Services — coming soon",
+    "vip_experience_coming_soon": "VIP Experience — coming soon",
+    "details_coming_soon": "Service Details — coming soon"
   }
 }

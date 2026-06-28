@@ -159,5 +159,13 @@
   },
   "tracked_flight": {
     "coming_soon": "الرحلة المتابعة — قريباً"
+  },
+  "services": {
+    "coming_soon": "الخدمات — قريباً",
+    "accessibility_coming_soon": "إمكانية الوصول والمساعدة — قريباً",
+    "flight_counters_coming_soon": "عدادات الرحلات — قريباً",
+    "financial_services_coming_soon": "الخدمات المالية — قريباً",
+    "vip_experience_coming_soon": "تجربة VIP — قريباً",
+    "details_coming_soon": "تفاصيل الخدمة — قريباً"
   }
 }
