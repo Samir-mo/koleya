@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AssistantAppBar({super.key});
@@ -17,33 +19,33 @@ class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
         left: 16,
         right: 16,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.primary200,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(rr(20))),
       ),
       child: Row(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: rw(40),
+            height: rh(40),
             decoration: BoxDecoration(
               color: AppColors.primary300,
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.secondary200, width: 1.5),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.smart_toy_rounded,
               color: AppColors.secondary200,
               size: 22,
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: rw(12)),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'GateBuddy',
+                'ai_chat.assistant_name'.tr(),
                 style: AppTextStyles.font16Bold.copyWith(
                   color: AppColors.white,
                 ),

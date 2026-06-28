@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class InputBar extends StatefulWidget {
   final TextEditingController controller;
@@ -42,19 +44,20 @@ class InputBarState extends State<InputBar> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return Container(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 10,
-        bottom: MediaQuery.of(context).padding.bottom + 10,
+        left: rw(16),
+        right: rw(16),
+        top: rh(10),
+        bottom: MediaQuery.of(context).padding.bottom + rh(10),
       ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.grey100)),
+        color: colors.surface,
+        border: Border(top: BorderSide(color: colors.border)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),

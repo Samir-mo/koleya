@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/assistant_app_bar.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/input_bar.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/message_bubble.dart';
@@ -74,10 +76,10 @@ class _AssistantViewState extends State<_AssistantView> {
     showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Login Required'),
-        content: const Text(
-          'You need to be logged in to chat with GateBuddy.',
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(rr(16))),
+        title: Text('ai_chat.login_required'.tr()),
+        content: Text(
+          'ai_chat.login_required_message'.tr(),
         ),
         actions: [
           TextButton(

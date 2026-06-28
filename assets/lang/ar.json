@@ -190,5 +190,10 @@
     "category_services": "الخدمات",
     "category_atm": "الصراف الآلي",
     "category_lounge": "الصالة"
+  },
+  "ai_chat": {
+    "assistant_name": "GateBuddy",
+    "login_required": "تسجيل الدخول مطلوب",
+    "login_required_message": "تحتاج إلى تسجيل الدخول للدردشة مع GateBuddy."
   }
 }

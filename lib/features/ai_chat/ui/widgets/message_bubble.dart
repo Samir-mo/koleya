@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/shared/models/assistant_message.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 
 class MessageBubble extends StatelessWidget {
   final AssistantMessage message;
@@ -14,7 +15,7 @@ class MessageBubble extends StatelessWidget {
     final isUser = message.sender == 'user';
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: rh(12)),
       child: Row(
         mainAxisAlignment: isUser
             ? MainAxisAlignment.end
@@ -23,30 +24,30 @@ class MessageBubble extends StatelessWidget {
         children: [
           if (!isUser) ...[
             Container(
-              width: 32,
-              height: 32,
+              width: rw(32),
+              height: rh(32),
               decoration: const BoxDecoration(
                 color: AppColors.primary200,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.smart_toy_rounded,
                 color: AppColors.secondary200,
                 size: 16,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: rw(8)),
           ],
           Flexible(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),
               decoration: BoxDecoration(
-                color: isUser ? AppColors.primary200 : AppColors.white,
+                color: isUser ? AppColors.primary200 : Colors.white,
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(16),
-                  topRight: const Radius.circular(16),
-                  bottomLeft: Radius.circular(isUser ? 16 : 4),
-                  bottomRight: Radius.circular(isUser ? 4 : 16),
+                  topLeft: Radius.circular(rr(16)),
+                  topRight: Radius.circular(rr(16)),
+                  bottomLeft: Radius.circular(isUser ? rr(16) : rr(4)),
+                  bottomRight: Radius.circular(isUser ? rr(4) : rr(16)),
                 ),
                 border: isUser ? null : Border.all(color: AppColors.grey100),
                 boxShadow: [

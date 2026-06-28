@@ -190,5 +190,10 @@
     "category_services": "Services",
     "category_atm": "ATM",
     "category_lounge": "Lounge"
+  },
+  "ai_chat": {
+    "assistant_name": "GateBuddy",
+    "login_required": "Login Required",
+    "login_required_message": "You need to be logged in to chat with GateBuddy."
   }
 }
