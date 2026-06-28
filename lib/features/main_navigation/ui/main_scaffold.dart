@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/ai_chat/logic/cubit/ai_chat_cubit.dart';
 import 'package:gate_buddy/features/ai_chat/ui/ai_chat_screen.dart';
 import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
@@ -81,8 +82,8 @@ class _MainScaffoldState extends State<MainScaffold> {
     IconData inactiveIcon,
   ) {
     return PersistentBottomNavBarItem(
-      icon: Icon(activeIcon, size: 28),
-      inactiveIcon: Icon(inactiveIcon, size: 26),
+      icon: Icon(activeIcon, size: 28.0),
+      inactiveIcon: Icon(inactiveIcon, size: 26.0),
       activeColorPrimary: context.customColors.textSecondary,
       inactiveColorPrimary: context.customColors.textHint,
     );
@@ -101,9 +102,9 @@ class _MainScaffoldState extends State<MainScaffold> {
       stateManagement: true,
       hideNavigationBarWhenKeyboardAppears: true,
       decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(rr(10)),
         colorBehindNavBar: context.customColors.background,
-        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+        border: Border(top: BorderSide(color: context.customColors.border)),
       ),
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: false,
