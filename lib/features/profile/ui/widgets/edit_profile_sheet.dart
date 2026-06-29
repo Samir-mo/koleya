@@ -6,6 +6,7 @@ import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/utils/validators.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
 import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
@@ -77,36 +78,19 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
               verticalSpacing(24),
               AuthTextField(
                 controller: _nameController,
-                label: 'Full Name',
+                label: 'auth.signup.full_name'.tr(),
                 prefixIcon: Icons.person_outline_rounded,
-                validator: (v) =>
-                    Validators.minLength(v, 3, fieldName: 'Full Name'),
+                validator: (v) => Validators.minLength(v, 3,
+                    fieldName: 'auth.signup.full_name'.tr()),
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _onSave(),
               ),
               verticalSpacing(24),
               BlocBuilder<AuthCubit, AuthState>(
-                builder: (context, state) => SizedBox(
-                  width: double.infinity,
-                  height: rh(52),
-                  child: ElevatedButton(
-                    onPressed: state.isLoading ? null : _onSave,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary200,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(rr(12))),
-                    ),
-                    child: state.isLoading
-                        ? SizedBox(
-                            width: rw(20),
-                            height: rh(20),
-                            child: const CircularProgressIndicator(
-                                strokeWidth: 2, color: AppColors.white),
-                          )
-                        : Text('Save Changes',
-                            style: AppTextStyles.font16SemiBold.copyWith(
-                                color: AppColors.white)),
-                  ),
+                builder: (context, state) => CustomTextButton(
+                  text: 'profile.save_changes'.tr(),
+                  onPressed: state.isLoading ? null : _onSave,
+                  isLoading: state.isLoading,
                 ),
               ),
             ],

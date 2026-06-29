@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
 import 'package:gate_buddy/features/explore_places/logic/explore_state.dart';
 import 'package:gate_buddy/features/explore_places/ui/widgets/featured_place_card.dart';
@@ -24,28 +26,12 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
   // Values must match the backend's 'category' field exactly (uppercase)
   late final _types = [
     (label: 'explore_places.category_all'.tr(), value: null, icon: Icons.grid_view_rounded),
-    (
-      label: 'explore_places.category_restaurants'.tr(),
-      value: 'RESTAURANTS',
-      icon: Icons.restaurant_rounded,
-    ),
+    (label: 'explore_places.category_restaurants'.tr(), value: 'RESTAURANTS', icon: Icons.restaurant_rounded),
     (label: 'explore_places.category_shops'.tr(), value: 'SHOPS', icon: Icons.shopping_bag_rounded),
     (label: 'explore_places.category_vip'.tr(), value: 'VIP_SERVICES', icon: Icons.stars_rounded),
-    (
-      label: 'explore_places.category_financial'.tr(),
-      value: 'FINANCIAL',
-      icon: Icons.account_balance_rounded,
-    ),
-    (
-      label: 'explore_places.category_counters'.tr(),
-      value: 'COUNTERS',
-      icon: Icons.confirmation_number_rounded,
-    ),
-    (
-      label: 'explore_places.category_accessibility'.tr(),
-      value: 'ACCESSIBILITY',
-      icon: Icons.accessibility_new_rounded,
-    ),
+    (label: 'explore_places.category_financial'.tr(), value: 'FINANCIAL', icon: Icons.account_balance_rounded),
+    (label: 'explore_places.category_counters'.tr(), value: 'COUNTERS', icon: Icons.confirmation_number_rounded),
+    (label: 'explore_places.category_accessibility'.tr(), value: 'ACCESSIBILITY', icon: Icons.accessibility_new_rounded),
   ];
 
   late final _financialSubCategories = [
@@ -75,9 +61,7 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
               builder: (context, state) {
                 if (state is ExploreLoading) return _buildLoading();
                 if (state is ExploreError) return _buildError(context, state);
-                if (state is ExploreLoaded) {
-                  return _buildContent(context, state);
-                }
+                if (state is ExploreLoaded) return _buildContent(context, state);
                 return const SizedBox.shrink();
               },
             ),
@@ -94,9 +78,8 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
         bottom: false,
         child: Column(
           children: [
-            // Title row
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+              padding: EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(8)),
               child: Row(
                 children: [
                   Expanded(
@@ -104,19 +87,14 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Explore Airport',
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w800,
-                          ),
+                          'explore_places.title'.tr(),
+                          style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
                         ),
-                        SizedBox(height: 2.h),
+                        verticalSpacing(2),
                         Text(
-                          'Discover services & places',
-                          style: TextStyle(
+                          'explore_places.subtitle'.tr(),
+                          style: AppTextStyles.font12Regular.copyWith(
                             color: AppColors.white.withValues(alpha: 0.7),
-                            fontSize: 13.sp,
                           ),
                         ),
                       ],
@@ -131,15 +109,15 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
                       }
                     },
                     child: Container(
-                      padding: EdgeInsets.all(10.r),
+                      padding: EdgeInsets.all(rr(10)),
                       decoration: BoxDecoration(
                         color: AppColors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(rr(12)),
                       ),
                       child: Icon(
                         _showSearch ? Icons.close : Icons.search_rounded,
                         color: AppColors.white,
-                        size: 22.r,
+                        size: rr(22),
                       ),
                     ),
                   ),
@@ -147,37 +125,33 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
               ),
             ),
 
-            // Search bar (animated)
             AnimatedSize(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInOut,
               child: _showSearch
                   ? Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+                      padding: EdgeInsets.fromLTRB(rw(16), 0, rw(16), rh(16)),
                       child: Container(
                         decoration: BoxDecoration(
                           color: AppColors.white,
-                          borderRadius: BorderRadius.circular(14.r),
+                          borderRadius: BorderRadius.circular(rr(14)),
                         ),
                         child: TextField(
                           controller: _searchController,
                           autofocus: true,
-                          style: TextStyle(fontSize: 14.sp),
+                          style: AppTextStyles.font14Regular,
                           decoration: InputDecoration(
-                            hintText: 'Search restaurants, lounges…',
-                            hintStyle: TextStyle(
+                            hintText: 'explore_places.search_placeholder'.tr(),
+                            hintStyle: AppTextStyles.font14Regular.copyWith(
                               color: AppColors.grey400,
-                              fontSize: 14.sp,
                             ),
                             prefixIcon: Icon(
                               Icons.search_rounded,
                               color: AppColors.grey400,
-                              size: 20.r,
+                              size: rr(20),
                             ),
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 14.h,
-                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: rh(14)),
                           ),
                           onChanged: (q) =>
                               context.read<ExploreCubit>().onSearchChanged(q),
@@ -195,32 +169,27 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
   Widget _buildContent(BuildContext context, ExploreLoaded state) {
     return CustomScrollView(
       slivers: [
-        // Category chips
         SliverToBoxAdapter(child: _buildTypeFilter(context, state)),
 
-        // Featured / Top Rated
         if (state.searchQuery.isEmpty && state.topRated.isNotEmpty)
           SliverToBoxAdapter(child: _buildFeaturedSection(context, state)),
 
-        // All places header
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 12.h),
+            padding: EdgeInsets.fromLTRB(rw(20), rh(20), rw(20), rh(12)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   _sectionTitle(state),
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w800,
+                  style: AppTextStyles.font16Bold.copyWith(
                     color: context.customColors.textPrimary,
                   ),
                 ),
                 if (state.isSearching)
                   SizedBox(
-                    width: 16.r,
-                    height: 16.r,
+                    width: rr(16),
+                    height: rr(16),
                     child: const CircularProgressIndicator(strokeWidth: 2),
                   ),
               ],
@@ -228,19 +197,18 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
           ),
         ),
 
-        // Places list
         if (state.displayedPlaces.isEmpty)
           SliverToBoxAdapter(child: _buildEmpty(context))
         else
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: rw(20)),
             sliver: SliverList.builder(
               itemCount: state.displayedPlaces.length,
               itemBuilder: (_, i) => PlaceCard(place: state.displayedPlaces[i]),
             ),
           ),
 
-        SliverToBoxAdapter(child: SizedBox(height: 100.h)),
+        SliverToBoxAdapter(child: verticalSpacing(100)),
       ],
     );
   }
@@ -249,12 +217,11 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Main category chips
         SizedBox(
-          height: 52.h,
+          height: rh(52),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(8)),
             itemCount: _types.length,
             itemBuilder: (_, i) {
               final t = _types[i];
@@ -271,8 +238,6 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
             },
           ),
         ),
-
-        // Subcategory row — only shown for FINANCIAL
         if (state.selectedType == 'FINANCIAL')
           _buildSubCategoryRow(context, state),
       ],
@@ -286,10 +251,10 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
       child: Container(
         color: colors.backgroundSecondary,
         child: SizedBox(
-          height: 44.h,
+          height: rh(44),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+            padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(6)),
             itemCount: _financialSubCategories.length,
             itemBuilder: (_, i) {
               final sub = _financialSubCategories[i];
@@ -299,27 +264,21 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
                     context.read<ExploreCubit>().selectSubCategory(sub.value),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
-                  margin: EdgeInsets.only(right: 8.w),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 6.h,
-                  ),
+                  margin: EdgeInsets.only(right: rw(8)),
+                  padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(6)),
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.secondary200 : colors.surface,
-                    borderRadius: BorderRadius.circular(20.r),
+                    borderRadius: BorderRadius.circular(rr(20)),
                     border: Border.all(
-                      color: isSelected
-                          ? AppColors.secondary200
-                          : colors.border,
+                      color: isSelected ? AppColors.secondary200 : colors.border,
                     ),
                   ),
                   child: Text(
                     sub.label,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: isSelected
-                          ? FontWeight.w700
-                          : FontWeight.w500,
+                    style: (isSelected
+                            ? AppTextStyles.font12Bold
+                            : AppTextStyles.font12Medium)
+                        .copyWith(
                       color: isSelected ? AppColors.white : colors.textPrimary,
                     ),
                   ),
@@ -334,48 +293,41 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
 
   Widget _buildFeaturedSection(BuildContext context, ExploreLoaded state) {
     return Padding(
-      padding: EdgeInsets.only(top: 8.h),
+      padding: EdgeInsets.only(top: rh(8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: rw(20)),
             child: Row(
               children: [
-                Icon(
-                  Icons.star_rounded,
-                  color: AppColors.secondary200,
-                  size: 18.r,
-                ),
-                SizedBox(width: 6.w),
+                Icon(Icons.star_rounded, color: AppColors.secondary200, size: rr(18)),
+                horizontalSpacing(6),
                 Text(
-                  'Top Rated',
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w800,
+                  'explore_places.top_rated'.tr(),
+                  style: AppTextStyles.font16Bold.copyWith(
                     color: context.customColors.textPrimary,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 12.h),
+          verticalSpacing(12),
           SizedBox(
-            height: 220.h,
+            height: rh(220),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: rw(20)),
               itemCount: state.topRated.length,
-              itemBuilder: (_, i) =>
-                  FeaturedPlaceCard(place: state.topRated[i]),
+              itemBuilder: (_, i) => FeaturedPlaceCard(place: state.topRated[i]),
             ),
           ),
-          SizedBox(height: 8.h),
+          verticalSpacing(8),
           Divider(
             color: context.customColors.divider,
             height: 1,
-            indent: 20.w,
-            endIndent: 20.w,
+            indent: rw(20),
+            endIndent: rw(20),
           ),
         ],
       ),
@@ -384,28 +336,25 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
 
   Widget _buildEmpty(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(48.r),
+      padding: EdgeInsets.all(rr(48)),
       child: Column(
         children: [
           Icon(
             Icons.search_off_rounded,
-            size: 56.r,
+            size: rr(56),
             color: context.customColors.iconSecondary,
           ),
-          SizedBox(height: 16.h),
+          verticalSpacing(16),
           Text(
-            'No places found',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
+            'explore_places.empty_title'.tr(),
+            style: AppTextStyles.font16SemiBold.copyWith(
               color: context.customColors.textPrimary,
             ),
           ),
-          SizedBox(height: 8.h),
+          verticalSpacing(8),
           Text(
-            'Try a different search or category',
-            style: TextStyle(
-              fontSize: 13.sp,
+            'explore_places.empty_desc'.tr(),
+            style: AppTextStyles.font12Regular.copyWith(
               color: context.customColors.textSecondary,
             ),
           ),
@@ -423,32 +372,25 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
   Widget _buildError(BuildContext context, ExploreError state) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(32.r),
+        padding: EdgeInsets.all(rr(32)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.wifi_off_rounded, size: 56.r, color: AppColors.red200),
-            SizedBox(height: 16.h),
+            Icon(Icons.wifi_off_rounded, size: rr(56), color: AppColors.red200),
+            verticalSpacing(16),
             Text(
               state.message,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: AppTextStyles.font14Regular.copyWith(
                 color: context.customColors.textSecondary,
-                fontSize: 14.sp,
               ),
             ),
-            SizedBox(height: 20.h),
-            ElevatedButton.icon(
+            verticalSpacing(20),
+            CustomTextButton(
+              text: 'errors.error_screen_button'.tr(),
               onPressed: () => context.read<ExploreCubit>().loadPlaces(),
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Retry'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary200,
-                foregroundColor: AppColors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
+              isFullWidth: false,
+              prefixIcon: const Icon(Icons.refresh_rounded),
             ),
           ],
         ),
@@ -458,10 +400,11 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
 
   String _sectionTitle(ExploreLoaded state) {
     if (state.searchQuery.isNotEmpty) {
-      return 'Results (${state.displayedPlaces.length})';
+      return 'explore_places.results'.tr(
+        namedArgs: {'count': '${state.displayedPlaces.length}'},
+      );
     }
-    if (state.selectedType == 'FINANCIAL' &&
-        state.selectedSubCategory != null) {
+    if (state.selectedType == 'FINANCIAL' && state.selectedSubCategory != null) {
       return '${state.selectedSubCategory} (${state.displayedPlaces.length})';
     }
     if (state.selectedType != null) {
@@ -477,6 +420,6 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
           .label;
       return '$label (${state.displayedPlaces.length})';
     }
-    return 'All Services';
+    return 'explore_places.all_services'.tr();
   }
 }

@@ -92,8 +92,8 @@ class MainScaffoldState extends State<MainScaffold> {
     IconData inactiveIcon,
   ) {
     return PersistentBottomNavBarItem(
-      icon: Icon(activeIcon, size: 28.0),
-      inactiveIcon: Icon(inactiveIcon, size: 26.0),
+      icon: Icon(activeIcon, size: rr(28)),
+      inactiveIcon: Icon(inactiveIcon, size: rr(26)),
       activeColorPrimary: context.customColors.textSecondary,
       inactiveColorPrimary: context.customColors.textHint,
     );

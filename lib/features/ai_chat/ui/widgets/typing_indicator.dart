@@ -45,14 +45,14 @@ class TypingIndicatorState extends State<TypingIndicator>
             child: Icon(
               Icons.smart_toy_rounded,
               color: AppColors.secondary200,
-              size: 16,
+              size: rr(16),
             ),
           ),
-          SizedBox(width: rw(8)),
+          horizontalSpacing(8),
           Container(
             padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(12)),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(rr(16)),
                 topRight: Radius.circular(rr(16)),

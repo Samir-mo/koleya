@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/shared/models/service_model.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 
 class ServiceDetailSheet extends StatelessWidget {
   final ServiceModel service;
@@ -26,7 +29,7 @@ class ServiceDetailSheet extends StatelessWidget {
         borderRadius: BorderRadius.circular(rr(20)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.12),
+            color: AppColors.black.withValues(alpha: 0.12),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),
@@ -35,7 +38,6 @@ class ServiceDetailSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Drag handle
           Padding(
             padding: EdgeInsets.only(top: rh(10)),
             child: Container(
@@ -52,23 +54,22 @@ class ServiceDetailSheet extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header row: image + info + close
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(rr(12)),
                       child: service.primaryImage?.isNotEmpty == true
                           ? Image.network(
                               service.primaryImage!,
-                              width: 72,
-                              height: 72,
+                              width: rw(72),
+                              height: rh(72),
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _placeholder(),
+                              errorBuilder: (_, __, ___) => _placeholder(colors),
                             )
-                          : _placeholder(),
+                          : _placeholder(colors),
                     ),
-                    const SizedBox(width: 12),
+                    horizontalSpacing(12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,9 +79,7 @@ class ServiceDetailSheet extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   service.name,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
+                                  style: AppTextStyles.font16Bold.copyWith(
                                     color: AppColors.primary200,
                                   ),
                                 ),
@@ -88,71 +87,64 @@ class ServiceDetailSheet extends StatelessWidget {
                               GestureDetector(
                                 onTap: onClose,
                                 child: Container(
-                                  padding: const EdgeInsets.all(4),
+                                  padding: EdgeInsets.all(rr(4)),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.shade100,
+                                    color: colors.surfaceVariant,
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(Icons.close,
-                                      size: 16, color: Colors.grey.shade600),
+                                      size: rr(16), color: colors.iconSecondary),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 5),
-                          // Category badge
+                          verticalSpacing(5),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: rw(8), vertical: rh(3)),
                             decoration: BoxDecoration(
                               color: AppColors.primary200.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(rr(6)),
                             ),
                             child: Text(
                               service.categoryLabel,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
+                              style: AppTextStyles.font12Medium.copyWith(
                                 color: AppColors.primary200,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 6),
-                          // Open / closed status
+                          verticalSpacing(6),
                           Row(
                             children: [
                               Container(
-                                width: 7,
-                                height: 7,
+                                width: rw(7),
+                                height: rw(7),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: service.isOpen
-                                      ? Colors.green.shade500
-                                      : Colors.red.shade400,
+                                      ? AppColors.green200
+                                      : AppColors.red200,
                                 ),
                               ),
-                              const SizedBox(width: 5),
+                              horizontalSpacing(5),
                               Text(
-                                service.isOpen ? 'Open Now' : 'Closed',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
+                                service.isOpen
+                                    ? 'indoor_map.open_now'.tr()
+                                    : 'indoor_map.closed'.tr(),
+                                style: AppTextStyles.font12Medium.copyWith(
                                   color: service.isOpen
-                                      ? Colors.green.shade600
-                                      : Colors.red.shade500,
+                                      ? AppColors.green200
+                                      : AppColors.red200,
                                 ),
                               ),
-                              const SizedBox(width: 10),
-                              // Rating
+                              horizontalSpacing(10),
                               Icon(Icons.star_rounded,
-                                  size: 13, color: AppColors.secondary200),
-                              const SizedBox(width: 3),
+                                  size: rr(13), color: AppColors.secondary200),
+                              horizontalSpacing(3),
                               Text(
                                 service.rating.toStringAsFixed(1),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey.shade700,
+                                style: AppTextStyles.font12Medium.copyWith(
+                                  color: colors.textSecondary,
                                 ),
                               ),
                             ],
@@ -163,12 +155,11 @@ class ServiceDetailSheet extends StatelessWidget {
                   ],
                 ),
 
-                const SizedBox(height: 12),
+                verticalSpacing(12),
 
-                // Info chips
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
+                  spacing: rw(8),
+                  runSpacing: rh(6),
                   children: [
                     if (service.hours?.isNotEmpty == true)
                       _InfoChip(
@@ -178,41 +169,38 @@ class ServiceDetailSheet extends StatelessWidget {
                     _InfoChip(
                       icon: Icons.location_on_outlined,
                       label: service.gate?.isNotEmpty == true
-                          ? 'Gate ${service.gate}'
+                          ? '${"flights.gate".tr()} ${service.gate}'
                           : service.zone.isNotEmpty
-                              ? 'Zone ${service.zone}'
-                              : 'Terminal ${service.terminal}',
+                              ? 'indoor_map.zone'.tr(namedArgs: {'name': service.zone})
+                              : '${"flights.terminal".tr()} ${service.terminal}',
                     ),
                     if (service.waitTime > 0)
                       _InfoChip(
                         icon: Icons.timer_outlined,
-                        label: '${service.waitTime} min wait',
+                        label: 'indoor_map.min_wait'.tr(namedArgs: {'n': '${service.waitTime}'}),
                         highlight: true,
                       ),
                   ],
                 ),
 
-                // Description
                 if (service.description.isNotEmpty) ...[
-                  const SizedBox(height: 10),
+                  verticalSpacing(10),
                   Text(
                     service.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade700,
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: colors.textSecondary,
                       height: 1.4,
                     ),
                   ),
                 ],
 
-                // Amenity tags
                 if (service.amenities.isNotEmpty) ...[
-                  const SizedBox(height: 10),
+                  verticalSpacing(10),
                   Wrap(
-                    spacing: 6,
-                    runSpacing: 4,
+                    spacing: rw(6),
+                    runSpacing: rh(4),
                     children: service.amenities
                         .take(4)
                         .map((a) => _TagChip(label: a))
@@ -220,32 +208,14 @@ class ServiceDetailSheet extends StatelessWidget {
                   ),
                 ],
 
-                const SizedBox(height: 14),
+                verticalSpacing(14),
 
-                // Navigate button
-                SizedBox(
-                  width: double.infinity,
-                  height: 46,
-                  child: ElevatedButton.icon(
-                    onPressed: onNavigate,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary200,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 0,
-                    ),
-                    icon: Icon(Icons.navigation_rounded,
-                        color: AppColors.secondary200, size: 18),
-                    label: Text(
-                      'Navigate',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15,
-                        color: AppColors.secondary200,
-                      ),
-                    ),
-                  ),
+                CustomTextButton(
+                  text: 'indoor_map.navigate'.tr(),
+                  onPressed: onNavigate,
+                  prefixIcon: Icon(Icons.navigation_rounded,
+                      color: AppColors.secondary200, size: rr(18)),
+                  foregroundColor: AppColors.secondary200,
                 ),
               ],
             ),
@@ -255,15 +225,14 @@ class ServiceDetailSheet extends StatelessWidget {
     );
   }
 
-  Widget _placeholder() => Container(
-        width: 72,
-        height: 72,
+  Widget _placeholder(dynamic colors) => Container(
+        width: rw(72),
+        height: rh(72),
         decoration: BoxDecoration(
-          color: const Color(0xFFEFF3FB),
-          borderRadius: BorderRadius.circular(12),
+          color: colors.surfaceVariant,
+          borderRadius: BorderRadius.circular(rr(12)),
         ),
-        child: Icon(Icons.storefront_outlined,
-            size: 30, color: AppColors.primary200),
+        child: Icon(Icons.storefront_outlined, size: rr(30), color: AppColors.primary200),
       );
 }
 
@@ -277,56 +246,54 @@ class _InfoChip extends StatelessWidget {
     this.highlight = false,
   });
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        decoration: BoxDecoration(
-          color: highlight
-              ? AppColors.secondary200.withValues(alpha: 0.1)
-              : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 12,
-              color: highlight ? AppColors.secondary200 : Colors.grey.shade600,
+  Widget build(BuildContext context) {
+    final colors = context.customColors;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(5)),
+      decoration: BoxDecoration(
+        color: highlight
+            ? AppColors.secondary200.withValues(alpha: 0.1)
+            : colors.surfaceVariant,
+        borderRadius: BorderRadius.circular(rr(8)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: rr(12),
+            color: highlight ? AppColors.secondary200 : colors.iconSecondary,
+          ),
+          horizontalSpacing(4),
+          Text(
+            label,
+            style: AppTextStyles.font12Medium.copyWith(
+              color: highlight ? AppColors.secondary200 : colors.textSecondary,
             ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: highlight
-                    ? const Color(0xFF8E5B15)
-                    : Colors.grey.shade700,
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _TagChip extends StatelessWidget {
   final String label;
   const _TagChip({required this.label});
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF9FAFB),
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: const Color(0xFFE3E7F1)),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: AppColors.primary200,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final colors = context.customColors;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(3)),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(6)),
+        border: Border.all(color: colors.border),
+      ),
+      child: Text(
+        label,
+        style: AppTextStyles.font12Medium.copyWith(color: AppColors.primary200),
+      ),
+    );
+  }
 }

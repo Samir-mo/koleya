@@ -45,10 +45,10 @@ class AuthHeader extends StatelessWidget {
                   color: AppColors.primary300,
                   borderRadius: BorderRadius.circular(rr(10)),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back_ios_new_rounded,
                   color: AppColors.white,
-                  size: 16,
+                  size: rr(16),
                 ),
               ),
             ),
@@ -62,13 +62,13 @@ class AuthHeader extends StatelessWidget {
                   color: AppColors.secondary200,
                   borderRadius: BorderRadius.circular(rr(10)),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.flight_rounded,
                   color: AppColors.white,
-                  size: 22,
+                  size: rr(22),
                 ),
               ),
-              SizedBox(width: rw(10)),
+              horizontalSpacing(10),
               Text(
                 'GateBuddy',
                 style: AppTextStyles.font18Bold.copyWith(

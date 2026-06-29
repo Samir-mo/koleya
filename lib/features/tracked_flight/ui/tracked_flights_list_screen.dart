@@ -5,6 +5,7 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
 import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_state.dart';
@@ -426,13 +427,10 @@ class _ErrorView extends StatelessWidget {
                     .copyWith(color: colors.textSecondary),
                 textAlign: TextAlign.center),
             verticalSpacing(24),
-            ElevatedButton(
+            CustomTextButton(
+              text: 'errors.error_screen_button'.tr(),
               onPressed: onRetry,
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary200),
-              child: Text('errors.error_screen_button'.tr(),
-                  style: AppTextStyles.font14SemiBold
-                      .copyWith(color: AppColors.white)),
+              isFullWidth: false,
             ),
           ],
         ),

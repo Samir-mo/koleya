@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
@@ -21,7 +22,7 @@ class ProfileAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.primary200,
-      padding: EdgeInsets.only(top: 44, left: 16, right: 16, bottom: 16),
+      padding: EdgeInsets.only(top: rh(44), left: rw(16), right: rw(16), bottom: rh(16)),
       child: Row(
         children: [
           IconButton(
@@ -39,25 +40,18 @@ class ProfileAppBar extends StatelessWidget {
             GestureDetector(
               onTap: onEdit,
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(6)),
                 decoration: BoxDecoration(
                   color: AppColors.primary300,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(rr(20)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.edit_outlined,
-                      size: 14,
-                      color: AppColors.secondary200,
-                    ),
-                    const SizedBox(width: 4),
+                    Icon(Icons.edit_outlined, size: rr(14), color: AppColors.secondary200),
+                    horizontalSpacing(4),
                     Text(
-                      'Edit',
+                      'profile.edit_button'.tr(),
                       style: AppTextStyles.font12Medium.copyWith(
                         color: AppColors.secondary200,
                       ),

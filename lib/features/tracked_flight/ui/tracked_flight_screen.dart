@@ -443,23 +443,23 @@ class _RouteHero extends StatelessWidget {
                 if (dep.gate != null)
                   _QuickChip(
                       icon: Icons.door_sliding_outlined,
-                      label: 'Gate ${dep.gate}',
-                      sub: 'Dep.'),
+                      label: '${"flights.gate".tr()} ${dep.gate}',
+                      sub: 'flights.departure'.tr()),
                 if (dep.terminal != null)
                   _QuickChip(
                       icon: Icons.business_outlined,
                       label: 'T${dep.terminal}',
-                      sub: 'Terminal'),
+                      sub: 'flights.terminal'.tr()),
                 if (arr.gate != null)
                   _QuickChip(
                       icon: Icons.door_sliding_outlined,
-                      label: 'Gate ${arr.gate}',
-                      sub: 'Arr.'),
+                      label: '${"flights.gate".tr()} ${arr.gate}',
+                      sub: 'flights.arrival'.tr()),
                 if (arr.terminal != null)
                   _QuickChip(
                       icon: Icons.business_outlined,
                       label: 'T${arr.terminal}',
-                      sub: 'Terminal'),
+                      sub: 'flights.terminal'.tr()),
               ],
             ),
           ],

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
@@ -30,15 +31,12 @@ class MapCategoryFilter extends StatelessWidget {
               onTap: () => onSelected(cat),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding:
-                    EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(8)),
+                padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(8)),
                 decoration: BoxDecoration(
                   color: isActive ? AppColors.primary200 : colors.surface,
                   borderRadius: BorderRadius.circular(rr(20)),
                   border: Border.all(
-                    color: isActive
-                        ? AppColors.primary200
-                        : colors.border,
+                    color: isActive ? AppColors.primary200 : colors.border,
                     width: 1.5,
                   ),
                   boxShadow: isActive
@@ -56,19 +54,14 @@ class MapCategoryFilter extends StatelessWidget {
                   children: [
                     Icon(
                       _iconForCategory(cat),
-                      size: 13,
-                      color: isActive
-                          ? AppColors.secondary200
-                          : Colors.grey.shade600,
+                      size: rr(13),
+                      color: isActive ? AppColors.secondary200 : colors.iconSecondary,
                     ),
-                    const SizedBox(width: 5),
+                    horizontalSpacing(5),
                     Text(
                       cat.label,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            isActive ? Colors.white : Colors.grey.shade700,
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: isActive ? AppColors.white : colors.textPrimary,
                         letterSpacing: 0.3,
                       ),
                     ),

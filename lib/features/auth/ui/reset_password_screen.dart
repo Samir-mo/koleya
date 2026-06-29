@@ -131,15 +131,15 @@ class _LockIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 100,
-        height: 100,
+        width: rw(100),
+        height: rw(100),
         decoration: const BoxDecoration(
           color: AppColors.primary50,
           shape: BoxShape.circle,
         ),
-        child: const Icon(
+        child: Icon(
           Icons.lock_reset_rounded,
-          size: 48,
+          size: rr(48),
           color: AppColors.primary200,
         ),
       ),

@@ -138,15 +138,15 @@ class _EnvelopeIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
+        width: rw(100),
+        height: rw(100),
+        decoration: const BoxDecoration(
           color: AppColors.primary50,
           shape: BoxShape.circle,
         ),
-        child: const Icon(
+        child: Icon(
           Icons.mark_email_unread_outlined,
-          size: 48,
+          size: rr(48),
           color: AppColors.primary200,
         ),
       ),

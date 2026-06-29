@@ -218,7 +218,7 @@ class _EmptyPrompt extends StatelessWidget {
             itemBuilder: (_, i) {
               final item = categories[i];
               return GestureDetector(
-                onTap: () => Navigator.pushNamed(context, item.route),
+                onTap: () => context.pushNamed(item.route),
                 child: Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: rw(14), vertical: rh(10)),
@@ -394,7 +394,7 @@ class _ResultCard extends StatelessWidget {
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: AppColors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

@@ -184,15 +184,15 @@ class _OtpBox extends StatelessWidget {
           filled: true,
           fillColor: colors.surface,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(rr(12)),
             borderSide: BorderSide(color: colors.border),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(rr(12)),
             borderSide: BorderSide(color: colors.border),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(rr(12)),
             borderSide:
                 const BorderSide(color: AppColors.primary200, width: 2),
           ),
@@ -207,15 +207,15 @@ class _CodeIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 100,
-        height: 100,
+        width: rw(100),
+        height: rw(100),
         decoration: const BoxDecoration(
           color: AppColors.primary50,
           shape: BoxShape.circle,
         ),
-        child: const Icon(
+        child: Icon(
           Icons.password_rounded,
-          size: 48,
+          size: rr(48),
           color: AppColors.primary200,
         ),
       ),
@@ -238,9 +238,8 @@ class _EmailChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.email_outlined,
-              size: 16, color: AppColors.primary200),
-          SizedBox(width: rw(8)),
+          Icon(Icons.email_outlined, size: rr(16), color: AppColors.primary200),
+          horizontalSpacing(8),
           Text(
             email,
             style: AppTextStyles.font14SemiBold.copyWith(

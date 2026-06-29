@@ -10,6 +10,7 @@ import 'package:gate_buddy/core/utils/validators.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
 import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
 import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
 
@@ -93,13 +94,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           verticalSpacing(4),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: TextButton(
+                            child: CustomTextButton.text(
+                              text: 'auth.login.forgot_password'.tr(),
                               onPressed: () => context.pushNamed(Routes.forgetPassword),
-                              child: Text(
-                                'auth.login.forgot_password'.tr(),
-                                style: AppTextStyles.font14SemiBold.copyWith(
-                                    color: AppColors.primary200),
-                              ),
+                              isFullWidth: false,
                             ),
                           ),
                           verticalSpacing(8),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
@@ -57,7 +58,7 @@ class InputBarState extends State<InputBar> {
         border: Border(top: BorderSide(color: colors.border)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: AppColors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -71,7 +72,7 @@ class InputBarState extends State<InputBar> {
               constraints: const BoxConstraints(maxHeight: 120),
               decoration: BoxDecoration(
                 color: AppColors.grey50,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(rr(24)),
                 border: Border.all(color: AppColors.grey100),
               ),
               child: TextField(
@@ -84,34 +85,34 @@ class InputBarState extends State<InputBar> {
                   color: AppColors.grey700,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Ask GateBuddy anything...',
+                  hintText: 'ai_chat.input_hint'.tr(),
                   hintStyle: AppTextStyles.font14Regular.copyWith(
                     color: AppColors.grey400,
                   ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: rw(16),
+                    vertical: rh(10),
                   ),
                   filled: false,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          horizontalSpacing(10),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: 44,
-            height: 44,
+            width: rw(44),
+            height: rw(44),
             decoration: BoxDecoration(
               color: _hasText ? AppColors.primary200 : AppColors.grey200,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               onPressed: _hasText ? widget.onSend : null,
-              icon: const Icon(Icons.send_rounded, size: 20),
+              icon: Icon(Icons.send_rounded, size: rr(20)),
               color: AppColors.white,
               padding: EdgeInsets.zero,
             ),

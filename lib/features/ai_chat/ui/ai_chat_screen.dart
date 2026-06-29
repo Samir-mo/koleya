@@ -6,6 +6,7 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/assistant_app_bar.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/input_bar.dart';
 import 'package:gate_buddy/features/ai_chat/ui/widgets/message_bubble.dart';
@@ -78,29 +79,21 @@ class _AssistantViewState extends State<_AssistantView> {
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(rr(16))),
         title: Text('ai_chat.login_required'.tr()),
-        content: Text(
-          'ai_chat.login_required_message'.tr(),
-        ),
+        content: Text('ai_chat.login_required_message'.tr()),
         actions: [
-          TextButton(
+          CustomTextButton.text(
+            text: 'common.cancel'.tr(),
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            isFullWidth: false,
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
+          CustomTextButton(
+            text: 'common.login'.tr(),
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, Routes.login);
+              context.pushNamed(Routes.login);
             },
-            child: Text(
-              'Log In',
-              style: AppTextStyles.font14SemiBold.copyWith(
-                  color: AppColors.white),
-            ),
+            isFullWidth: false,
+            size: CustomButtonSize.small,
           ),
         ],
       ),
@@ -144,9 +137,9 @@ class _AssistantViewState extends State<_AssistantView> {
 
               return ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                padding: EdgeInsets.symmetric(
+                  horizontal: rw(16),
+                  vertical: rh(12),
                 ),
                 itemCount: messages.length + (isTyping ? 1 : 0),
                 itemBuilder: (context, index) {
@@ -186,25 +179,22 @@ class _AuthBanner extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: AppColors.amber0,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(10)),
       child: Row(
         children: [
-          const Icon(Icons.lock_outline_rounded,
-              size: 16, color: AppColors.amber300),
-          const SizedBox(width: 8),
+          Icon(Icons.lock_outline_rounded, size: rr(16), color: AppColors.amber300),
+          horizontalSpacing(8),
           Expanded(
             child: Text(
-              'Log in to chat with GateBuddy',
-              style: AppTextStyles.font12Regular.copyWith(
-                  color: AppColors.amber400),
+              'ai_chat.login_banner'.tr(),
+              style: AppTextStyles.font12Regular.copyWith(color: AppColors.amber400),
             ),
           ),
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, Routes.login),
+            onTap: () => context.pushNamed(Routes.login),
             child: Text(
-              'Log In',
-              style: AppTextStyles.font12Medium.copyWith(
-                  color: AppColors.amber400),
+              'common.login'.tr(),
+              style: AppTextStyles.font12Medium.copyWith(color: AppColors.amber400),
             ),
           ),
         ],
@@ -227,28 +217,26 @@ class _EmptyState extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 80,
-            height: 80,
+            width: rw(80),
+            height: rw(80),
             decoration: const BoxDecoration(
               color: AppColors.primary50,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.smart_toy_rounded,
               color: AppColors.primary200,
-              size: 40,
+              size: rr(40),
             ),
           ),
-          const SizedBox(height: 16),
+          verticalSpacing(16),
           Text(
-            'Hi! I\'m GateBuddy ✈️',
-            style: AppTextStyles.font18Bold.copyWith(
-              color: AppColors.primary200,
-            ),
+            'ai_chat.welcome_title'.tr(),
+            style: AppTextStyles.font18Bold.copyWith(color: AppColors.primary200),
           ),
-          const SizedBox(height: 8),
+          verticalSpacing(8),
           Text(
-            'Ask me anything about your flight,\ngate, or airport services.',
+            'ai_chat.welcome_body'.tr(),
             textAlign: TextAlign.center,
             style: AppTextStyles.font14Regular.copyWith(
               color: colors.textSecondary,

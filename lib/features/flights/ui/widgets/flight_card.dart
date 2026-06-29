@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
@@ -211,20 +212,20 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = FlightCard._statusColor(status);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(rr(8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 6,
-            height: 6,
+            width: rw(6),
+            height: rw(6),
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
-          const SizedBox(width: 4),
+          horizontalSpacing(4),
           Text(
             _label(status),
             style: AppTextStyles.font12Bold.copyWith(color: color),
@@ -322,28 +323,30 @@ class _RouteRow extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: AppColors.grey200,
+                      color: colors.border,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    padding: EdgeInsets.symmetric(horizontal: rw(6)),
                     child: Icon(
                       Icons.flight,
-                      size: 16,
+                      size: rw(16),
                       color: AppColors.secondary200,
                     ),
                   ),
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: AppColors.grey200,
+                      color: colors.border,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 2),
               Text(
-                flight.direction == 'departure' ? 'Departure' : 'Arrival',
+                flight.direction == 'departure'
+                    ? 'flights.departure'.tr()
+                    : 'flights.arrival'.tr(),
                 style: AppTextStyles.font12Regular.copyWith(
                   color: colors.textHint,
                 ),
@@ -413,10 +416,10 @@ class _InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
       decoration: BoxDecoration(
         color: colors.surfaceVariant,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(rr(8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -445,10 +448,10 @@ class _UpdatesBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(6)),
       decoration: BoxDecoration(
         color: AppColors.amber0,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(rr(8)),
         border: Border.all(color: AppColors.amber100),
       ),
       child: Row(

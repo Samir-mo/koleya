@@ -89,7 +89,7 @@ class _ProfileView extends StatelessWidget {
 
           // ── Sections ─────────────────────────────────────────────────────
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            padding: EdgeInsets.fromLTRB(rw(16), 0, rw(16), rh(24)),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 verticalSpacing(20),
@@ -114,16 +114,15 @@ class _ProfileView extends StatelessWidget {
                       icon: Icons.lock_outline_rounded,
                       label: 'profile.change_password'.tr(),
                       iconColor: AppColors.amber200,
-                      onTap: () =>
-                          Navigator.pushNamed(context, Routes.forgetPassword),
+                      onTap: () => context.pushNamed(Routes.forgetPassword),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                verticalSpacing(20),
 
                 // Preferences
                 _PreferencesSection(),
-                const SizedBox(height: 20),
+                verticalSpacing(20),
 
                 // Tracked Flights shortcut
                 ProfileSection(
@@ -133,19 +132,17 @@ class _ProfileView extends StatelessWidget {
                       icon: Icons.bookmark_outline_rounded,
                       label: 'profile.tracked_flights'.tr(),
                       iconColor: AppColors.secondary200,
-                      onTap: () =>
-                          Navigator.pushNamed(context, Routes.trackedFlight),
+                      onTap: () => context.pushNamed(Routes.trackedFlight),
                     ),
                     ProfileTile(
                       icon: Icons.notifications_outlined,
                       label: 'profile.notifications'.tr(),
                       iconColor: AppColors.green200,
-                      onTap: () =>
-                          Navigator.pushNamed(context, Routes.notifications),
+                      onTap: () => context.pushNamed(Routes.notifications),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                verticalSpacing(20),
 
                 // Support
                 ProfileSection(
@@ -169,7 +166,7 @@ class _ProfileView extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                verticalSpacing(20),
 
                 // Actions
                 CustomTextButton.outlined(
@@ -227,18 +224,18 @@ class _HeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [AppColors.primary200, AppColors.primary300],
         ),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+          bottomLeft: Radius.circular(rr(32)),
+          bottomRight: Radius.circular(rr(32)),
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+      padding: EdgeInsets.fromLTRB(rw(24), rh(8), rw(24), rh(32)),
       child: Column(
         children: [
           Stack(
@@ -250,15 +247,15 @@ class _HeaderCard extends StatelessWidget {
                 child: GestureDetector(
                   onTap: onEdit,
                   child: Container(
-                    width: 30,
-                    height: 30,
+                    width: rw(30),
+                    height: rw(30),
                     decoration: const BoxDecoration(
                       color: AppColors.secondary200,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.edit_rounded,
-                      size: 14,
+                      size: rr(14),
                       color: AppColors.white,
                     ),
                   ),
@@ -266,19 +263,19 @@ class _HeaderCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          verticalSpacing(14),
           Text(
             user.name,
             style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
           ),
-          const SizedBox(height: 4),
+          verticalSpacing(4),
           Text(
             user.email,
             style: AppTextStyles.font14Regular.copyWith(
               color: AppColors.primary50,
             ),
           ),
-          const SizedBox(height: 16),
+          verticalSpacing(16),
           _StatsRow(),
         ],
       ),
@@ -290,10 +287,10 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(12)),
       decoration: BoxDecoration(
         color: AppColors.primary300,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(rr(14)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -336,8 +333,8 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: AppColors.secondary200, size: 18),
-        const SizedBox(height: 4),
+        Icon(icon, color: AppColors.secondary200, size: rr(18)),
+        verticalSpacing(4),
         Text(
           value,
           style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
@@ -356,7 +353,7 @@ class _StatItem extends StatelessWidget {
 class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 40, color: AppColors.primary200);
+    return Container(width: 1, height: rh(40), color: AppColors.primary200);
   }
 }
 
@@ -412,10 +409,10 @@ class _LanguageToggle extends StatelessWidget {
     return GestureDetector(
       onTap: onToggle,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(5)),
         decoration: BoxDecoration(
           color: AppColors.primary50,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(rr(8)),
         ),
         child: Text(
           isArabic ? 'AR → EN' : 'EN → AR',

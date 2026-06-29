@@ -45,44 +45,60 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
         ),
         child: Column(
           children: [
-            _shimmerBox(width: double.infinity, height: 5,
-                radius: const BorderRadius.vertical(top: Radius.circular(14))),
+            _shimmerBox(
+              width: double.infinity,
+              height: rh(5),
+              radius:
+                  const BorderRadius.vertical(top: Radius.circular(14)),
+            ),
             Padding(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(rw(14)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      _shimmerBox(width: 44, height: 44, radius: BorderRadius.circular(10)),
-                      const SizedBox(width: 10),
+                      _shimmerBox(
+                          width: rw(44),
+                          height: rw(44),
+                          radius: BorderRadius.circular(rr(10))),
+                      horizontalSpacing(10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _shimmerBox(width: 120, height: 14),
-                            const SizedBox(height: 6),
-                            _shimmerBox(width: 70, height: 12),
+                            _shimmerBox(width: rw(120), height: rh(14)),
+                            verticalSpacing(6),
+                            _shimmerBox(width: rw(70), height: rh(12)),
                           ],
                         ),
                       ),
-                      _shimmerBox(width: 70, height: 26, radius: BorderRadius.circular(8)),
+                      _shimmerBox(
+                          width: rw(70),
+                          height: rh(26),
+                          radius: BorderRadius.circular(rr(8))),
                     ],
                   ),
-                  const SizedBox(height: 14),
+                  verticalSpacing(14),
                   Row(
                     children: [
-                      _shimmerBox(width: 50, height: 40),
+                      _shimmerBox(width: rw(50), height: rh(40)),
                       const Spacer(),
-                      _shimmerBox(width: 50, height: 40),
+                      _shimmerBox(width: rw(50), height: rh(40)),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  verticalSpacing(12),
                   Row(
                     children: [
-                      _shimmerBox(width: 70, height: 26, radius: BorderRadius.circular(8)),
-                      const SizedBox(width: 8),
-                      _shimmerBox(width: 50, height: 26, radius: BorderRadius.circular(8)),
+                      _shimmerBox(
+                          width: rw(70),
+                          height: rh(26),
+                          radius: BorderRadius.circular(rr(8))),
+                      horizontalSpacing(8),
+                      _shimmerBox(
+                          width: rw(50),
+                          height: rh(26),
+                          radius: BorderRadius.circular(rr(8))),
                     ],
                   ),
                 ],
@@ -103,7 +119,7 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
       width: width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: radius ?? BorderRadius.circular(4),
+        borderRadius: radius ?? BorderRadius.circular(rr(4)),
         gradient: LinearGradient(
           begin: Alignment(_animation.value - 1, 0),
           end: Alignment(_animation.value + 1, 0),

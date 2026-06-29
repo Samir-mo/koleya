@@ -47,7 +47,7 @@ class ServiceTypeChip extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 16,
+              size: rr(16),
               color: isSelected ? AppColors.white : colors.iconPrimary,
             ),
             SizedBox(width: rw(6)),

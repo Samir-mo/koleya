@@ -5,6 +5,7 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/home/data/models/home_model.dart';
 
 class TrackedFlightCard extends StatelessWidget {
@@ -103,7 +104,7 @@ class TrackedFlightCard extends StatelessWidget {
                       Container(
                           width: double.infinity,
                           height: 1,
-                          color: AppColors.grey200),
+                          color: colors.border),
                     ],
                   ),
                 ),
@@ -161,42 +162,27 @@ class TrackedFlightCard extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: CustomTextButton(
+                    text: 'home.view_details'.tr(),
                     onPressed: () => Navigator.of(context, rootNavigator: true)
                         .pushNamed(Routes.trackedFlight),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary200,
-                      foregroundColor: AppColors.white,
-                      padding: EdgeInsets.symmetric(vertical: rh(11)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(rr(10))),
-                      elevation: 0,
-                    ),
-                    icon: Icon(Icons.open_in_new_rounded, size: rw(16)),
-                    label: Text(
-                      'home.view_details'.tr(),
-                      style: AppTextStyles.font14SemiBold,
-                    ),
+                    size: CustomButtonSize.small,
+                    prefixIcon: const Icon(Icons.open_in_new_rounded),
+                    textStyle: AppTextStyles.font14SemiBold,
+                    borderRadius: rr(10),
                   ),
                 ),
                 horizontalSpacing(10),
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: CustomTextButton.outlined(
+                    text: 'home.explore_destination'.tr(),
                     onPressed: () =>
                         Navigator.pushNamed(context, Routes.explorePlacesScreen),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primary200,
-                      padding: EdgeInsets.symmetric(vertical: rh(11)),
-                      side: BorderSide(
-                          color: AppColors.primary200.withValues(alpha: 0.5)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(rr(10))),
-                    ),
-                    icon: Icon(Icons.explore_rounded, size: rw(16)),
-                    label: Text(
-                      'home.explore_destination'.tr(),
-                      style: AppTextStyles.font14SemiBold,
-                    ),
+                    size: CustomButtonSize.small,
+                    prefixIcon: const Icon(Icons.explore_rounded),
+                    textStyle: AppTextStyles.font14SemiBold,
+                    borderColor: AppColors.primary200.withValues(alpha: 0.5),
+                    borderRadius: rr(10),
                   ),
                 ),
               ],

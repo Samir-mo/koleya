@@ -33,16 +33,16 @@ class MessageBubble extends StatelessWidget {
               child: Icon(
                 Icons.smart_toy_rounded,
                 color: AppColors.secondary200,
-                size: 16,
+                size: rr(16),
               ),
             ),
-            SizedBox(width: rw(8)),
+            horizontalSpacing(8),
           ],
           Flexible(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),
               decoration: BoxDecoration(
-                color: isUser ? AppColors.primary200 : Colors.white,
+                color: isUser ? AppColors.primary200 : AppColors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(rr(16)),
                   topRight: Radius.circular(rr(16)),

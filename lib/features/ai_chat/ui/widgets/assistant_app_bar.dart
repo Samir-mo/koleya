@@ -16,8 +16,8 @@ class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
       height: preferredSize.height + MediaQuery.of(context).padding.top,
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
-        left: 16,
-        right: 16,
+        left: rw(16),
+        right: rw(16),
       ),
       decoration: BoxDecoration(
         color: AppColors.primary200,
@@ -36,10 +36,10 @@ class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Icon(
               Icons.smart_toy_rounded,
               color: AppColors.secondary200,
-              size: 22,
+              size: rr(22),
             ),
           ),
-          SizedBox(width: rw(12)),
+          horizontalSpacing(12),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,16 +53,16 @@ class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
               Row(
                 children: [
                   Container(
-                    width: 7,
-                    height: 7,
+                    width: rw(7),
+                    height: rw(7),
                     decoration: const BoxDecoration(
                       color: AppColors.success,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  horizontalSpacing(5),
                   Text(
-                    'AI Assistant · Online',
+                    'ai_chat.online_status'.tr(),
                     style: AppTextStyles.font12Regular.copyWith(
                       color: AppColors.primary50,
                     ),

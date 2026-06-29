@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
+import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/shared/models/service_model.dart';
@@ -28,7 +29,7 @@ class PlaceCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(rr(16)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
+              color: AppColors.black.withValues(alpha: 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -36,79 +37,66 @@ class PlaceCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Image
             ClipRRect(
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.circular(rr(16)),
-              ),
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(rr(16))),
               child: CachedNetworkImage(
                 imageUrl: place.primaryImage ?? '',
                 width: rw(110),
                 height: rh(110),
                 fit: BoxFit.cover,
                 placeholder: (_, __) => _placeholder(colors.surfaceVariant),
-                errorWidget: (_, __, ___) =>
-                    _placeholder(colors.surfaceVariant),
+                errorWidget: (_, __, ___) => _placeholder(colors.surfaceVariant),
               ),
             ),
 
-            // Info
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(12)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Name + status
                     Row(
                       children: [
                         Expanded(
                           child: Text(
                             place.name,
-                            style: TextStyle(
-                              fontSize: rf(14),
-                              fontWeight: FontWeight.w700,
+                            style: AppTextStyles.font14Bold.copyWith(
                               color: colors.textPrimary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(width: rw(6)),
+                        horizontalSpacing(6),
                         _StatusBadge(isOpen: place.isOpen),
                       ],
                     ),
 
-                    SizedBox(height: 4.h),
+                    verticalSpacing(4),
 
-                    // Type
                     Text(
                       place.categoryLabel,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.font12Medium.copyWith(
                         color: AppColors.secondary200,
                       ),
                     ),
 
-                    SizedBox(height: 8.h),
+                    verticalSpacing(8),
 
-                    // Terminal
                     Row(
                       children: [
                         Icon(
                           Icons.location_on_outlined,
-                          size: 13.r,
+                          size: rr(13),
                           color: colors.iconSecondary,
                         ),
-                        SizedBox(width: 3.w),
+                        horizontalSpacing(3),
                         Expanded(
                           child: Text(
                             place.terminal.isNotEmpty
-                                ? 'Terminal ${place.terminal}'
+                                ? '${"flights.terminal".tr()} ${place.terminal}'
                                 : place.airport,
-                            style: TextStyle(
-                              fontSize: 11.sp,
+                            style: AppTextStyles.font12Regular.copyWith(
                               color: colors.textSecondary,
                             ),
                             maxLines: 1,
@@ -118,22 +106,19 @@ class PlaceCard extends StatelessWidget {
                       ],
                     ),
 
-                    SizedBox(height: 8.h),
+                    verticalSpacing(8),
 
-                    // Rating + price level
                     Row(
                       children: [
                         Icon(
                           Icons.star_rounded,
-                          size: 14.r,
+                          size: rr(14),
                           color: AppColors.secondary200,
                         ),
-                        SizedBox(width: 3.w),
+                        horizontalSpacing(3),
                         Text(
                           place.rating.toStringAsFixed(1),
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
+                          style: AppTextStyles.font12Medium.copyWith(
                             color: colors.textPrimary,
                           ),
                         ),
@@ -152,15 +137,11 @@ class PlaceCard extends StatelessWidget {
   }
 
   Widget _placeholder(Color bg) => Container(
-    width: 110.w,
-    height: 110.h,
-    color: bg,
-    child: Icon(
-      Icons.storefront_outlined,
-      size: 36.r,
-      color: AppColors.grey400,
-    ),
-  );
+        width: rw(110),
+        height: rh(110),
+        color: bg,
+        child: Icon(Icons.storefront_outlined, size: rr(36), color: AppColors.grey400),
+      );
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -169,21 +150,16 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = isOpen ? AppColors.green200 : AppColors.red200;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
+      padding: EdgeInsets.symmetric(horizontal: rw(7), vertical: rh(2)),
       decoration: BoxDecoration(
-        color: (isOpen ? AppColors.green200 : AppColors.red200).withValues(
-          alpha: 0.12,
-        ),
-        borderRadius: BorderRadius.circular(20.r),
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(rr(20)),
       ),
       child: Text(
-        isOpen ? 'Open' : 'Closed',
-        style: TextStyle(
-          fontSize: 10.sp,
-          fontWeight: FontWeight.w700,
-          color: isOpen ? AppColors.green200 : AppColors.red200,
-        ),
+        isOpen ? 'explore_places.open_short'.tr() : 'explore_places.closed'.tr(),
+        style: AppTextStyles.font12Bold.copyWith(color: color),
       ),
     );
   }
@@ -200,9 +176,7 @@ class _PriceLevel extends StatelessWidget {
       children: List.generate(4, (i) {
         return Text(
           '\$',
-          style: TextStyle(
-            fontSize: 11.sp,
-            fontWeight: FontWeight.w700,
+          style: AppTextStyles.font12Bold.copyWith(
             color: i < level ? AppColors.secondary200 : colors.textDisabled,
           ),
         );

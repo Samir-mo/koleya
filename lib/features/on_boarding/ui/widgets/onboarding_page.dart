@@ -54,10 +54,10 @@ class OnboardingPage extends StatelessWidget {
                     onTap: onBack,
                     child: Container(
                       padding: EdgeInsets.all(rw(8)),
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_back_ios_new_rounded,
                         color: AppColors.white,
-                        size: 20,
+                        size: rr(20),
                       ),
                     ),
                   ),

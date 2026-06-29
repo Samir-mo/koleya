@@ -55,7 +55,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
         hintStyle:
             AppTextStyles.font14Regular.copyWith(color: colors.textHint),
         prefixIcon:
-            Icon(widget.prefixIcon, color: AppColors.primary200, size: 20),
+            Icon(widget.prefixIcon, color: AppColors.primary200, size: rr(20)),
         suffixIcon: widget.isPassword
             ? GestureDetector(
                 onTap: () => setState(() => _obscure = !_obscure),
@@ -64,7 +64,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
                   color: colors.iconSecondary,
-                  size: 20,
+                  size: rr(20),
                 ),
               )
             : null,
