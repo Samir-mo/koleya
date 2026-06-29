@@ -268,5 +268,16 @@
                     "assistant_name":  "GateBuddy",
                     "login_required":  "تسجيل الدخول مطلوب",
                     "login_required_message":  "تحتاج إلى تسجيل الدخول للدردشة مع GateBuddy."
-                }
+                },
+    "search":  {
+                   "hint":  "ابحث عن الرحلات والخدمات والأماكن...",
+                   "quick_access":  "وصول سريع",
+                   "quick_flights":  "الرحلات",
+                   "quick_vip":  "صالة كبار الشخصيات",
+                   "quick_restaurants":  "المطاعم",
+                   "quick_shops":  "المتاجر",
+                   "quick_financial":  "الخدمات المالية",
+                   "quick_accessibility":  "إمكانية الوصول",
+                   "no_results":  "لا توجد نتائج لـ"
+               }
 }

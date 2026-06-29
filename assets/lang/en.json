@@ -268,5 +268,16 @@
                     "assistant_name":  "GateBuddy",
                     "login_required":  "Login Required",
                     "login_required_message":  "You need to be logged in to chat with GateBuddy."
-                }
+                },
+    "search":  {
+                   "hint":  "Search flights, services, places...",
+                   "quick_access":  "Quick Access",
+                   "quick_flights":  "Flights",
+                   "quick_vip":  "VIP Lounge",
+                   "quick_restaurants":  "Restaurants",
+                   "quick_shops":  "Shops",
+                   "quick_financial":  "Financial",
+                   "quick_accessibility":  "Accessibility",
+                   "no_results":  "No results for"
+               }
 }

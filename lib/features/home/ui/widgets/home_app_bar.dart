@@ -15,7 +15,8 @@ class HomeAppBar extends StatelessWidget {
         children: [
           _IconBtn(
             icon: Icons.search_rounded,
-            onTap: () => Navigator.pushNamed(context, Routes.search),
+            onTap: () => Navigator.of(context, rootNavigator: true)
+                .pushNamed(Routes.search),
           ),
           const Spacer(),
           Row(

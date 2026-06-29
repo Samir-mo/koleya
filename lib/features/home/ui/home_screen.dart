@@ -13,7 +13,6 @@ import 'package:gate_buddy/features/home/ui/widgets/airport_services_grid.dart';
 import 'package:gate_buddy/features/home/ui/widgets/featured_services_section.dart';
 import 'package:gate_buddy/features/home/ui/widgets/flight_update_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/home_app_bar.dart';
-import 'package:gate_buddy/features/home/ui/widgets/home_header.dart';
 import 'package:gate_buddy/features/home/ui/widgets/metrics_strip.dart';
 import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_card.dart';
 
@@ -32,8 +31,13 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 const HomeAppBar(),
-                const HomeHeader(),
-                Expanded(child: _Body(state: state, scrollController: scrollController)),
+
+                Expanded(
+                  child: _Body(
+                    state: state,
+                    scrollController: scrollController,
+                  ),
+                ),
               ],
             ),
           ),
@@ -66,7 +70,9 @@ class _Body extends StatelessWidget {
 
   Widget _content(BuildContext context) {
     if (state.isLoading) return _LoadingSkeleton();
-    if (state.isFailure) return _ErrorView(error: state.error ?? 'errors.unknown'.tr());
+    if (state.isFailure) {
+      return _ErrorView(error: state.error ?? 'errors.unknown'.tr());
+    }
     if (state.isSuccess && state.data != null) {
       return _LoadedView(data: state.data!, scrollController: scrollController);
     }
@@ -132,16 +138,17 @@ class _LoadedView extends StatelessWidget {
                 header: HomeSectionHeader(
                   title: 'home.flight_updates'.tr(),
                   actionLabel: 'home.view_all'.tr(),
-                  onAction: () =>
-                      Navigator.pushNamed(context, Routes.flights),
+                  onAction: () => Navigator.pushNamed(context, Routes.flights),
                 ),
                 child: Column(
                   children: data.updatedFlights
                       .take(2)
-                      .map((f) => Padding(
-                            padding: EdgeInsets.only(bottom: rh(10)),
-                            child: FlightUpdateCard(flight: f),
-                          ))
+                      .map(
+                        (f) => Padding(
+                          padding: EdgeInsets.only(bottom: rh(10)),
+                          child: FlightUpdateCard(flight: f),
+                        ),
+                      )
                       .toList(),
                 ),
               ),
@@ -161,9 +168,7 @@ class _LoadedView extends StatelessWidget {
             // ── Airport services grid ─────────────────────────────────────
             verticalSpacing(24),
             _Section(
-              header: HomeSectionHeader(
-                title: 'home.airport_services'.tr(),
-              ),
+              header: HomeSectionHeader(title: 'home.airport_services'.tr()),
               child: const AirportServicesGrid(),
             ),
 
@@ -175,15 +180,13 @@ class _LoadedView extends StatelessWidget {
                 child: HomeSectionHeader(
                   title: 'home.popular_services'.tr(),
                   actionLabel: 'home.view_all'.tr(),
-                  onAction: () =>
-                      Navigator.pushNamed(context, Routes.services),
+                  onAction: () => Navigator.pushNamed(context, Routes.services),
                 ),
               ),
               verticalSpacing(12),
               Padding(
                 padding: EdgeInsets.only(left: rw(20)),
-                child: FeaturedServicesSection(
-                    services: data.featuredServices),
+                child: FeaturedServicesSection(services: data.featuredServices),
               ),
             ],
 
@@ -206,11 +209,7 @@ class _Section extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: rw(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          header,
-          verticalSpacing(12),
-          child,
-        ],
+        children: [header, verticalSpacing(12), child],
       ),
     );
   }

@@ -28,6 +28,9 @@ import 'package:gate_buddy/features/indoor_map/data/repo/indoor_map_repo_impl.da
 import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
 import 'package:gate_buddy/features/notifications/logic/cubit/notifications_cubit.dart';
 import 'package:gate_buddy/features/profile/logic/cubit/profile_cubit.dart';
+import 'package:gate_buddy/features/search/data/remote/search_remote_ds.dart';
+import 'package:gate_buddy/features/search/data/repo/search_repo.dart';
+import 'package:gate_buddy/features/search/data/repo/search_repo_impl.dart';
 import 'package:gate_buddy/features/search/logic/cubit/search_cubit.dart';
 import 'package:gate_buddy/features/services/logic/cubit/services_cubit.dart';
 import 'package:gate_buddy/features/home/data/remote/home_remote_ds.dart';
@@ -148,7 +151,15 @@ Future<void> setUpDependencies() async {
   getIt.registerFactory(() => ProfileCubit());
 
   // ── Search ────────────────────────────────────────────────────────────────
-  getIt.registerFactory(() => SearchCubit());
+  getIt.registerLazySingleton(
+    () => SearchRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<SearchRepo>(
+    () => SearchRepoImpl(remoteDs: getIt<SearchRemoteDs>()),
+  );
+  getIt.registerFactory(
+    () => SearchCubit(repo: getIt<SearchRepo>()),
+  );
 
   // ── Home ──────────────────────────────────────────────────────────────────
   getIt.registerLazySingleton(
