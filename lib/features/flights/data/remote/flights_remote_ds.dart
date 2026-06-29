@@ -65,17 +65,29 @@ class FlightsRemoteDs with BaseRemoteDs {
         await api.delete(endpoint);
       });
 
+  // Resolves all known response shapes from this backend:
+  //   { data: { flights: [...] } }   — paginated list endpoint
+  //   { data: { results: [...] } }   — search endpoint
+  //   { data: { data: [...] } }      — Natours double-nesting
+  //   { data: [...] }                — flat list
   static List<FlightModel> _parseFlightList(dynamic data) {
     if (data is! Map) return [];
     final body = data['data'];
     List<dynamic> raw = [];
-    if (body is Map && body['flights'] is List) {
-      raw = body['flights'] as List;
+    if (body is Map) {
+      if (body['flights'] is List) {
+        raw = body['flights'] as List;
+      } else if (body['results'] is List) {
+        raw = body['results'] as List;
+      } else if (body['data'] is List) {
+        raw = body['data'] as List;
+      }
     } else if (body is List) {
       raw = body;
     }
     return raw
-        .map((e) => FlightModel.fromJson(e as Map<String, dynamic>))
+        .whereType<Map<String, dynamic>>()
+        .map(FlightModel.fromJson)
         .toList();
   }
 }

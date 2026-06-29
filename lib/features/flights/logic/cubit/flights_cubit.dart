@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/errors/failure.dart';
 
@@ -7,6 +9,7 @@ import 'flights_state.dart';
 
 class FlightsCubit extends Cubit<FlightsState> {
   final FlightsRepo repo;
+  Timer? _searchDebounce;
 
   FlightsCubit({required this.repo}) : super(const FlightsState());
 
@@ -28,30 +31,36 @@ class FlightsCubit extends Cubit<FlightsState> {
   }
 
   Future<void> searchFlights(String query) async {
+    _searchDebounce?.cancel();
     if (query.trim().isEmpty) {
       emit(state.copyWith(isSearching: false, query: '', searchResults: []));
       return;
     }
-    emit(state.copyWith(
-      isSearching: true,
-      query: query,
-      status: FlightsStatus.loading,
-    ));
+    // Update query immediately so the UI reflects what the user is typing.
+    emit(state.copyWith(isSearching: true, query: query));
+    _searchDebounce = Timer(
+      const Duration(milliseconds: 300),
+      () => _executeSearch(query.trim()),
+    );
+  }
+
+  Future<void> _executeSearch(String query) async {
+    if (isClosed) return;
+    emit(state.copyWith(status: FlightsStatus.loading));
     try {
-      final results = await repo.searchFlights(query.trim());
-      emit(state.copyWith(
-        status: FlightsStatus.success,
-        searchResults: results,
-      ));
+      final results = await repo.searchFlights(query);
+      if (!isClosed) {
+        emit(state.copyWith(status: FlightsStatus.success, searchResults: results));
+      }
     } catch (e) {
-      emit(state.copyWith(
-        status: FlightsStatus.failure,
-        error: _errorMessage(e),
-      ));
+      if (!isClosed) {
+        emit(state.copyWith(status: FlightsStatus.failure, error: _errorMessage(e)));
+      }
     }
   }
 
   void clearSearch() {
+    _searchDebounce?.cancel();
     emit(state.copyWith(isSearching: false, query: '', searchResults: []));
   }
 
@@ -67,6 +76,12 @@ class FlightsCubit extends Cubit<FlightsState> {
     } catch (e) {
       emit(state.copyWith(clearTracking: true, error: _errorMessage(e)));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _searchDebounce?.cancel();
+    return super.close();
   }
 
   String _errorMessage(Object e) {
