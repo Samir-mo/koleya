@@ -50,6 +50,7 @@ dependencies:
   latlong2: ^0.9.1
   cached_network_image: ^3.4.1
   dartz: ^0.10.1
+  mobile_scanner: ^5.2.3
 
 # ----------------------------------------------------------------
 # DEV DEPENDENCIES

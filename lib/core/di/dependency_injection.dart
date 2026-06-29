@@ -32,6 +32,7 @@ import 'package:gate_buddy/features/search/data/remote/search_remote_ds.dart';
 import 'package:gate_buddy/features/search/data/repo/search_repo.dart';
 import 'package:gate_buddy/features/search/data/repo/search_repo_impl.dart';
 import 'package:gate_buddy/features/search/logic/cubit/search_cubit.dart';
+import 'package:gate_buddy/features/boarding_pass_scan/logic/cubit/boarding_pass_scan_cubit.dart';
 import 'package:gate_buddy/features/services_category/data/repo/services_category_repo.dart';
 import 'package:gate_buddy/features/services_category/data/repo/services_category_repo_impl.dart';
 import 'package:gate_buddy/features/services_category/logic/cubit/services_category_cubit.dart';
@@ -142,6 +143,11 @@ Future<void> setUpDependencies() async {
 
   // ── Notifications ─────────────────────────────────────────────────────────
   getIt.registerFactory(() => NotificationsCubit());
+
+  // ── Boarding Pass Scanner ─────────────────────────────────────────────────
+  getIt.registerFactory(
+    () => BoardingPassScanCubit(flightsRepo: getIt<FlightsRepo>()),
+  );
 
   // ── Services Category ─────────────────────────────────────────────────────
   getIt.registerLazySingleton<ServicesCategoryRepo>(

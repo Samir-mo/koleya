@@ -7,4 +7,5 @@ abstract class FlightsRepo {
   Future<FlightModel> getFlightById(String id);
   Future<void> trackFlight(String id);
   Future<void> untrackFlight(String id);
+  Future<FlightModel> scanBoardingPass(String rawBoardingPassData);
 }

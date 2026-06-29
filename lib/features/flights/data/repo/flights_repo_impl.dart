@@ -62,4 +62,14 @@ class FlightsRepoImpl implements FlightsRepo {
       throw ErrorHandler.handleFailure(e);
     }
   }
+
+  @override
+  Future<FlightModel> scanBoardingPass(String rawBoardingPassData) async {
+    try {
+      return await remoteDs.scanBoardingPass(
+          rawBoardingPassData: rawBoardingPassData);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
 }

@@ -65,6 +65,16 @@ class FlightsRemoteDs with BaseRemoteDs {
         await api.delete(endpoint);
       });
 
+  Future<FlightModel> scanBoardingPass({required String rawBoardingPassData}) =>
+      execute(() async {
+        final response = await api.post(
+          ApiEndpoints.scanBoardingPass,
+          body: {'barcodeData': rawBoardingPassData},
+        );
+        final data = response['data'] as Map<String, dynamic>;
+        return FlightModel.fromJson(data['flight'] as Map<String, dynamic>);
+      });
+
   // Resolves all known response shapes from this backend:
   //   { data: { flights: [...] } }   — paginated list endpoint
   //   { data: { results: [...] } }   — search endpoint

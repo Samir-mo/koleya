@@ -7,6 +7,7 @@ import 'package:gate_buddy/features/home/data/models/home_model.dart';
 import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
 import 'package:gate_buddy/features/home/ui/widgets/airport_services_grid.dart';
 import 'package:gate_buddy/features/home/ui/widgets/featured_services_section.dart';
+import 'package:gate_buddy/features/home/ui/widgets/scan_boarding_pass_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/flight_update_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/home_section.dart';
 import 'package:gate_buddy/features/home/ui/widgets/metrics_strip.dart';
@@ -83,24 +84,12 @@ class HomeLoadedView extends StatelessWidget {
               child: const AirportServicesGrid(),
             ),
 
-            // ── Featured services ─────────────────────────────────────────
-            if (data.featuredServices.isNotEmpty) ...[
-              verticalSpacing(24),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: rw(20)),
-                child: HomeSectionHeader(
-                  title: 'home.popular_services'.tr(),
-                  actionLabel: 'home.view_all'.tr(),
-                  onAction: () =>
-                      MainScaffold.jumpToTab(MainScaffold.tabExplore),
-                ),
-              ),
-              verticalSpacing(12),
-              Padding(
-                padding: EdgeInsets.only(left: rw(20)),
-                child: FeaturedServicesSection(services: data.featuredServices),
-              ),
-            ],
+            // ── Scan boarding pass card ───────────────────────────────────
+            verticalSpacing(24),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: rw(20)),
+              child: const ScanBoardingPassCard(),
+            ),
 
             verticalSpacing(40),
           ],

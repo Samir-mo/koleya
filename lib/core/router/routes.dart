@@ -21,4 +21,5 @@
   static const String indoorMap        = '/indoorMap';
   static const String assistant        = '/assistant';
   static const String servicesCategory = '/servicesCategory';
+  static const String boardingPassScan  = '/boardingPassScan';
 }

@@ -20,6 +20,8 @@ import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart
 import 'package:gate_buddy/features/tracked_flight/ui/tracked_flights_list_screen.dart';
 import 'package:gate_buddy/features/services_category/logic/cubit/services_category_cubit.dart';
 import 'package:gate_buddy/features/services_category/ui/services_category_screen.dart';
+import 'package:gate_buddy/features/boarding_pass_scan/logic/cubit/boarding_pass_scan_cubit.dart';
+import 'package:gate_buddy/features/boarding_pass_scan/ui/boarding_pass_scanner_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -89,6 +91,15 @@ class AppRouter {
             create: (_) =>
                 getIt<ServicesCategoryCubit>()..load(category),
             child: ServicesCategoryScreen(category: category),
+          ),
+          settings,
+        );
+
+      case Routes.boardingPassScan:
+        return _buildRoute(
+          BlocProvider(
+            create: (_) => getIt<BoardingPassScanCubit>(),
+            child: const BoardingPassScannerScreen(),
           ),
           settings,
         );

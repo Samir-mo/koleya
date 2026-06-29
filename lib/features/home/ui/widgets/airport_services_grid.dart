@@ -91,6 +91,7 @@ class _ServiceTile extends StatelessWidget {
       onTap: () => context.pushNamed(
         Routes.servicesCategory,
         arguments: {'category': item.category},
+        rootNavigator: true,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),

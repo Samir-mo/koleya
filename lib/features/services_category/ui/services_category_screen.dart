@@ -21,7 +21,14 @@ class ServicesCategoryScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          CustomAppBar(title: _titleFor(category)),
+          CustomAppBar(
+            title: _titleFor(category),
+            leading: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.white,
+            ),
+            onLeadingPressed: () => Navigator.of(context).pop(),
+          ),
           Expanded(
             child: BlocBuilder<ServicesCategoryCubit, ServicesCategoryState>(
               builder: (context, state) {
@@ -71,30 +78,28 @@ class _LoadingView extends StatelessWidget {
       padding: EdgeInsets.all(rw(16)),
       itemCount: 6,
       separatorBuilder: (_, __) => verticalSpacing(12),
-      itemBuilder: (_, __) => LoadingShimmer.card(
-        width: double.infinity,
-        height: rh(110),
-      ),
+      itemBuilder: (_, __) =>
+          LoadingShimmer.card(width: double.infinity, height: rh(110)),
     );
   }
 }
 
 String _titleFor(String category) => switch (category) {
-      'RESTAURANTS' => 'services_category.title_restaurants'.tr(),
-      'SHOPS' => 'services_category.title_shops'.tr(),
-      'VIP_SERVICES' => 'services_category.title_vip'.tr(),
-      'FINANCIAL' => 'services_category.title_financial'.tr(),
-      'COUNTERS' => 'services_category.title_counters'.tr(),
-      'ACCESSIBILITY' => 'services_category.title_accessibility'.tr(),
-      _ => category,
-    };
+  'RESTAURANTS' => 'services_category.title_restaurants'.tr(),
+  'SHOPS' => 'services_category.title_shops'.tr(),
+  'VIP_SERVICES' => 'services_category.title_vip'.tr(),
+  'FINANCIAL' => 'services_category.title_financial'.tr(),
+  'COUNTERS' => 'services_category.title_counters'.tr(),
+  'ACCESSIBILITY' => 'services_category.title_accessibility'.tr(),
+  _ => category,
+};
 
 IconData _iconFor(String category) => switch (category) {
-      'RESTAURANTS' => Icons.restaurant_outlined,
-      'SHOPS' => Icons.shopping_bag_outlined,
-      'VIP_SERVICES' => Icons.star_outline_rounded,
-      'FINANCIAL' => Icons.account_balance_outlined,
-      'COUNTERS' => Icons.confirmation_number_outlined,
-      'ACCESSIBILITY' => Icons.accessible_outlined,
-      _ => Icons.storefront_outlined,
-    };
+  'RESTAURANTS' => Icons.restaurant_outlined,
+  'SHOPS' => Icons.shopping_bag_outlined,
+  'VIP_SERVICES' => Icons.star_outline_rounded,
+  'FINANCIAL' => Icons.account_balance_outlined,
+  'COUNTERS' => Icons.confirmation_number_outlined,
+  'ACCESSIBILITY' => Icons.accessible_outlined,
+  _ => Icons.storefront_outlined,
+};
