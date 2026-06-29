@@ -44,23 +44,13 @@ class AuthRemoteDs with BaseRemoteDs {
   Future<UserModel> getMe() =>
       execute(() async {
         final response = await api.get(ApiEndpoints.getProfile);
-        final map = response as Map<String, dynamic>;
-        final data = map['data'];
-        final userMap = data is Map<String, dynamic>
-            ? (data['user'] as Map<String, dynamic>? ?? data)
-            : (map['user'] as Map<String, dynamic>? ?? map);
-        return UserModel.fromJson(userMap);
+        return UserModel.fromJson(_extractUser(response));
       });
 
   Future<UserModel> updateMe(Map<String, dynamic> fields) =>
       execute(() async {
         final response = await api.patch(ApiEndpoints.updateMe, body: fields);
-        final map = response as Map<String, dynamic>;
-        final data = map['data'];
-        final userMap = data is Map<String, dynamic>
-            ? (data['user'] as Map<String, dynamic>? ?? data)
-            : (map['user'] as Map<String, dynamic>? ?? map);
-        return UserModel.fromJson(userMap);
+        return UserModel.fromJson(_extractUser(response));
       });
 
   Future<void> deleteMe() =>
@@ -97,4 +87,32 @@ class AuthRemoteDs with BaseRemoteDs {
         );
         return AuthResponseModel.fromJson(response as Map<String, dynamic>);
       });
+
+  // Walks all known backend response shapes to find the user map:
+  //   { data: { user: {...} } }           — most common
+  //   { data: { data: {...} } }           — Natours-style double nesting
+  //   { data: { data: { user: {...} } } } — rare triple shape
+  //   { user: {...} }                     — flat root
+  //   { _id, name, email, ... }           — user at root
+  static Map<String, dynamic> _extractUser(dynamic response) {
+    final map = response as Map<String, dynamic>;
+    final data = map['data'];
+    if (data is Map<String, dynamic>) {
+      // { data: { user: {...} } }
+      final fromUser = data['user'];
+      if (fromUser is Map<String, dynamic>) return fromUser;
+      // { data: { data: { user: {...} } | {...} } } — Natours double-nesting
+      final inner = data['data'];
+      if (inner is Map<String, dynamic>) {
+        final fromInnerUser = inner['user'];
+        if (fromInnerUser is Map<String, dynamic>) return fromInnerUser;
+        return inner;
+      }
+      return data;
+    }
+    // { user: {...} } or user at root
+    final rootUser = map['user'];
+    if (rootUser is Map<String, dynamic>) return rootUser;
+    return map;
+  }
 }
