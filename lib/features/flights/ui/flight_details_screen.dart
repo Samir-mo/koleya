@@ -6,6 +6,8 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/widgets/custom_text_button.dart';
+import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
 
 import '../data/models/flight_model.dart';
 import '../logic/cubit/flights_cubit.dart';
@@ -839,7 +841,7 @@ class _TrackBar extends StatelessWidget {
     final colors = context.customColors;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 12, 20, bottom + 12),
+      padding: EdgeInsets.fromLTRB(rw(16), rh(12), rw(16), bottom + rh(12)),
       decoration: BoxDecoration(
         color: colors.surface,
         border: Border(top: BorderSide(color: colors.border)),
@@ -851,75 +853,74 @@ class _TrackBar extends StatelessWidget {
           ),
         ],
       ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 52,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: isTracking
-              ? _buildLoading()
-              : flight.isTracked
-                  ? _buildUntrack(context)
-                  : _buildTrack(context),
-        ),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: flight.isTracked
+            ? _TrackedButtons(key: const ValueKey('tracked'), flight: flight, isLoading: isTracking)
+            : _TrackButton(key: const ValueKey('untracked'), flight: flight, isLoading: isTracking),
       ),
     );
   }
+}
 
-  Widget _buildLoading() {
-    return Builder(
-      builder: (context) => Container(
-      key: const ValueKey('loading'),
-      decoration: BoxDecoration(
-        color: context.customColors.surfaceVariant,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: const Center(
-        child: SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            color: AppColors.primary200,
+class _TrackButton extends StatelessWidget {
+  final FlightModel flight;
+  final bool isLoading;
+  const _TrackButton({super.key, required this.flight, required this.isLoading});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomTextButton(
+      text: 'flights.track_flight'.tr(),
+      isLoading: isLoading,
+      onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
+      prefixIcon: const Icon(Icons.bookmark_border_rounded),
+    );
+  }
+}
+
+class _TrackedButtons extends StatelessWidget {
+  final FlightModel flight;
+  final bool isLoading;
+  const _TrackedButtons({super.key, required this.flight, required this.isLoading});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: CustomTextButton.outlined(
+            text: 'flights.stop_tracking'.tr(),
+            isLoading: isLoading,
+            onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
+            foregroundColor: AppColors.red200,
+            borderColor: AppColors.red200,
+            prefixIcon: const Icon(Icons.bookmark_remove_rounded),
           ),
         ),
-      ),
-    ),
-    );
-  }
-
-  Widget _buildTrack(BuildContext context) {
-    return ElevatedButton.icon(
-      key: const ValueKey('track'),
-      onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary200,
-        foregroundColor: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        elevation: 0,
-      ),
-      icon: const Icon(Icons.bookmark_border_rounded, size: 20),
-      label: Text(
-        'Track this Flight',
-        style: AppTextStyles.font16SemiBold.copyWith(color: AppColors.white),
-      ),
-    );
-  }
-
-  Widget _buildUntrack(BuildContext context) {
-    return OutlinedButton.icon(
-      key: const ValueKey('untrack'),
-      onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.red200,
-        side: const BorderSide(color: AppColors.red200),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-      icon: const Icon(Icons.bookmark_remove_rounded, size: 20),
-      label: Text(
-        'Stop Tracking',
-        style: AppTextStyles.font16SemiBold.copyWith(color: AppColors.red200),
-      ),
+        horizontalSpacing(12),
+        Expanded(
+          child: CustomTextButton(
+            text: 'flights.view_tracked'.tr(),
+            onPressed: () => Navigator.of(context, rootNavigator: true).push(
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) =>
+                    TrackedFlightScreen(flight: flight),
+                transitionsBuilder: (_, animation, __, child) => SlideTransition(
+                  position: Tween(
+                          begin: const Offset(1, 0), end: Offset.zero)
+                      .animate(CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeInOutCubic)),
+                  child: child,
+                ),
+                transitionDuration: const Duration(milliseconds: 300),
+              ),
+            ),
+            prefixIcon: const Icon(Icons.track_changes_rounded),
+          ),
+        ),
+      ],
     );
   }
 }

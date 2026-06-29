@@ -5,9 +5,9 @@
                    "yes":  "نعم",
                    "no":  "لا",
                    "ok":  "حسنا",
-                   "cancel":  "إلغاء",
                    "retry":  "إعادة محاولة",
-                   "close":  "إغلاق"
+                   "close":  "إغلاق",
+                   "cancel":  "إلغاء"
                },
     "errors":  {
                    "error_screen_title":  "خطأ",
@@ -190,10 +190,39 @@
     "flights":  {
                     "search_placeholder":  "ابحث برقم الرحلة أو اسم شركة الطيران...",
                     "departure":  "المغادرة",
-                    "arrival":  "الوصول"
+                    "arrival":  "الوصول",
+                    "track_flight":  "تتبع هذه الرحلة",
+                    "stop_tracking":  "إيقاف التتبع",
+                    "view_tracked":  "عرض الرحلة المتتبعة"
                 },
     "tracked_flight":  {
-                           "coming_soon":  "الرحلة المتابعة — قريباً"
+                           "coming_soon":  "الرحلة المتتبعة — قريبًا",
+                           "title":  "رحلتك المتتبعة",
+                           "tracking":  "متابعة",
+                           "flight_status":  "حالة الرحلة",
+                           "live_tracking":  "متابعة مباشرة",
+                           "departure_info":  "معلومات المغادرة",
+                           "scheduled":  "موعد الجدول",
+                           "estimated":  "الوقت المتوقع",
+                           "actual":  "الوقت الفعلي",
+                           "dep_gate":  "بوابة المغادرة",
+                           "dep_terminal":  "صالة المغادرة",
+                           "arr_gate":  "بوابة الوصول",
+                           "gate":  "البوابة",
+                           "terminal":  "الصالة",
+                           "recent_updates":  "آخر التحديثات",
+                           "explore":  "استكشاف",
+                           "cancel_tracking":  "إلغاء المتابعة",
+                           "stop_tracking":  "إيقاف المتابعة",
+                           "confirm_cancel_title":  "إيقاف المتابعة؟",
+                           "confirm_cancel_body":  "هل أنت متأكد أنك تريد إيقاف متابعة هذه الرحلة؟",
+                           "cancelled":  "تم إلغاء متابعة الرحلة",
+                           "no_tracking":  "لا توجد رحلة متتبعة",
+                           "no_tracking_hint":  "تابع رحلة من شاشة الرحلات لمراقبتها هنا",
+                           "find_flight":  "البحث عن رحلة",
+                           "section_title":  "رحلاتك المتتبعة",
+                           "all_tracked":  "جميع الرحلات المتتبعة",
+                           "flight_details":  "تفاصيل الرحلة"
                        },
     "home":  {
                  "greeting_morning":  "صباح الخير",
@@ -212,7 +241,6 @@
                  "boards_at":  "الصعود",
                  "departs_at":  "الإقلاع",
                  "check_in":  "الصعود للطائرة",
-                 "view_details":  "عرض التفاصيل",
                  "flight_updates":  "تحديثات الرحلات",
                  "view_all":  "عرض الكل",
                  "popular_services":  "الخدمات الشائعة",
@@ -231,7 +259,8 @@
                  "service_shops":  "المحلات",
                  "service_restaurants":  "المطاعم",
                  "updated_gate":  "البوابة الجديدة",
-                 "updated_time":  "الوقت الجديد"
+                 "updated_time":  "الوقت الجديد",
+                 "view_details":  "عرض التفاصيل"
              },
     "services":  {
                      "coming_soon":  "الخدمات — قريباً",

@@ -37,6 +37,9 @@ import 'package:gate_buddy/features/home/data/remote/home_remote_ds.dart';
 import 'package:gate_buddy/features/home/data/repo/home_repo.dart';
 import 'package:gate_buddy/features/home/data/repo/home_repo_impl.dart';
 import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
+import 'package:gate_buddy/features/tracked_flight/data/remote/tracked_flight_remote_ds.dart';
+import 'package:gate_buddy/features/tracked_flight/data/repo/tracked_flight_repo.dart';
+import 'package:gate_buddy/features/tracked_flight/data/repo/tracked_flight_repo_impl.dart';
 import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -171,5 +174,13 @@ Future<void> setUpDependencies() async {
   getIt.registerFactory(() => HomeCubit(repo: getIt<HomeRepo>()));
 
   // ── Tracked Flight ────────────────────────────────────────────────────────
-  getIt.registerFactory(() => TrackedFlightCubit());
+  getIt.registerLazySingleton(
+    () => TrackedFlightRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<TrackedFlightRepo>(
+    () => TrackedFlightRepoImpl(remoteDs: getIt<TrackedFlightRemoteDs>()),
+  );
+  getIt.registerFactory(
+    () => TrackedFlightCubit(repo: getIt<TrackedFlightRepo>()),
+  );
 }

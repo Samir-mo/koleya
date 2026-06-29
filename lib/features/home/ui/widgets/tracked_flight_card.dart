@@ -162,8 +162,8 @@ class TrackedFlightCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, Routes.explorePlacesScreen),
+                    onPressed: () => Navigator.of(context, rootNavigator: true)
+                        .pushNamed(Routes.trackedFlight),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary200,
                       foregroundColor: AppColors.white,
@@ -172,9 +172,9 @@ class TrackedFlightCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(rr(10))),
                       elevation: 0,
                     ),
-                    icon: Icon(Icons.explore_rounded, size: rw(16)),
+                    icon: Icon(Icons.open_in_new_rounded, size: rw(16)),
                     label: Text(
-                      'home.explore_destination'.tr(),
+                      'home.view_details'.tr(),
                       style: AppTextStyles.font14SemiBold,
                     ),
                   ),
@@ -183,18 +183,18 @@ class TrackedFlightCard extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () =>
-                        Navigator.pushNamed(context, Routes.trackedFlight),
+                        Navigator.pushNamed(context, Routes.explorePlacesScreen),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.red200,
+                      foregroundColor: AppColors.primary200,
                       padding: EdgeInsets.symmetric(vertical: rh(11)),
                       side: BorderSide(
-                          color: AppColors.red200.withValues(alpha: 0.5)),
+                          color: AppColors.primary200.withValues(alpha: 0.5)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(rr(10))),
                     ),
-                    icon: Icon(Icons.cancel_outlined, size: rw(16)),
+                    icon: Icon(Icons.explore_rounded, size: rw(16)),
                     label: Text(
-                      'home.cancel_tracking'.tr(),
+                      'home.explore_destination'.tr(),
                       style: AppTextStyles.font14SemiBold,
                     ),
                   ),

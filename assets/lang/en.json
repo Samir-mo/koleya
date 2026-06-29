@@ -5,9 +5,9 @@
                    "yes":  "Yes",
                    "no":  "No",
                    "ok":  "OK",
-                   "cancel":  "Cancel",
                    "retry":  "Retry",
-                   "close":  "Close"
+                   "close":  "Close",
+                   "cancel":  "Cancel"
                },
     "errors":  {
                    "error_screen_title":  "Error",
@@ -190,10 +190,39 @@
     "flights":  {
                     "search_placeholder":  "Search by flight number, airline...",
                     "departure":  "Departure",
-                    "arrival":  "Arrival"
+                    "arrival":  "Arrival",
+                    "track_flight":  "Track this Flight",
+                    "stop_tracking":  "Stop Tracking",
+                    "view_tracked":  "View Tracked Flight"
                 },
     "tracked_flight":  {
-                           "coming_soon":  "Tracked Flight — coming soon"
+                           "coming_soon":  "Tracked Flight — coming soon",
+                           "title":  "Your Tracked Flight",
+                           "tracking":  "Tracking",
+                           "flight_status":  "Flight Status",
+                           "live_tracking":  "Live Tracking",
+                           "departure_info":  "Departure Info",
+                           "scheduled":  "Scheduled",
+                           "estimated":  "Estimated",
+                           "actual":  "Actual",
+                           "dep_gate":  "Dep. Gate",
+                           "dep_terminal":  "Dep. Terminal",
+                           "arr_gate":  "Arr. Gate",
+                           "gate":  "Gate",
+                           "terminal":  "Terminal",
+                           "recent_updates":  "Recent Updates",
+                           "explore":  "Explore",
+                           "cancel_tracking":  "Cancel Tracking",
+                           "stop_tracking":  "Stop Tracking",
+                           "confirm_cancel_title":  "Stop Tracking?",
+                           "confirm_cancel_body":  "Are you sure you want to stop tracking this flight?",
+                           "cancelled":  "Flight tracking cancelled",
+                           "no_tracking":  "No Tracked Flight",
+                           "no_tracking_hint":  "Track a flight from the flights screen to monitor it here",
+                           "find_flight":  "Find a Flight",
+                           "section_title":  "Your Tracked Flights",
+                           "all_tracked":  "All Tracked Flights",
+                           "flight_details":  "Flight Details"
                        },
     "home":  {
                  "greeting_morning":  "Good morning",
@@ -212,7 +241,6 @@
                  "boards_at":  "Boards at",
                  "departs_at":  "Departs at",
                  "check_in":  "Check-in",
-                 "view_details":  "View Details",
                  "flight_updates":  "Flight Updates",
                  "view_all":  "View all",
                  "popular_services":  "Popular Services",
@@ -231,7 +259,8 @@
                  "service_shops":  "Shops",
                  "service_restaurants":  "Restaurants",
                  "updated_gate":  "New Gate",
-                 "updated_time":  "New Time"
+                 "updated_time":  "New Time",
+                 "view_details":  "View Details"
              },
     "services":  {
                      "coming_soon":  "Services — coming soon",

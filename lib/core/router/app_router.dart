@@ -19,7 +19,9 @@ import 'package:gate_buddy/features/services/ui/flight_counters_screen.dart';
 import 'package:gate_buddy/features/services/ui/service_details_screen.dart';
 import 'package:gate_buddy/features/services/ui/services_screen.dart';
 import 'package:gate_buddy/features/services/ui/vip_experience_screen.dart';
+import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
+import 'package:gate_buddy/features/tracked_flight/ui/tracked_flights_list_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -53,7 +55,7 @@ class AppRouter {
         );
 
       case Routes.mainScaffold:
-        return _buildRoute(const MainScaffold(), settings);
+        return _buildRoute(MainScaffold(key: MainScaffold.scaffoldKey), settings);
 
       case Routes.profile:
         return _buildRoute(const ProfileScreen(), settings);
@@ -87,19 +89,12 @@ class AppRouter {
 
       case Routes.trackedFlight:
         return _buildRoute(
-          TrackedFlightScreen(
-            flightNo: args?['flightNo'] ?? '',
-            airline: args?['airline'] ?? '',
-            status: args?['status'] ?? '',
-            gate: args?['gate'] ?? '',
-            time: args?['time'] ?? '',
-            date: args?['date'] ?? '',
-            from: args?['from'] ?? '',
-            to: args?['to'] ?? '',
-            terminal: args?['terminal'] ?? '',
-          ),
+          TrackedFlightScreen(flight: args?['flight'] as FlightModel?),
           settings,
         );
+
+      case Routes.trackedFlightsList:
+        return _buildRoute(const TrackedFlightsListScreen(), settings);
 
       case Routes.placeDetailsScreen:
         return _buildRoute(PlaceDetailsScreen(place: args?['place']), settings);

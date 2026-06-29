@@ -21,6 +21,7 @@ class ApiEndpoints {
   static const String flightsSearch = "/flights/search";
   static const String flightsUpdated = "/flights/updated";
   static const String flightById = "/flights/:id";
+  static const String flightUpdates = "/flights/:id/updates";
   static const String trackedFlights = "/flights/tracked";
   static const String trackFlight = "/flights/:id/track";
   static const String untrackFlight = "/flights/:id/track"; // DELETE

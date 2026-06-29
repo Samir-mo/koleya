@@ -13,7 +13,8 @@
   static const String settings         = '/settings';
   static const String notifications    = '/notifications';
   static const String flights          = '/flights';
-  static const String trackedFlight    = '/trackedFlight';
+  static const String trackedFlight     = '/trackedFlight';
+  static const String trackedFlightsList = '/trackedFlightsList';
   static const String search           = '/search';
   static const String services         = '/services';
   static const String serviceDetails   = '/serviceDetails';

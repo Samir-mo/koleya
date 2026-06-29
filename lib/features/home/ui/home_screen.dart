@@ -15,6 +15,7 @@ import 'package:gate_buddy/features/home/ui/widgets/flight_update_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/home_app_bar.dart';
 import 'package:gate_buddy/features/home/ui/widgets/metrics_strip.dart';
 import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_card.dart';
+import 'package:gate_buddy/features/home/ui/widgets/tracked_flights_section.dart';
 
 class HomeScreen extends StatelessWidget {
   final ScrollController scrollController;
@@ -31,6 +32,7 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 const HomeAppBar(),
+                
 
                 Expanded(
                   child: _Body(
@@ -164,6 +166,10 @@ class _LoadedView extends StatelessWidget {
                 child: TrackedFlightCard(track: data.userTrack!),
               ),
             ],
+
+            // ── Tracked flights ────────────────────────────────────────────
+            verticalSpacing(24),
+            const TrackedFlightsSection(),
 
             // ── Airport services grid ─────────────────────────────────────
             verticalSpacing(24),

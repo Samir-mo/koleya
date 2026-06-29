@@ -17,11 +17,21 @@ import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
 
+  static final GlobalKey<MainScaffoldState> scaffoldKey =
+      GlobalKey<MainScaffoldState>();
+
+  static void jumpToTab(int index) =>
+      scaffoldKey.currentState?._controller.jumpToTab(index);
+
+  static const int tabFlights = 1;
+  static const int tabHome = 2;
+  static const int tabExplore = 3;
+
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  State<MainScaffold> createState() => MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class MainScaffoldState extends State<MainScaffold> {
   late final PersistentTabController _controller;
   final ScrollController _homeScrollController = ScrollController();
   late final HomeCubit _homeCubit;
@@ -111,3 +121,4 @@ class _MainScaffoldState extends State<MainScaffold> {
     );
   }
 }
+

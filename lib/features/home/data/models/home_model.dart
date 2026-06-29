@@ -71,6 +71,7 @@ class UserTrackModel extends Equatable {
 }
 
 class TrackFlightModel extends Equatable {
+  final String id;
   final String flightNumber;
   final AirlineModel airline;
   final String status;
@@ -79,6 +80,7 @@ class TrackFlightModel extends Equatable {
   final String? arrivalScheduledTime;
 
   const TrackFlightModel({
+    this.id = '',
     required this.flightNumber,
     required this.airline,
     required this.status,
@@ -89,6 +91,7 @@ class TrackFlightModel extends Equatable {
 
   factory TrackFlightModel.fromJson(Map<String, dynamic> json) =>
       TrackFlightModel(
+        id: json['_id'] as String? ?? json['id'] as String? ?? '',
         flightNumber: json['flightNumber'] as String? ?? '',
         airline:
             AirlineModel.fromJson(json['airline'] as Map<String, dynamic>? ?? {}),
@@ -104,7 +107,7 @@ class TrackFlightModel extends Equatable {
 
   @override
   List<Object?> get props =>
-      [flightNumber, airline, status, route, departure, arrivalScheduledTime];
+      [id, flightNumber, airline, status, route, departure, arrivalScheduledTime];
 }
 
 // ── UpdatedFlight ─────────────────────────────────────────────────────────────
