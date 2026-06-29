@@ -8,7 +8,6 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/core/widgets/ui/dialogs/app_dialogs.dart';
 import 'package:gate_buddy/features/auth/data/models/user_model.dart';
 import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
@@ -124,26 +123,6 @@ class _ProfileView extends StatelessWidget {
                 _PreferencesSection(),
                 verticalSpacing(20),
 
-                // Tracked Flights shortcut
-                ProfileSection(
-                  title: 'profile.activity'.tr(),
-                  children: [
-                    ProfileTile(
-                      icon: Icons.bookmark_outline_rounded,
-                      label: 'profile.tracked_flights'.tr(),
-                      iconColor: AppColors.secondary200,
-                      onTap: () => context.pushNamed(Routes.trackedFlight),
-                    ),
-                    ProfileTile(
-                      icon: Icons.notifications_outlined,
-                      label: 'profile.notifications'.tr(),
-                      iconColor: AppColors.green200,
-                      onTap: () => context.pushNamed(Routes.notifications),
-                    ),
-                  ],
-                ),
-                verticalSpacing(20),
-
                 // Support
                 ProfileSection(
                   title: 'profile.support'.tr(),
@@ -168,34 +147,8 @@ class _ProfileView extends StatelessWidget {
                 ),
                 verticalSpacing(20),
 
-                // Actions
-                CustomTextButton.outlined(
-                  borderColor: AppColors.red200.withValues(alpha: 12),
-                  isFullWidth: false,
-                  text: "profile.logout".tr(),
-                  onPressed: () => AppDialogs.showConfirm(
-                    context,
-                    title: 'profile.logout_confirmation_title'.tr(),
-                    message: 'profile.logout_confirmation_message'.tr(),
-                    confirmText: 'profile.logout'.tr(),
-                    onConfirm: () => context.read<AuthCubit>().logout(),
-                  ),
-                  size: CustomButtonSize.small,
-                ),
-                verticalSpacing(16),
-                CustomTextButton.outlined(
-                  borderColor: AppColors.red200,
-                  isFullWidth: false,
-                  text: "profile.delete_account".tr(),
-                  onPressed: () => AppDialogs.showConfirm(
-                    context,
-                    title: 'profile.delete_account_confirmation_title'.tr(),
-                    message: 'profile.delete_account_confirmation_message'.tr(),
-                    confirmText: 'profile.delete_account'.tr(),
-                    onConfirm: () => context.read<AuthCubit>().deleteAccount(),
-                  ),
-                  size: CustomButtonSize.small,
-                ),
+                // ── Account actions ───────────────────────────────────────
+                _AccountActionsSection(context: context),
                 verticalSpacing(16),
               ]),
             ),
@@ -418,6 +371,104 @@ class _LanguageToggle extends StatelessWidget {
           isArabic ? 'AR → EN' : 'EN → AR',
           style: AppTextStyles.font12Medium.copyWith(
             color: AppColors.primary200,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Account Actions Section ───────────────────────────────────────────────────
+
+class _AccountActionsSection extends StatelessWidget {
+  final BuildContext context;
+  const _AccountActionsSection({required this.context});
+
+  @override
+  Widget build(BuildContext ctx) {
+    final colors = ctx.customColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(16)),
+        border: Border.all(color: colors.border),
+      ),
+      child: Column(
+        children: [
+          _ActionTile(
+            icon: Icons.logout_rounded,
+            label: 'profile.logout'.tr(),
+            color: AppColors.amber200,
+            onTap: () => AppDialogs.showConfirm(
+              context,
+              title: 'profile.logout_confirmation_title'.tr(),
+              message: 'profile.logout_confirmation_message'.tr(),
+              confirmText: 'profile.logout'.tr(),
+              onConfirm: () => context.read<AuthCubit>().logout(),
+            ),
+          ),
+          Divider(height: 1, color: colors.border),
+          _ActionTile(
+            icon: Icons.delete_forever_rounded,
+            label: 'profile.delete_account'.tr(),
+            color: AppColors.red200,
+            onTap: () => AppDialogs.showConfirm(
+              context,
+              title: 'profile.delete_account_confirmation_title'.tr(),
+              message: 'profile.delete_account_confirmation_message'.tr(),
+              confirmText: 'profile.delete_account'.tr(),
+              onConfirm: () => context.read<AuthCubit>().deleteAccount(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _ActionTile({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(rr(16)),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(16)),
+          child: Row(
+            children: [
+              Container(
+                width: rw(38),
+                height: rw(38),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(rr(10)),
+                ),
+                child: Icon(icon, color: color, size: rr(18)),
+              ),
+              horizontalSpacing(14),
+              Expanded(
+                child: Text(
+                  label,
+                  style: AppTextStyles.font14SemiBold.copyWith(color: color),
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios_rounded,
+                  size: rr(14), color: color.withValues(alpha: 0.5)),
+            ],
           ),
         ),
       ),
