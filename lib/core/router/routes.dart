@@ -16,14 +16,9 @@
   static const String trackedFlight     = '/trackedFlight';
   static const String trackedFlightsList = '/trackedFlightsList';
   static const String search           = '/search';
-  static const String services         = '/services';
-  static const String serviceDetails   = '/serviceDetails';
-  static const String vipExperience    = '/vipExperience';
-  static const String accessibility    = '/accessibility';
-  static const String financial        = '/financialServices';
-  static const String counters         = '/flightCounters';
   static const String explorePlacesScreen = '/explorePlacesScreen';
   static const String placeDetailsScreen  = '/placeDetailsScreen';
   static const String indoorMap        = '/indoorMap';
   static const String assistant        = '/assistant';
+  static const String servicesCategory = '/servicesCategory';
 }

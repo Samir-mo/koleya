@@ -23,9 +23,12 @@ class MainScaffold extends StatefulWidget {
   static void jumpToTab(int index) =>
       scaffoldKey.currentState?._controller.jumpToTab(index);
 
+  // Tab indices for MainScaffold.jumpToTab(...)
+  static const int tabIndoorMap = 0;
   static const int tabFlights = 1;
   static const int tabHome = 2;
   static const int tabExplore = 3;
+  static const int tabAssistant = 4;
 
   @override
   State<MainScaffold> createState() => MainScaffoldState();

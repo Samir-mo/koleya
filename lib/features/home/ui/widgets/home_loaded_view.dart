@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/features/home/data/models/home_model.dart';
@@ -13,6 +12,7 @@ import 'package:gate_buddy/features/home/ui/widgets/home_section.dart';
 import 'package:gate_buddy/features/home/ui/widgets/metrics_strip.dart';
 import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/tracked_flights_section.dart';
+import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
 
 class HomeLoadedView extends StatelessWidget {
   final HomeModel data;
@@ -45,7 +45,7 @@ class HomeLoadedView extends StatelessWidget {
                 header: HomeSectionHeader(
                   title: 'home.flight_updates'.tr(),
                   actionLabel: 'home.view_all'.tr(),
-                  onAction: () => Navigator.pushNamed(context, Routes.flights),
+                  onAction: () => MainScaffold.jumpToTab(MainScaffold.tabFlights),
                 ),
                 child: Column(
                   children: data.updatedFlights
@@ -92,7 +92,7 @@ class HomeLoadedView extends StatelessWidget {
                   title: 'home.popular_services'.tr(),
                   actionLabel: 'home.view_all'.tr(),
                   onAction: () =>
-                      Navigator.pushNamed(context, Routes.services),
+                      MainScaffold.jumpToTab(MainScaffold.tabExplore),
                 ),
               ),
               verticalSpacing(12),

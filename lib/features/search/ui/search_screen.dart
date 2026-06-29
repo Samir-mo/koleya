@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+﻿import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/router/routes.dart';
@@ -165,31 +165,36 @@ class _EmptyPrompt extends StatelessWidget {
         icon: Icons.star_outline_rounded,
         label: 'search.quick_vip'.tr(),
         color: AppColors.secondary200,
-        route: Routes.vipExperience,
+        route: Routes.servicesCategory,
+        args: const {'category': 'VIP_SERVICES'},
       ),
       _QuickItem(
         icon: Icons.restaurant_outlined,
         label: 'search.quick_restaurants'.tr(),
         color: AppColors.red200,
-        route: Routes.explorePlacesScreen,
+        route: Routes.servicesCategory,
+        args: const {'category': 'RESTAURANTS'},
       ),
       _QuickItem(
         icon: Icons.shopping_bag_outlined,
         label: 'search.quick_shops'.tr(),
         color: AppColors.amber200,
-        route: Routes.explorePlacesScreen,
+        route: Routes.servicesCategory,
+        args: const {'category': 'SHOPS'},
       ),
       _QuickItem(
         icon: Icons.account_balance_outlined,
         label: 'search.quick_financial'.tr(),
         color: AppColors.green200,
-        route: Routes.financial,
+        route: Routes.servicesCategory,
+        args: const {'category': 'FINANCIAL'},
       ),
       _QuickItem(
         icon: Icons.accessible_outlined,
         label: 'search.quick_accessibility'.tr(),
         color: AppColors.blue200,
-        route: Routes.accessibility,
+        route: Routes.servicesCategory,
+        args: const {'category': 'ACCESSIBILITY'},
       ),
     ];
 
@@ -218,7 +223,7 @@ class _EmptyPrompt extends StatelessWidget {
             itemBuilder: (_, i) {
               final item = categories[i];
               return GestureDetector(
-                onTap: () => context.pushNamed(item.route),
+                onTap: () => context.pushNamed(item.route, arguments: item.args),
                 child: Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: rw(14), vertical: rh(10)),
@@ -266,11 +271,13 @@ class _QuickItem {
   final String label;
   final Color color;
   final String route;
-  const _QuickItem(
-      {required this.icon,
+  final Map<String, dynamic>? args;
+  const _QuickItem({
+      required this.icon,
       required this.label,
       required this.color,
-      required this.route});
+      required this.route,
+      this.args});
 }
 
 // ── Loading ───────────────────────────────────────────────────────────────────
@@ -471,3 +478,4 @@ class _ResultCard extends StatelessWidget {
     }
   }
 }
+

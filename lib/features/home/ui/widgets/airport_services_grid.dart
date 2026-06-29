@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+﻿import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
@@ -31,37 +31,37 @@ class AirportServicesGrid extends StatelessWidget {
           icon: Icons.confirmation_number_outlined,
           labelKey: 'home.service_counters',
           color: AppColors.primary200,
-          route: Routes.counters,
+          category: 'COUNTERS',
         ),
         _ServiceItem(
           icon: Icons.star_outline_rounded,
           labelKey: 'home.service_vip',
           color: AppColors.secondary200,
-          route: Routes.vipExperience,
+          category: 'VIP_SERVICES',
         ),
         _ServiceItem(
           icon: Icons.account_balance_outlined,
           labelKey: 'home.service_financial',
           color: AppColors.green200,
-          route: Routes.financial,
+          category: 'FINANCIAL',
         ),
         _ServiceItem(
           icon: Icons.accessible_outlined,
           labelKey: 'home.service_accessibility',
           color: AppColors.blue200,
-          route: Routes.accessibility,
+          category: 'ACCESSIBILITY',
         ),
         _ServiceItem(
           icon: Icons.shopping_bag_outlined,
           labelKey: 'home.service_shops',
           color: AppColors.amber200,
-          route: Routes.explorePlacesScreen,
+          category: 'SHOPS',
         ),
         _ServiceItem(
           icon: Icons.restaurant_outlined,
           labelKey: 'home.service_restaurants',
           color: AppColors.red200,
-          route: Routes.explorePlacesScreen,
+          category: 'RESTAURANTS',
         ),
       ];
 }
@@ -70,12 +70,12 @@ class _ServiceItem {
   final IconData icon;
   final String labelKey;
   final Color color;
-  final String route;
+  final String category;
   const _ServiceItem({
     required this.icon,
     required this.labelKey,
     required this.color,
-    required this.route,
+    required this.category,
   });
 }
 
@@ -88,7 +88,10 @@ class _ServiceTile extends StatelessWidget {
     final colors = context.customColors;
 
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, item.route),
+      onTap: () => context.pushNamed(
+        Routes.servicesCategory,
+        arguments: {'category': item.category},
+      ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),
         decoration: BoxDecoration(

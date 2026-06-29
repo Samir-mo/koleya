@@ -1,4 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gate_buddy/core/di/dependency_injection.dart';
 import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/features/auth/ui/forget_password_screen.dart';
 import 'package:gate_buddy/features/auth/ui/get_code_screen.dart';
@@ -13,15 +15,11 @@ import 'package:gate_buddy/features/on_boarding/ui/onboarding_screen.dart';
 import 'package:gate_buddy/features/profile/ui/profile_screen.dart';
 import 'package:gate_buddy/features/profile/ui/settings_screen.dart';
 import 'package:gate_buddy/features/search/ui/search_screen.dart';
-import 'package:gate_buddy/features/services/ui/accessibility_screen.dart';
-import 'package:gate_buddy/features/services/ui/financial_services_screen.dart';
-import 'package:gate_buddy/features/services/ui/flight_counters_screen.dart';
-import 'package:gate_buddy/features/services/ui/service_details_screen.dart';
-import 'package:gate_buddy/features/services/ui/services_screen.dart';
-import 'package:gate_buddy/features/services/ui/vip_experience_screen.dart';
 import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
 import 'package:gate_buddy/features/tracked_flight/ui/tracked_flights_list_screen.dart';
+import 'package:gate_buddy/features/services_category/logic/cubit/services_category_cubit.dart';
+import 'package:gate_buddy/features/services_category/ui/services_category_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -69,24 +67,6 @@ class AppRouter {
       case Routes.search:
         return _buildRoute(const SearchScreen(), settings);
 
-      case Routes.services:
-        return _buildRoute(const ServicesScreen(), settings);
-
-      case Routes.serviceDetails:
-        return _buildRoute(const ServiceDetailsScreen(), settings);
-
-      case Routes.vipExperience:
-        return _buildRoute(const VipExperienceScreen(), settings);
-
-      case Routes.accessibility:
-        return _buildRoute(const AccessibilityScreen(), settings);
-
-      case Routes.financial:
-        return _buildRoute(const FinancialServicesScreen(), settings);
-
-      case Routes.counters:
-        return _buildRoute(const FlightCountersScreen(), settings);
-
       case Routes.trackedFlight:
         return _buildRoute(
           TrackedFlightScreen(flight: args?['flight'] as FlightModel?),
@@ -101,6 +81,17 @@ class AppRouter {
 
       case Routes.indoorMap:
         return _buildRoute(const IndoorMapScreen(), settings);
+
+      case Routes.servicesCategory:
+        final category = args?['category'] as String? ?? 'RESTAURANTS';
+        return _buildRoute(
+          BlocProvider(
+            create: (_) =>
+                getIt<ServicesCategoryCubit>()..load(category),
+            child: ServicesCategoryScreen(category: category),
+          ),
+          settings,
+        );
 
       default:
         return _buildRoute(

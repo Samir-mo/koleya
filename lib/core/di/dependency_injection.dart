@@ -32,7 +32,9 @@ import 'package:gate_buddy/features/search/data/remote/search_remote_ds.dart';
 import 'package:gate_buddy/features/search/data/repo/search_repo.dart';
 import 'package:gate_buddy/features/search/data/repo/search_repo_impl.dart';
 import 'package:gate_buddy/features/search/logic/cubit/search_cubit.dart';
-import 'package:gate_buddy/features/services/logic/cubit/services_cubit.dart';
+import 'package:gate_buddy/features/services_category/data/repo/services_category_repo.dart';
+import 'package:gate_buddy/features/services_category/data/repo/services_category_repo_impl.dart';
+import 'package:gate_buddy/features/services_category/logic/cubit/services_category_cubit.dart';
 import 'package:gate_buddy/features/home/data/remote/home_remote_ds.dart';
 import 'package:gate_buddy/features/home/data/repo/home_repo.dart';
 import 'package:gate_buddy/features/home/data/repo/home_repo_impl.dart';
@@ -141,8 +143,13 @@ Future<void> setUpDependencies() async {
   // ── Notifications ─────────────────────────────────────────────────────────
   getIt.registerFactory(() => NotificationsCubit());
 
-  // ── Services ──────────────────────────────────────────────────────────────
-  getIt.registerFactory(() => ServicesCubit());
+  // ── Services Category ─────────────────────────────────────────────────────
+  getIt.registerLazySingleton<ServicesCategoryRepo>(
+    () => ServicesCategoryRepoImpl(dataSource: getIt<ServicesDataSource>()),
+  );
+  getIt.registerFactory(
+    () => ServicesCategoryCubit(repo: getIt<ServicesCategoryRepo>()),
+  );
 
   // ── Profile ───────────────────────────────────────────────────────────────
   getIt.registerLazySingleton(
