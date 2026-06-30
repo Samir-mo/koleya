@@ -7,10 +7,9 @@ import 'package:gate_buddy/features/home/data/models/home_model.dart';
 import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
 import 'package:gate_buddy/features/home/ui/widgets/airport_services_grid.dart';
 import 'package:gate_buddy/features/home/ui/widgets/featured_services_section.dart';
-import 'package:gate_buddy/features/home/ui/widgets/scan_boarding_pass_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/flight_update_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/home_section.dart';
-import 'package:gate_buddy/features/home/ui/widgets/metrics_strip.dart';
+import 'package:gate_buddy/features/home/ui/widgets/scan_boarding_pass_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_card.dart';
 import 'package:gate_buddy/features/home/ui/widgets/tracked_flights_section.dart';
 import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
@@ -35,18 +34,14 @@ class HomeLoadedView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Metrics ───────────────────────────────────────────────────
-            verticalSpacing(20),
-            MetricsStrip(metrics: data.metrics),
-
-            // ── Updated flights ───────────────────────────────────────────
             if (data.updatedFlights.isNotEmpty) ...[
               verticalSpacing(24),
               HomeSection(
                 header: HomeSectionHeader(
                   title: 'home.flight_updates'.tr(),
                   actionLabel: 'home.view_all'.tr(),
-                  onAction: () => MainScaffold.jumpToTab(MainScaffold.tabFlights),
+                  onAction: () =>
+                      MainScaffold.jumpToTab(MainScaffold.tabFlights),
                 ),
                 child: Column(
                   children: data.updatedFlights
