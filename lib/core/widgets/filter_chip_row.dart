@@ -72,9 +72,7 @@ class FilterChipRow<T> extends StatelessWidget {
               backgroundColor: colors.surface,
               selectedColor: AppColors.primary200,
               side: BorderSide(
-                color: isActive
-                    ? AppColors.primary200
-                    : colors.border,
+                color: isActive ? AppColors.primary200 : colors.border,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(rr(20)),

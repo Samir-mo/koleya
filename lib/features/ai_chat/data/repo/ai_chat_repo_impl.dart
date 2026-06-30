@@ -1,4 +1,4 @@
-import 'package:gate_buddy/core/errors/error_handler.dart';
+import '../../../../core/errors/error_handler.dart';
 
 import '../models/ai_chat_reply_model.dart';
 import '../remote/ai_chat_remote_ds.dart';

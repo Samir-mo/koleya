@@ -6,7 +6,8 @@ abstract class AppException implements Exception {
   AppException({required this.message, this.statusCode});
 
   @override
-  String toString() => statusCode != null ? '$message (HTTP $statusCode)' : message;
+  String toString() =>
+      statusCode != null ? '$message (HTTP $statusCode)' : message;
 }
 
 class ServerException extends AppException {
@@ -18,9 +19,7 @@ class CacheException extends AppException {
 }
 
 class NetworkException extends AppException {
-  NetworkException({
-    super.message = 'errors.no_internet',
-  });
+  NetworkException({super.message = 'errors.no_internet'});
 }
 
 class UnauthorizedException extends AppException {

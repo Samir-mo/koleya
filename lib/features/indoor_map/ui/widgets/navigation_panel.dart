@@ -1,10 +1,10 @@
-﻿import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../logic/cubit/indoor_map_state.dart';
 
 class NavigationPanel extends StatelessWidget {
   final IndoorMapLoaded state;
@@ -57,12 +57,20 @@ class NavigationPanel extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.navigation_rounded, color: AppColors.secondary200, size: rr(18)),
+                    Icon(
+                      Icons.navigation_rounded,
+                      color: AppColors.secondary200,
+                      size: rr(18),
+                    ),
                     horizontalSpacing(8),
                     Expanded(
                       child: Text(
-                        'indoor_map.navigating_to'.tr(namedArgs: {'name': dest.name}),
-                        style: AppTextStyles.font14Bold.copyWith(color: AppColors.white),
+                        'indoor_map.navigating_to'.tr(
+                          namedArgs: {'name': dest.name},
+                        ),
+                        style: AppTextStyles.font14Bold.copyWith(
+                          color: AppColors.white,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -75,7 +83,11 @@ class NavigationPanel extends StatelessWidget {
                           color: AppColors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(rr(8)),
                         ),
-                        child: Icon(Icons.close, color: AppColors.white, size: rr(16)),
+                        child: Icon(
+                          Icons.close,
+                          color: AppColors.white,
+                          size: rr(16),
+                        ),
                       ),
                     ),
                   ],
@@ -83,15 +95,23 @@ class NavigationPanel extends StatelessWidget {
                 verticalSpacing(10),
                 Row(
                   children: [
-                    _MetaChip(icon: Icons.straighten_rounded, label: route.distanceLabel),
+                    _MetaChip(
+                      icon: Icons.straighten_rounded,
+                      label: route.distanceLabel,
+                    ),
                     horizontalSpacing(8),
-                    _MetaChip(icon: Icons.directions_walk_rounded, label: route.estimatedTimeLabel),
+                    _MetaChip(
+                      icon: Icons.directions_walk_rounded,
+                      label: route.estimatedTimeLabel,
+                    ),
                     const Spacer(),
                     Text(
-                      'indoor_map.steps'.tr(namedArgs: {
-                        'current': '${state.currentStepIndex + 1}',
-                        'total': '${route.steps.length}',
-                      }),
+                      'indoor_map.steps'.tr(
+                        namedArgs: {
+                          'current': '${state.currentStepIndex + 1}',
+                          'total': '${route.steps.length}',
+                        },
+                      ),
                       style: AppTextStyles.font12Regular.copyWith(
                         color: AppColors.white.withValues(alpha: 0.7),
                       ),
@@ -104,7 +124,9 @@ class NavigationPanel extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: progress.clamp(0.0, 1.0),
                     backgroundColor: AppColors.white.withValues(alpha: 0.2),
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondary200),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.secondary200,
+                    ),
                     minHeight: rh(5),
                   ),
                 ),
@@ -124,7 +146,11 @@ class NavigationPanel extends StatelessWidget {
                       color: AppColors.primary200.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(rr(12)),
                     ),
-                    child: Icon(_iconForStep(step.instruction), color: AppColors.primary200, size: rr(20)),
+                    child: Icon(
+                      _iconForStep(step.instruction),
+                      color: AppColors.primary200,
+                      size: rr(20),
+                    ),
                   ),
                   horizontalSpacing(12),
                   Expanded(
@@ -178,9 +204,15 @@ class NavigationPanel extends StatelessWidget {
                                   : context.customColors.surfaceVariant,
                             ),
                             child: Icon(
-                              isDone ? Icons.check : isCurrent ? Icons.radio_button_checked : Icons.circle,
+                              isDone
+                                  ? Icons.check
+                                  : isCurrent
+                                  ? Icons.radio_button_checked
+                                  : Icons.circle,
                               size: rr(12),
-                              color: isDone || isCurrent ? AppColors.white : context.customColors.iconSecondary,
+                              color: isDone || isCurrent
+                                  ? AppColors.white
+                                  : context.customColors.iconSecondary,
                             ),
                           ),
                           horizontalSpacing(10),
@@ -193,8 +225,12 @@ class NavigationPanel extends StatelessWidget {
                                     : isCurrent
                                     ? context.customColors.textPrimary
                                     : context.customColors.textSecondary,
-                                fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
-                                decoration: isDone ? TextDecoration.lineThrough : TextDecoration.none,
+                                fontWeight: isCurrent
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                                decoration: isDone
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
                               ),
                             ),
                           ),
@@ -221,9 +257,12 @@ class NavigationPanel extends StatelessWidget {
     final lower = instruction.toLowerCase();
     if (lower.contains('left')) return Icons.turn_left_rounded;
     if (lower.contains('right')) return Icons.turn_right_rounded;
-    if (lower.contains('straight') || lower.contains('continue')) return Icons.straight_rounded;
-    if (lower.contains('destination') || lower.contains('arrived')) return Icons.place_rounded;
-    if (lower.contains('head') || lower.contains('towards')) return Icons.north_rounded;
+    if (lower.contains('straight') || lower.contains('continue'))
+      return Icons.straight_rounded;
+    if (lower.contains('destination') || lower.contains('arrived'))
+      return Icons.place_rounded;
+    if (lower.contains('head') || lower.contains('towards'))
+      return Icons.north_rounded;
     return Icons.directions_walk_rounded;
   }
 }
@@ -246,7 +285,10 @@ class _MetaChip extends StatelessWidget {
         children: [
           Icon(icon, color: AppColors.white, size: rr(12)),
           horizontalSpacing(4),
-          Text(label, style: AppTextStyles.font12Bold.copyWith(color: AppColors.white)),
+          Text(
+            label,
+            style: AppTextStyles.font12Bold.copyWith(color: AppColors.white),
+          ),
         ],
       ),
     );

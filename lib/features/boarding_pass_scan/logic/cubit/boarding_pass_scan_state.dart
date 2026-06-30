@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/data/models/boarding_pass_data.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
+import '../../data/models/boarding_pass_data.dart';
+import '../../../flights/data/models/flight_model.dart';
 
 enum BoardingPassScanStatus {
   initial,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/router/routes.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/spacing.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
@@ -15,28 +15,36 @@ class HomeAppBar extends StatelessWidget {
         children: [
           _IconBtn(
             icon: Icons.search_rounded,
-            onTap: () => Navigator.of(context, rootNavigator: true)
-                .pushNamed(Routes.search),
+            onTap: () => Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pushNamed(Routes.search),
           ),
           const Spacer(),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.flight_rounded,
-                  color: AppColors.secondary200, size: rw(18)),
+              Icon(
+                Icons.flight_rounded,
+                color: AppColors.secondary200,
+                size: rw(18),
+              ),
               horizontalSpacing(6),
               Text(
                 'GateBuddy',
-                style:
-                    AppTextStyles.font20Bold.copyWith(color: AppColors.white),
+                style: AppTextStyles.font20Bold.copyWith(
+                  color: AppColors.white,
+                ),
               ),
             ],
           ),
           const Spacer(),
           _IconBtn(
             icon: Icons.person_outline_rounded,
-            onTap: () => Navigator.of(context, rootNavigator: true)
-                .pushNamed(Routes.profile),
+            onTap: () => Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pushNamed(Routes.profile),
           ),
         ],
       ),

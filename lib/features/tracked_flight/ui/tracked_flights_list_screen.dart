@@ -1,18 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/core/widgets/flight_info_chip.dart';
-import 'package:gate_buddy/core/widgets/flight_status_badge.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
-import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
-import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_state.dart';
-import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/helpers/flight_time_helpers.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../../../core/widgets/flight_info_chip.dart';
+import '../../../core/widgets/flight_status_badge.dart';
+import '../../flights/data/models/flight_model.dart';
+import '../logic/cubit/tracked_flight_cubit.dart';
+import '../logic/cubit/tracked_flight_state.dart';
+import 'tracked_flight_screen.dart';
 import 'package:get_it/get_it.dart';
 
 class TrackedFlightsListScreen extends StatelessWidget {
@@ -46,8 +46,11 @@ class _View extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: AppColors.primary300,
               radius: rw(16),
-              child: Icon(Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.white, size: rw(14)),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: AppColors.white,
+                size: rw(14),
+              ),
             ),
           ),
         ),
@@ -103,14 +106,15 @@ class _TrackedCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (_, __, ___) =>
-              TrackedFlightScreen(flight: flight),
+          pageBuilder: (_, __, ___) => TrackedFlightScreen(flight: flight),
           transitionsBuilder: (_, animation, __, child) => SlideTransition(
-            position: Tween(
-                    begin: const Offset(1, 0), end: Offset.zero)
-                .animate(CurvedAnimation(
+            position: Tween(begin: const Offset(1, 0), end: Offset.zero)
+                .animate(
+                  CurvedAnimation(
                     parent: animation,
-                    curve: Curves.easeInOutCubic)),
+                    curve: Curves.easeInOutCubic,
+                  ),
+                ),
             child: child,
           ),
           transitionDuration: const Duration(milliseconds: 300),
@@ -134,17 +138,19 @@ class _TrackedCard extends StatelessWidget {
             // Header
             Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: rw(16), vertical: rh(12)),
+                horizontal: rw(16),
+                vertical: rh(12),
+              ),
               decoration: const BoxDecoration(
                 color: AppColors.primary200,
-                borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: Row(
                 children: [
                   _AirlineLogo(
-                      name: flight.airline.name,
-                      logo: flight.airline.logo),
+                    name: flight.airline.name,
+                    logo: flight.airline.logo,
+                  ),
                   horizontalSpacing(12),
                   Expanded(
                     child: Column(
@@ -152,15 +158,17 @@ class _TrackedCard extends StatelessWidget {
                       children: [
                         Text(
                           flight.airline.name,
-                          style: AppTextStyles.font14SemiBold
-                              .copyWith(color: AppColors.white),
+                          style: AppTextStyles.font14SemiBold.copyWith(
+                            color: AppColors.white,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           flight.flightNumber,
-                          style: AppTextStyles.font12Regular
-                              .copyWith(color: AppColors.primary50),
+                          style: AppTextStyles.font12Regular.copyWith(
+                            color: AppColors.primary50,
+                          ),
                         ),
                       ],
                     ),
@@ -169,13 +177,16 @@ class _TrackedCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Icon(Icons.flight_takeoff_rounded,
-                            size: rw(13),
-                            color: AppColors.secondary200),
+                        Icon(
+                          Icons.flight_takeoff_rounded,
+                          size: rw(13),
+                          color: AppColors.secondary200,
+                        ),
                         Text(
                           formatHm(depTime),
-                          style: AppTextStyles.font16Bold
-                              .copyWith(color: AppColors.white),
+                          style: AppTextStyles.font16Bold.copyWith(
+                            color: AppColors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -189,30 +200,37 @@ class _TrackedCard extends StatelessWidget {
             // Route row
             Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: rw(16), vertical: rh(14)),
+                horizontal: rw(16),
+                vertical: rh(14),
+              ),
               child: Row(
                 children: [
                   _AirportCode(
-                      code: flight.route.fromCode,
-                      city: flight.route.from,
-                      align: CrossAxisAlignment.start),
+                    code: flight.route.fromCode,
+                    city: flight.route.from,
+                    align: CrossAxisAlignment.start,
+                  ),
                   Expanded(
                     child: Column(
                       children: [
-                        Icon(Icons.flight_rounded,
-                            color: AppColors.secondary200,
-                            size: rw(18)),
+                        Icon(
+                          Icons.flight_rounded,
+                          color: AppColors.secondary200,
+                          size: rw(18),
+                        ),
                         Container(
-                            width: double.infinity,
-                            height: 1,
-                            color: colors.border),
+                          width: double.infinity,
+                          height: 1,
+                          color: colors.border,
+                        ),
                       ],
                     ),
                   ),
                   _AirportCode(
-                      code: flight.route.toCode,
-                      city: flight.route.to,
-                      align: CrossAxisAlignment.end),
+                    code: flight.route.toCode,
+                    city: flight.route.to,
+                    align: CrossAxisAlignment.end,
+                  ),
                 ],
               ),
             ),
@@ -225,31 +243,41 @@ class _TrackedCard extends StatelessWidget {
                   children: [
                     if (dep.gate != null)
                       FlightInfoChip(
-                          icon: Icons.door_sliding_outlined,
-                          label:
-                              '${'tracked_flight.gate'.tr()} ${dep.gate}'),
+                        icon: Icons.door_sliding_outlined,
+                        label: '${'tracked_flight.gate'.tr()} ${dep.gate}',
+                      ),
                     if (dep.gate != null && dep.terminal != null)
                       horizontalSpacing(8),
                     if (dep.terminal != null)
                       FlightInfoChip(
-                          icon: Icons.business_outlined,
-                          label:
-                              '${'tracked_flight.terminal'.tr()} ${dep.terminal}'),
+                        icon: Icons.business_outlined,
+                        label:
+                            '${'tracked_flight.terminal'.tr()} ${dep.terminal}',
+                      ),
                     const Spacer(),
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        size: rw(14), color: colors.textHint),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: rw(14),
+                      color: colors.textHint,
+                    ),
                   ],
                 ),
               )
             else
               Padding(
                 padding: EdgeInsets.only(
-                    left: rw(16), right: rw(16), bottom: rh(12)),
+                  left: rw(16),
+                  right: rw(16),
+                  bottom: rh(12),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        size: rw(14), color: colors.textHint),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: rw(14),
+                      color: colors.textHint,
+                    ),
                   ],
                 ),
               ),
@@ -258,7 +286,6 @@ class _TrackedCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 // ── Sub-widgets ───────────────────────────────────────────────────────────────
@@ -280,29 +307,33 @@ class _AirlineLogo extends StatelessWidget {
       ),
       child: logo.isNotEmpty
           ? ClipOval(
-              child: Image.network(logo,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => _initial(name)),
+              child: Image.network(
+                logo,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => _initial(name),
+              ),
             )
           : _initial(name),
     );
   }
 
   Widget _initial(String n) => Center(
-        child: Text(
-          n.isNotEmpty ? n[0].toUpperCase() : '✈',
-          style:
-              AppTextStyles.font14Bold.copyWith(color: AppColors.white),
-        ),
-      );
+    child: Text(
+      n.isNotEmpty ? n[0].toUpperCase() : '✈',
+      style: AppTextStyles.font14Bold.copyWith(color: AppColors.white),
+    ),
+  );
 }
 
 class _AirportCode extends StatelessWidget {
   final String code;
   final String city;
   final CrossAxisAlignment align;
-  const _AirportCode(
-      {required this.code, required this.city, required this.align});
+  const _AirportCode({
+    required this.code,
+    required this.city,
+    required this.align,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -310,19 +341,22 @@ class _AirportCode extends StatelessWidget {
     return Column(
       crossAxisAlignment: align,
       children: [
-        Text(code,
-            style: AppTextStyles.font20Bold
-                .copyWith(color: AppColors.primary200)),
-        Text(city,
-            style: AppTextStyles.font12Regular
-                .copyWith(color: colors.textSecondary),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis),
+        Text(
+          code,
+          style: AppTextStyles.font20Bold.copyWith(color: AppColors.primary200),
+        ),
+        Text(
+          city,
+          style: AppTextStyles.font12Regular.copyWith(
+            color: colors.textSecondary,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }
 }
-
 
 class _ErrorView extends StatelessWidget {
   final String error;
@@ -338,13 +372,15 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_off_rounded,
-                size: rw(52), color: colors.textHint),
+            Icon(Icons.cloud_off_rounded, size: rw(52), color: colors.textHint),
             verticalSpacing(16),
-            Text(error,
-                style: AppTextStyles.font14Regular
-                    .copyWith(color: colors.textSecondary),
-                textAlign: TextAlign.center),
+            Text(
+              error,
+              style: AppTextStyles.font14Regular.copyWith(
+                color: colors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
             verticalSpacing(24),
             CustomTextButton(
               text: 'errors.error_screen_button'.tr(),
@@ -366,17 +402,24 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.airplanemode_off_rounded,
-              size: rw(64), color: colors.textHint),
+          Icon(
+            Icons.airplanemode_off_rounded,
+            size: rw(64),
+            color: colors.textHint,
+          ),
           verticalSpacing(20),
-          Text('tracked_flight.no_tracking'.tr(),
-              style: AppTextStyles.font18Bold
-                  .copyWith(color: colors.textPrimary)),
+          Text(
+            'tracked_flight.no_tracking'.tr(),
+            style: AppTextStyles.font18Bold.copyWith(color: colors.textPrimary),
+          ),
           verticalSpacing(10),
-          Text('tracked_flight.no_tracking_hint'.tr(),
-              style: AppTextStyles.font14Regular
-                  .copyWith(color: colors.textSecondary),
-              textAlign: TextAlign.center),
+          Text(
+            'tracked_flight.no_tracking_hint'.tr(),
+            style: AppTextStyles.font14Regular.copyWith(
+              color: colors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

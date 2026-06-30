@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/errors/exceptions.dart';
-import 'package:gate_buddy/features/search/data/models/search_result_model.dart';
-import 'package:gate_buddy/features/search/data/repo/search_repo.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../data/models/search_result_model.dart';
+import '../../data/repo/search_repo.dart';
 import 'search_state.dart';
 
 class SearchCubit extends Cubit<SearchState> {
@@ -17,11 +17,13 @@ class SearchCubit extends Cubit<SearchState> {
       emit(const SearchState());
       return;
     }
-    emit(state.copyWith(
-      status: SearchStatus.loading,
-      query: query,
-      clearError: true,
-    ));
+    emit(
+      state.copyWith(
+        status: SearchStatus.loading,
+        query: query,
+        clearError: true,
+      ),
+    );
     _debounce = Timer(const Duration(milliseconds: 500), () => _search(query));
   }
 
@@ -29,21 +31,17 @@ class SearchCubit extends Cubit<SearchState> {
     try {
       final raw = await repo.search(query.trim());
       final results = SearchResultModel.fromResponse(raw);
-      emit(state.copyWith(
-        status: SearchStatus.success,
-        results: results,
-        query: query,
-      ));
+      emit(
+        state.copyWith(
+          status: SearchStatus.success,
+          results: results,
+          query: query,
+        ),
+      );
     } on AppException catch (e) {
-      emit(state.copyWith(
-        status: SearchStatus.failure,
-        error: e.message,
-      ));
+      emit(state.copyWith(status: SearchStatus.failure, error: e.message));
     } catch (e) {
-      emit(state.copyWith(
-        status: SearchStatus.failure,
-        error: e.toString(),
-      ));
+      emit(state.copyWith(status: SearchStatus.failure, error: e.toString()));
     }
   }
 

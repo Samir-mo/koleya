@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../../../core/router/routes.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/shared/models/service_model.dart';
 
 class FeaturedPlaceCard extends StatelessWidget {
   final ServiceModel place;
@@ -42,7 +42,9 @@ class FeaturedPlaceCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(rr(18))),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(rr(18)),
+                  ),
                   child: CachedNetworkImage(
                     imageUrl: place.primaryImage ?? '',
                     height: rh(130),
@@ -51,14 +53,20 @@ class FeaturedPlaceCard extends StatelessWidget {
                     placeholder: (_, __) => Container(
                       height: rh(130),
                       color: colors.surfaceVariant,
-                      child: Icon(Icons.storefront_outlined,
-                          size: rr(40), color: AppColors.grey400),
+                      child: Icon(
+                        Icons.storefront_outlined,
+                        size: rr(40),
+                        color: AppColors.grey400,
+                      ),
                     ),
                     errorWidget: (_, __, ___) => Container(
                       height: rh(130),
                       color: colors.surfaceVariant,
-                      child: Icon(Icons.storefront_outlined,
-                          size: rr(40), color: AppColors.grey400),
+                      child: Icon(
+                        Icons.storefront_outlined,
+                        size: rr(40),
+                        color: AppColors.grey400,
+                      ),
                     ),
                   ),
                 ),
@@ -66,18 +74,27 @@ class FeaturedPlaceCard extends StatelessWidget {
                   top: rh(10),
                   right: rw(10),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: rw(8),
+                      vertical: rh(4),
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.secondary200,
                       borderRadius: BorderRadius.circular(rr(20)),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.star_rounded, color: AppColors.white, size: rr(12)),
+                        Icon(
+                          Icons.star_rounded,
+                          color: AppColors.white,
+                          size: rr(12),
+                        ),
                         horizontalSpacing(3),
                         Text(
                           place.rating.toStringAsFixed(1),
-                          style: AppTextStyles.font12Bold.copyWith(color: AppColors.white),
+                          style: AppTextStyles.font12Bold.copyWith(
+                            color: AppColors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -93,15 +110,20 @@ class FeaturedPlaceCard extends StatelessWidget {
                 children: [
                   Text(
                     place.name,
-                    style: AppTextStyles.font12Bold.copyWith(color: colors.textPrimary),
+                    style: AppTextStyles.font12Bold.copyWith(
+                      color: colors.textPrimary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   verticalSpacing(4),
                   Row(
                     children: [
-                      Icon(Icons.location_on_outlined,
-                          size: rr(12), color: colors.iconSecondary),
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: rr(12),
+                        color: colors.iconSecondary,
+                      ),
                       horizontalSpacing(2),
                       Expanded(
                         child: Text(

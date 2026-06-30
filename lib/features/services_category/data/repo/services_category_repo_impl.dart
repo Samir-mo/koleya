@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:gate_buddy/core/errors/error_handler.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
-import 'package:gate_buddy/core/shared/data/services_data_source.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/features/services_category/data/repo/services_category_repo.dart';
+import '../../../../core/errors/error_handler.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/shared/data/services_data_source.dart';
+import '../../../../core/shared/models/service_model.dart';
+import 'services_category_repo.dart';
 
 class ServicesCategoryRepoImpl implements ServicesCategoryRepo {
   final ServicesDataSource dataSource;

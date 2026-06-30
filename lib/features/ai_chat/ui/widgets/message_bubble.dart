@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/shared/models/assistant_message.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/shared/models/assistant_message.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/spacing.dart';
 
 class MessageBubble extends StatelessWidget {
   final AssistantMessage message;
@@ -40,7 +40,10 @@ class MessageBubble extends StatelessWidget {
           ],
           Flexible(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),
+              padding: EdgeInsets.symmetric(
+                horizontal: rw(14),
+                vertical: rh(10),
+              ),
               decoration: BoxDecoration(
                 color: isUser ? AppColors.primary200 : AppColors.white,
                 borderRadius: BorderRadius.only(

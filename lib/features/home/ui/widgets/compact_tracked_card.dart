@@ -1,14 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/flight_info_chip.dart';
-import 'package:gate_buddy/core/widgets/flight_status_badge.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
-import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/helpers/flight_time_helpers.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/widgets/flight_info_chip.dart';
+import '../../../../core/widgets/flight_status_badge.dart';
+import '../../../flights/data/models/flight_model.dart';
+import '../../../tracked_flight/ui/tracked_flight_screen.dart';
 
 class CompactTrackedCard extends StatelessWidget {
   final FlightModel flight;
@@ -26,8 +26,12 @@ class CompactTrackedCard extends StatelessWidget {
           pageBuilder: (_, __, ___) => TrackedFlightScreen(flight: flight),
           transitionsBuilder: (_, animation, __, child) => SlideTransition(
             position: Tween(begin: const Offset(1, 0), end: Offset.zero)
-                .animate(CurvedAnimation(
-                    parent: animation, curve: Curves.easeInOutCubic)),
+                .animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeInOutCubic,
+                  ),
+                ),
             child: child,
           ),
           transitionDuration: const Duration(milliseconds: 300),
@@ -50,8 +54,10 @@ class CompactTrackedCard extends StatelessWidget {
           children: [
             // ── Navy header strip ──────────────────────────────────────────
             Container(
-              padding:
-                  EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(10)),
+              padding: EdgeInsets.symmetric(
+                horizontal: rw(14),
+                vertical: rh(10),
+              ),
               decoration: const BoxDecoration(
                 color: AppColors.primary200,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(14)),
@@ -70,8 +76,9 @@ class CompactTrackedCard extends StatelessWidget {
                         flight.airline.name.isNotEmpty
                             ? flight.airline.name[0].toUpperCase()
                             : '✈',
-                        style: AppTextStyles.font14Bold
-                            .copyWith(color: AppColors.white),
+                        style: AppTextStyles.font14Bold.copyWith(
+                          color: AppColors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -82,15 +89,17 @@ class CompactTrackedCard extends StatelessWidget {
                       children: [
                         Text(
                           flight.airline.name,
-                          style: AppTextStyles.font14SemiBold
-                              .copyWith(color: AppColors.white),
+                          style: AppTextStyles.font14SemiBold.copyWith(
+                            color: AppColors.white,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           flight.flightNumber,
-                          style: AppTextStyles.font12Regular
-                              .copyWith(color: AppColors.primary50),
+                          style: AppTextStyles.font12Regular.copyWith(
+                            color: AppColors.primary50,
+                          ),
                         ),
                       ],
                     ),
@@ -98,8 +107,9 @@ class CompactTrackedCard extends StatelessWidget {
                   if (depTime != null)
                     Text(
                       formatHm(depTime),
-                      style: AppTextStyles.font14Bold
-                          .copyWith(color: AppColors.white),
+                      style: AppTextStyles.font14Bold.copyWith(
+                        color: AppColors.white,
+                      ),
                     ),
                   horizontalSpacing(8),
                   FlightStatusBadge(status: flight.status, showBorder: false),
@@ -109,21 +119,29 @@ class CompactTrackedCard extends StatelessWidget {
 
             // ── Route row ────────────────────────────────────────────────
             Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(12)),
+              padding: EdgeInsets.symmetric(
+                horizontal: rw(14),
+                vertical: rh(12),
+              ),
               child: Row(
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(flight.route.fromCode,
-                          style: AppTextStyles.font18Bold
-                              .copyWith(color: AppColors.primary200)),
-                      Text(flight.route.from,
-                          style: AppTextStyles.font12Regular
-                              .copyWith(color: colors.textHint),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
+                      Text(
+                        flight.route.fromCode,
+                        style: AppTextStyles.font18Bold.copyWith(
+                          color: AppColors.primary200,
+                        ),
+                      ),
+                      Text(
+                        flight.route.from,
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: colors.textHint,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                   Expanded(
@@ -131,12 +149,16 @@ class CompactTrackedCard extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: rw(12)),
                       child: Column(
                         children: [
-                          Icon(Icons.flight_rounded,
-                              color: AppColors.secondary200, size: rw(16)),
+                          Icon(
+                            Icons.flight_rounded,
+                            color: AppColors.secondary200,
+                            size: rw(16),
+                          ),
                           Container(
-                              width: double.infinity,
-                              height: 1,
-                              color: colors.border),
+                            width: double.infinity,
+                            height: 1,
+                            color: colors.border,
+                          ),
                         ],
                       ),
                     ),
@@ -144,14 +166,20 @@ class CompactTrackedCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(flight.route.toCode,
-                          style: AppTextStyles.font18Bold
-                              .copyWith(color: AppColors.primary200)),
-                      Text(flight.route.to,
-                          style: AppTextStyles.font12Regular
-                              .copyWith(color: colors.textHint),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
+                      Text(
+                        flight.route.toCode,
+                        style: AppTextStyles.font18Bold.copyWith(
+                          color: AppColors.primary200,
+                        ),
+                      ),
+                      Text(
+                        flight.route.to,
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: colors.textHint,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ],
@@ -161,8 +189,7 @@ class CompactTrackedCard extends StatelessWidget {
             // ── Gate / terminal chips ────────────────────────────────────
             if (dep.gate != null || dep.terminal != null)
               Padding(
-                padding:
-                    EdgeInsets.fromLTRB(rw(14), 0, rw(14), rh(10)),
+                padding: EdgeInsets.fromLTRB(rw(14), 0, rw(14), rh(10)),
                 child: Row(
                   children: [
                     if (dep.gate != null)
@@ -179,8 +206,11 @@ class CompactTrackedCard extends StatelessWidget {
                             '${'tracked_flight.terminal'.tr()} ${dep.terminal}',
                       ),
                     const Spacer(),
-                    Icon(Icons.chevron_right_rounded,
-                        size: rw(18), color: colors.textHint),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: rw(18),
+                      color: colors.textHint,
+                    ),
                   ],
                 ),
               )
@@ -190,8 +220,11 @@ class CompactTrackedCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(Icons.chevron_right_rounded,
-                        size: rw(18), color: colors.textHint),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: rw(18),
+                      color: colors.textHint,
+                    ),
                   ],
                 ),
               ),
@@ -200,8 +233,4 @@ class CompactTrackedCard extends StatelessWidget {
       ),
     );
   }
-
-
-
 }
-

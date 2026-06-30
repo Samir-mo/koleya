@@ -1,7 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
+import '../../../flights/data/models/flight_model.dart';
 
-enum TrackedFlightStatus { initial, loading, success, failure, cancelling, cancelled }
+enum TrackedFlightStatus {
+  initial,
+  loading,
+  success,
+  failure,
+  cancelling,
+  cancelled,
+}
 
 class TrackedFlightState extends Equatable {
   final TrackedFlightStatus status;
@@ -34,14 +41,13 @@ class TrackedFlightState extends Equatable {
     String? error,
     bool clearError = false,
     bool clearFlight = false,
-  }) =>
-      TrackedFlightState(
-        status: status ?? this.status,
-        flight: clearFlight ? null : (flight ?? this.flight),
-        trackedFlights: trackedFlights ?? this.trackedFlights,
-        updates: updates ?? this.updates,
-        error: clearError ? null : (error ?? this.error),
-      );
+  }) => TrackedFlightState(
+    status: status ?? this.status,
+    flight: clearFlight ? null : (flight ?? this.flight),
+    trackedFlights: trackedFlights ?? this.trackedFlights,
+    updates: updates ?? this.updates,
+    error: clearError ? null : (error ?? this.error),
+  );
 
   @override
   List<Object?> get props => [status, flight, trackedFlights, updates, error];

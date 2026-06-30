@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
-import 'package:gate_buddy/features/tracked_flight/data/repo/tracked_flight_repo.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../flights/data/models/flight_model.dart';
+import '../../data/repo/tracked_flight_repo.dart';
 import 'tracked_flight_state.dart';
 
 class TrackedFlightCubit extends Cubit<TrackedFlightState> {
@@ -12,35 +12,35 @@ class TrackedFlightCubit extends Cubit<TrackedFlightState> {
   /// Loads ALL tracked flights from API.
   /// Used by home section and TrackedFlightsListScreen.
   Future<void> loadAll() async {
-    emit(state.copyWith(
-        status: TrackedFlightStatus.loading, clearError: true));
+    emit(state.copyWith(status: TrackedFlightStatus.loading, clearError: true));
     try {
       final list = await repo.getTrackedFlights();
-      emit(state.copyWith(
-        status: TrackedFlightStatus.success,
-        trackedFlights: list,
-        flight: list.isNotEmpty ? list.first : null,
-        clearFlight: list.isEmpty,
-      ));
+      emit(
+        state.copyWith(
+          status: TrackedFlightStatus.success,
+          trackedFlights: list,
+          flight: list.isNotEmpty ? list.first : null,
+          clearFlight: list.isEmpty,
+        ),
+      );
       // Also load updates for the first flight if available
       if (list.isNotEmpty && list.first.id.isNotEmpty) {
         _loadUpdatesQuietly(list.first.id);
       }
     } catch (e) {
-      emit(state.copyWith(
-        status: TrackedFlightStatus.failure,
-        error: _msg(e),
-      ));
+      emit(state.copyWith(status: TrackedFlightStatus.failure, error: _msg(e)));
     }
   }
 
   /// Use a pre-loaded FlightModel (from FlightDetailsScreen after tracking).
   void setFlight(FlightModel flight) {
-    emit(state.copyWith(
-      status: TrackedFlightStatus.success,
-      flight: flight,
-      updates: flight.updates,
-    ));
+    emit(
+      state.copyWith(
+        status: TrackedFlightStatus.success,
+        flight: flight,
+        updates: flight.updates,
+      ),
+    );
     if (flight.id.isNotEmpty && flight.updates.isEmpty) {
       _loadUpdatesQuietly(flight.id);
     }
@@ -61,10 +61,7 @@ class TrackedFlightCubit extends Cubit<TrackedFlightState> {
       await repo.untrackFlight(flightId);
       emit(state.copyWith(status: TrackedFlightStatus.cancelled));
     } catch (e) {
-      emit(state.copyWith(
-        status: TrackedFlightStatus.failure,
-        error: _msg(e),
-      ));
+      emit(state.copyWith(status: TrackedFlightStatus.failure, error: _msg(e)));
     }
   }
 

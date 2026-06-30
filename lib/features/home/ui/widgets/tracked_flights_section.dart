@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/features/home/ui/widgets/tracked_flights_content.dart';
-import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
+import 'tracked_flights_content.dart';
+import '../../../tracked_flight/logic/cubit/tracked_flight_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 /// Self-contained section that loads tracked flights and shows them.

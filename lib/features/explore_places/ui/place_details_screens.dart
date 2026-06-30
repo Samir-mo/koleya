@@ -2,15 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
-import 'package:gate_buddy/features/explore_places/logic/explore_state.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../../../core/shared/models/service_model.dart';
+import '../logic/explore_cubit.dart';
+import '../logic/explore_state.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   final ServiceModel place;
@@ -92,7 +92,9 @@ class _PlaceDetailsView extends StatelessWidget {
                         child: Wrap(
                           spacing: rw(8),
                           runSpacing: rh(8),
-                          children: place.cuisine.map((c) => _Chip(label: c)).toList(),
+                          children: place.cuisine
+                              .map((c) => _Chip(label: c))
+                              .toList(),
                         ),
                       ),
                     ],
@@ -129,8 +131,11 @@ class _PlaceDetailsView extends StatelessWidget {
             color: AppColors.black.withValues(alpha: 0.35),
             shape: BoxShape.circle,
           ),
-          child: Icon(Icons.arrow_back_ios_rounded,
-              color: AppColors.white, size: rr(18)),
+          child: Icon(
+            Icons.arrow_back_ios_rounded,
+            color: AppColors.white,
+            size: rr(18),
+          ),
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(
@@ -143,8 +148,11 @@ class _PlaceDetailsView extends StatelessWidget {
               placeholder: (_, __) => Container(color: AppColors.grey800),
               errorWidget: (_, __, ___) => Container(
                 color: AppColors.grey800,
-                child: Icon(Icons.storefront_outlined,
-                    size: rr(60), color: AppColors.grey600),
+                child: Icon(
+                  Icons.storefront_outlined,
+                  size: rr(60),
+                  color: AppColors.grey600,
+                ),
               ),
             ),
             DecoratedBox(
@@ -177,7 +185,9 @@ class _PlaceDetailsView extends StatelessWidget {
             Expanded(
               child: Text(
                 place.name,
-                style: AppTextStyles.font20Bold.copyWith(color: colors.textPrimary),
+                style: AppTextStyles.font20Bold.copyWith(
+                  color: colors.textPrimary,
+                ),
               ),
             ),
             horizontalSpacing(12),
@@ -188,8 +198,11 @@ class _PlaceDetailsView extends StatelessWidget {
                 verticalSpacing(6),
                 Row(
                   children: [
-                    Icon(Icons.star_rounded,
-                        color: AppColors.secondary200, size: rr(16)),
+                    Icon(
+                      Icons.star_rounded,
+                      color: AppColors.secondary200,
+                      size: rr(16),
+                    ),
                     horizontalSpacing(4),
                     Text(
                       place.rating.toStringAsFixed(1),
@@ -232,19 +245,22 @@ class _PlaceDetailsView extends StatelessWidget {
       children: [
         if (place.airport.isNotEmpty)
           _InfoTile(
-              icon: Icons.flight_rounded,
-              label: 'explore_places.airport'.tr(),
-              value: place.airport),
+            icon: Icons.flight_rounded,
+            label: 'explore_places.airport'.tr(),
+            value: place.airport,
+          ),
         if (place.terminal.isNotEmpty)
           _InfoTile(
-              icon: Icons.location_on_rounded,
-              label: 'flights.terminal'.tr(),
-              value: '${"flights.terminal".tr()} ${place.terminal}'),
+            icon: Icons.location_on_rounded,
+            label: 'flights.terminal'.tr(),
+            value: '${"flights.terminal".tr()} ${place.terminal}',
+          ),
         if (place.hours != null)
           _InfoTile(
-              icon: Icons.access_time_rounded,
-              label: 'explore_places.hours'.tr(),
-              value: place.hours!),
+            icon: Icons.access_time_rounded,
+            label: 'explore_places.hours'.tr(),
+            value: place.hours!,
+          ),
       ],
     );
   }
@@ -256,7 +272,9 @@ class _PlaceDetailsView extends StatelessWidget {
         horizontalSpacing(12),
         Text(
           place.hours!,
-          style: AppTextStyles.font14Regular.copyWith(color: colors.textSecondary),
+          style: AppTextStyles.font14Regular.copyWith(
+            color: colors.textSecondary,
+          ),
         ),
       ],
     );
@@ -264,8 +282,10 @@ class _PlaceDetailsView extends StatelessWidget {
 
   Widget _buildAmenities(dynamic colors) {
     final amenities = <(IconData, String)>[
-      if (place.hasWifi == true) (Icons.wifi_rounded, 'explore_places.wifi'.tr()),
-      if (place.hasUsb == true) (Icons.usb_rounded, 'explore_places.usb_charging'.tr()),
+      if (place.hasWifi == true)
+        (Icons.wifi_rounded, 'explore_places.wifi'.tr()),
+      if (place.hasUsb == true)
+        (Icons.usb_rounded, 'explore_places.usb_charging'.tr()),
     ];
 
     if (amenities.isEmpty) {
@@ -277,7 +297,9 @@ class _PlaceDetailsView extends StatelessWidget {
     return Wrap(
       spacing: rw(10),
       runSpacing: rh(10),
-      children: amenities.map((a) => _AmenityChip(icon: a.$1, label: a.$2)).toList(),
+      children: amenities
+          .map((a) => _AmenityChip(icon: a.$1, label: a.$2))
+          .toList(),
     );
   }
 
@@ -336,7 +358,9 @@ class _PlaceDetailsView extends StatelessWidget {
                         ? 'explore_places.submitting'.tr()
                         : 'explore_places.rate_place'.tr(),
                     isLoading: isRating,
-                    onPressed: isRating ? null : () => _showRatingSheet(context),
+                    onPressed: isRating
+                        ? null
+                        : () => _showRatingSheet(context),
                     prefixIcon: const Icon(Icons.star_rounded),
                     foregroundColor: AppColors.white,
                     backgroundColor: AppColors.secondary200,
@@ -411,13 +435,19 @@ class _RatingSheetState extends State<_RatingSheet> {
             ),
             verticalSpacing(20),
             Text(
-              'explore_places.rate_title'.tr(namedArgs: {'name': widget.place.name}),
-              style: AppTextStyles.font18Bold.copyWith(color: colors.textPrimary),
+              'explore_places.rate_title'.tr(
+                namedArgs: {'name': widget.place.name},
+              ),
+              style: AppTextStyles.font18Bold.copyWith(
+                color: colors.textPrimary,
+              ),
             ),
             verticalSpacing(6),
             Text(
               'explore_places.rate_subtitle'.tr(),
-              style: AppTextStyles.font12Regular.copyWith(color: colors.textSecondary),
+              style: AppTextStyles.font12Regular.copyWith(
+                color: colors.textSecondary,
+              ),
             ),
             verticalSpacing(24),
 
@@ -429,7 +459,9 @@ class _RatingSheetState extends State<_RatingSheet> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: rw(6)),
                     child: Icon(
-                      i < _selected ? Icons.star_rounded : Icons.star_border_rounded,
+                      i < _selected
+                          ? Icons.star_rounded
+                          : Icons.star_border_rounded,
                       size: rr(44),
                       color: i < _selected
                           ? AppColors.secondary200
@@ -479,12 +511,12 @@ class _RatingSheetState extends State<_RatingSheet> {
                   ? null
                   : () {
                       context.read<ExploreCubit>().ratePlace(
-                            place: widget.place,
-                            rating: _selected,
-                            review: _reviewController.text.trim().isEmpty
-                                ? null
-                                : _reviewController.text.trim(),
-                          );
+                        place: widget.place,
+                        rating: _selected,
+                        review: _reviewController.text.trim().isEmpty
+                            ? null
+                            : _reviewController.text.trim(),
+                      );
                       Navigator.pop(context);
                     },
             ),
@@ -496,12 +528,18 @@ class _RatingSheetState extends State<_RatingSheet> {
 
   String _ratingLabel(int r) {
     switch (r) {
-      case 1: return 'explore_places.rating_poor'.tr();
-      case 2: return 'explore_places.rating_fair'.tr();
-      case 3: return 'explore_places.rating_good'.tr();
-      case 4: return 'explore_places.rating_very_good'.tr();
-      case 5: return 'explore_places.rating_excellent'.tr();
-      default: return '';
+      case 1:
+        return 'explore_places.rating_poor'.tr();
+      case 2:
+        return 'explore_places.rating_fair'.tr();
+      case 3:
+        return 'explore_places.rating_good'.tr();
+      case 4:
+        return 'explore_places.rating_very_good'.tr();
+      case 5:
+        return 'explore_places.rating_excellent'.tr();
+      default:
+        return '';
     }
   }
 }
@@ -555,7 +593,11 @@ class _InfoTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const _InfoTile({required this.icon, required this.label, required this.value});
+  const _InfoTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -576,10 +618,18 @@ class _InfoTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style: AppTextStyles.font12Medium.copyWith(color: colors.textHint)),
-              Text(value,
-                  style: AppTextStyles.font14SemiBold.copyWith(color: colors.textPrimary)),
+              Text(
+                label,
+                style: AppTextStyles.font12Medium.copyWith(
+                  color: colors.textHint,
+                ),
+              ),
+              Text(
+                value,
+                style: AppTextStyles.font14SemiBold.copyWith(
+                  color: colors.textPrimary,
+                ),
+              ),
             ],
           ),
         ],
@@ -594,16 +644,16 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(6)),
-        decoration: BoxDecoration(
-          color: AppColors.secondary200.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(rr(20)),
-        ),
-        child: Text(
-          label,
-          style: AppTextStyles.font12Medium.copyWith(color: AppColors.secondary200),
-        ),
-      );
+    padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(6)),
+    decoration: BoxDecoration(
+      color: AppColors.secondary200.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(rr(20)),
+    ),
+    child: Text(
+      label,
+      style: AppTextStyles.font12Medium.copyWith(color: AppColors.secondary200),
+    ),
+  );
 }
 
 class _AmenityChip extends StatelessWidget {
@@ -628,7 +678,9 @@ class _AmenityChip extends StatelessWidget {
           horizontalSpacing(6),
           Text(
             label,
-            style: AppTextStyles.font12Medium.copyWith(color: colors.textPrimary),
+            style: AppTextStyles.font12Medium.copyWith(
+              color: colors.textPrimary,
+            ),
           ),
         ],
       ),

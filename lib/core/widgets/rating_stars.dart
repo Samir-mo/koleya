@@ -67,9 +67,11 @@ class _RatingStarsState extends State<RatingStars> {
               : null,
           onHorizontalDragUpdate: widget.interactive
               ? (details) {
-                  final newRating = (index +
-                          (details.localPosition.dx / widget.size))
-                      .clamp(0.0, widget.count.toDouble());
+                  final newRating =
+                      (index + (details.localPosition.dx / widget.size)).clamp(
+                        0.0,
+                        widget.count.toDouble(),
+                      );
                   setState(() => _hoverRating = newRating);
                 }
               : null,
@@ -95,11 +97,7 @@ class _RatingStarsState extends State<RatingStars> {
                     ),
                   )
                 else if (isFilled)
-                  Icon(
-                    Icons.star_rounded,
-                    size: widget.size,
-                    color: starColor,
-                  ),
+                  Icon(Icons.star_rounded, size: widget.size, color: starColor),
               ],
             ),
           ),

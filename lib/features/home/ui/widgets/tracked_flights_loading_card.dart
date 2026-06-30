@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
 
 class TrackedFlightsLoadingCard extends StatelessWidget {
   const TrackedFlightsLoadingCard({super.key});
@@ -18,7 +18,9 @@ class TrackedFlightsLoadingCard extends StatelessWidget {
       ),
       child: const Center(
         child: CircularProgressIndicator(
-            strokeWidth: 2, color: AppColors.primary200),
+          strokeWidth: 2,
+          color: AppColors.primary200,
+        ),
       ),
     );
   }

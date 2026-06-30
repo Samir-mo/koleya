@@ -2,16 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/verify_code_state.dart';
-import 'package:gate_buddy/features/auth/ui/reset_password_screen.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../logic/cubit/verify_code_cubit.dart';
+import '../logic/cubit/verify_code_state.dart';
+import 'reset_password_screen.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/auth_primary_button.dart';
 
 class GetCodeScreen extends StatelessWidget {
   final String email;
@@ -36,8 +36,10 @@ class _GetCodeView extends StatefulWidget {
 }
 
 class _GetCodeViewState extends State<_GetCodeView> {
-  final List<TextEditingController> _controllers =
-      List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
 
   @override
@@ -59,9 +61,9 @@ class _GetCodeViewState extends State<_GetCodeView> {
       return;
     }
     context.read<VerifyCodeCubit>().verifyCode(
-          email: widget.email,
-          code: _code,
-        );
+      email: widget.email,
+      code: _code,
+    );
   }
 
   @override
@@ -125,7 +127,6 @@ class _GetCodeViewState extends State<_GetCodeView> {
       ),
     );
   }
-
 }
 
 class _OtpRow extends StatelessWidget {
@@ -138,17 +139,20 @@ class _OtpRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(6, (i) => _OtpBox(
-        controller: controllers[i],
-        focusNode: focusNodes[i],
-        onChanged: (v) {
-          if (v.length == 1 && i < 5) {
-            focusNodes[i + 1].requestFocus();
-          } else if (v.isEmpty && i > 0) {
-            focusNodes[i - 1].requestFocus();
-          }
-        },
-      )),
+      children: List.generate(
+        6,
+        (i) => _OtpBox(
+          controller: controllers[i],
+          focusNode: focusNodes[i],
+          onChanged: (v) {
+            if (v.length == 1 && i < 5) {
+              focusNodes[i + 1].requestFocus();
+            } else if (v.isEmpty && i > 0) {
+              focusNodes[i - 1].requestFocus();
+            }
+          },
+        ),
+      ),
     );
   }
 }
@@ -193,8 +197,7 @@ class _OtpBox extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(rr(12)),
-            borderSide:
-                const BorderSide(color: AppColors.primary200, width: 2),
+            borderSide: const BorderSide(color: AppColors.primary200, width: 2),
           ),
         ),
       ),
@@ -243,7 +246,8 @@ class _EmailChip extends StatelessWidget {
           Text(
             email,
             style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.primary200),
+              color: AppColors.primary200,
+            ),
           ),
         ],
       ),
@@ -264,7 +268,8 @@ class _ResendButton extends StatelessWidget {
         Text(
           'auth.get_code.resend_prompt'.tr(),
           style: AppTextStyles.font14Regular.copyWith(
-              color: colors.textSecondary),
+            color: colors.textSecondary,
+          ),
         ),
         GestureDetector(
           onTap: () {
@@ -274,7 +279,8 @@ class _ResendButton extends StatelessWidget {
           child: Text(
             'auth.get_code.resend_link'.tr(),
             style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.primary200),
+              color: AppColors.primary200,
+            ),
           ),
         ),
       ],

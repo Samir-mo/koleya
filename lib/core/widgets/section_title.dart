@@ -40,10 +40,9 @@ class SectionTitle extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: textStyle ??
-                  AppTextStyles.font16Bold.copyWith(
-                    color: colors.textPrimary,
-                  ),
+              style:
+                  textStyle ??
+                  AppTextStyles.font16Bold.copyWith(color: colors.textPrimary),
             ),
           ),
           if (trailingLabel != null && onTrailingPressed != null) ...[

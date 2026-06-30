@@ -1,10 +1,10 @@
-﻿import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/router/routes.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
 
 class AirportServicesGrid extends StatelessWidget {
   const AirportServicesGrid({super.key});
@@ -27,43 +27,43 @@ class AirportServicesGrid extends StatelessWidget {
   }
 
   List<_ServiceItem> _services() => [
-        _ServiceItem(
-          icon: Icons.confirmation_number_outlined,
-          labelKey: 'home.service_counters',
-          color: AppColors.primary200,
-          category: 'COUNTERS',
-        ),
-        _ServiceItem(
-          icon: Icons.star_outline_rounded,
-          labelKey: 'home.service_vip',
-          color: AppColors.secondary200,
-          category: 'VIP_SERVICES',
-        ),
-        _ServiceItem(
-          icon: Icons.account_balance_outlined,
-          labelKey: 'home.service_financial',
-          color: AppColors.green200,
-          category: 'FINANCIAL',
-        ),
-        _ServiceItem(
-          icon: Icons.accessible_outlined,
-          labelKey: 'home.service_accessibility',
-          color: AppColors.blue200,
-          category: 'ACCESSIBILITY',
-        ),
-        _ServiceItem(
-          icon: Icons.shopping_bag_outlined,
-          labelKey: 'home.service_shops',
-          color: AppColors.amber200,
-          category: 'SHOPS',
-        ),
-        _ServiceItem(
-          icon: Icons.restaurant_outlined,
-          labelKey: 'home.service_restaurants',
-          color: AppColors.red200,
-          category: 'RESTAURANTS',
-        ),
-      ];
+    _ServiceItem(
+      icon: Icons.confirmation_number_outlined,
+      labelKey: 'home.service_counters',
+      color: AppColors.primary200,
+      category: 'COUNTERS',
+    ),
+    _ServiceItem(
+      icon: Icons.star_outline_rounded,
+      labelKey: 'home.service_vip',
+      color: AppColors.secondary200,
+      category: 'VIP_SERVICES',
+    ),
+    _ServiceItem(
+      icon: Icons.account_balance_outlined,
+      labelKey: 'home.service_financial',
+      color: AppColors.green200,
+      category: 'FINANCIAL',
+    ),
+    _ServiceItem(
+      icon: Icons.accessible_outlined,
+      labelKey: 'home.service_accessibility',
+      color: AppColors.blue200,
+      category: 'ACCESSIBILITY',
+    ),
+    _ServiceItem(
+      icon: Icons.shopping_bag_outlined,
+      labelKey: 'home.service_shops',
+      color: AppColors.amber200,
+      category: 'SHOPS',
+    ),
+    _ServiceItem(
+      icon: Icons.restaurant_outlined,
+      labelKey: 'home.service_restaurants',
+      color: AppColors.red200,
+      category: 'RESTAURANTS',
+    ),
+  ];
 }
 
 class _ServiceItem {
@@ -122,8 +122,9 @@ class _ServiceTile extends StatelessWidget {
             Expanded(
               child: Text(
                 item.labelKey.tr(),
-                style: AppTextStyles.font14SemiBold
-                    .copyWith(color: colors.textPrimary),
+                style: AppTextStyles.font14SemiBold.copyWith(
+                  color: colors.textPrimary,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -1,15 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_app_bar.dart';
-import 'package:gate_buddy/core/widgets/empty_state.dart';
-import 'package:gate_buddy/core/widgets/error_screen.dart';
-import 'package:gate_buddy/core/widgets/loading_shimmer.dart';
-import 'package:gate_buddy/features/services_category/logic/cubit/services_category_cubit.dart';
-import 'package:gate_buddy/features/services_category/logic/cubit/services_category_state.dart';
-import 'package:gate_buddy/features/services_category/ui/widgets/service_list_item.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_app_bar.dart';
+import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/error_screen.dart';
+import '../../../core/widgets/loading_shimmer.dart';
+import '../logic/cubit/services_category_cubit.dart';
+import '../logic/cubit/services_category_state.dart';
+import 'widgets/service_list_item.dart';
 
 class ServicesCategoryScreen extends StatelessWidget {
   final String category;

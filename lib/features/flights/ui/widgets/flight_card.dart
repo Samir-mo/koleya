@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
-import 'package:gate_buddy/core/widgets/flight_status_badge.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/utils/helpers/flight_time_helpers.dart';
+import '../../../../core/widgets/flight_status_badge.dart';
 import '../../data/models/flight_model.dart';
 import '../../logic/cubit/flights_cubit.dart';
 
@@ -83,12 +83,12 @@ class FlightCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      FlightStatusBadge(status: flight.status, showBorder: false),
-                      SizedBox(width: rw(8)),
-                      _TrackButton(
-                        flight: flight,
-                        isLoading: isTracking,
+                      FlightStatusBadge(
+                        status: flight.status,
+                        showBorder: false,
                       ),
+                      SizedBox(width: rw(8)),
+                      _TrackButton(flight: flight, isLoading: isTracking),
                     ],
                   ),
 
@@ -149,7 +149,6 @@ class FlightCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 // ── Airline Logo ─────────────────────────────────────────────────────────────
@@ -204,9 +203,7 @@ class _TrackButton extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: flight.isTracked
-              ? AppColors.primary200
-              : AppColors.primary50,
+          color: flight.isTracked ? AppColors.primary200 : AppColors.primary50,
           shape: BoxShape.circle,
         ),
         child: isLoading
@@ -240,10 +237,10 @@ class _RouteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final depTime = flight.departure.estimatedTime ??
-        flight.departure.scheduledTime;
-    final arrTime = flight.arrival.estimatedTime ??
-        flight.arrival.scheduledTime;
+    final depTime =
+        flight.departure.estimatedTime ?? flight.departure.scheduledTime;
+    final arrTime =
+        flight.arrival.estimatedTime ?? flight.arrival.scheduledTime;
 
     return Row(
       children: [
@@ -262,12 +259,7 @@ class _RouteRow extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      height: 1,
-                      color: colors.border,
-                    ),
-                  ),
+                  Expanded(child: Container(height: 1, color: colors.border)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: rw(6)),
                     child: Icon(
@@ -276,12 +268,7 @@ class _RouteRow extends StatelessWidget {
                       color: AppColors.secondary200,
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      height: 1,
-                      color: colors.border,
-                    ),
-                  ),
+                  Expanded(child: Container(height: 1, color: colors.border)),
                 ],
               ),
               const SizedBox(height: 2),
@@ -332,9 +319,7 @@ class _TimeBlock extends StatelessWidget {
       children: [
         Text(
           code,
-          style: AppTextStyles.font18Bold.copyWith(
-            color: AppColors.primary200,
-          ),
+          style: AppTextStyles.font18Bold.copyWith(color: AppColors.primary200),
         ),
         Text(
           time,
@@ -353,7 +338,11 @@ class _InfoChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final dynamic colors;
-  const _InfoChip({required this.icon, required this.label, required this.colors});
+  const _InfoChip({
+    required this.icon,
+    required this.label,
+    required this.colors,
+  });
 
   @override
   Widget build(BuildContext context) {

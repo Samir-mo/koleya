@@ -8,11 +8,7 @@ class HomeState extends Equatable {
   final HomeModel? data;
   final String? error;
 
-  const HomeState({
-    this.status = HomeStatus.initial,
-    this.data,
-    this.error,
-  });
+  const HomeState({this.status = HomeStatus.initial, this.data, this.error});
 
   bool get isLoading => status == HomeStatus.loading;
   bool get isSuccess => status == HomeStatus.success;
@@ -23,12 +19,11 @@ class HomeState extends Equatable {
     HomeModel? data,
     String? error,
     bool clearError = false,
-  }) =>
-      HomeState(
-        status: status ?? this.status,
-        data: data ?? this.data,
-        error: clearError ? null : error ?? this.error,
-      );
+  }) => HomeState(
+    status: status ?? this.status,
+    data: data ?? this.data,
+    error: clearError ? null : error ?? this.error,
+  );
 
   @override
   List<Object?> get props => [status, data, error];

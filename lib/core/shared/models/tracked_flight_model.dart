@@ -39,15 +39,15 @@ class TrackedFlightModel {
   }
 
   Map<String, dynamic> toJson() => {
-        "airline": airline,
-        "flight_no": flightNo,
-        "gate": gate,
-        "status": status,
-        "status_color": statusColorHex,
-        "time": time,
-        "date": date,
-        "route": route,
-        "terminal": terminal,
-        "logo": logo,
-      };
+    "airline": airline,
+    "flight_no": flightNo,
+    "gate": gate,
+    "status": status,
+    "status_color": statusColorHex,
+    "time": time,
+    "date": date,
+    "route": route,
+    "terminal": terminal,
+    "logo": logo,
+  };
 }

@@ -74,14 +74,10 @@ class _AppSearchFieldState extends State<AppSearchField> {
       focusNode: _focusNode,
       onSubmitted: widget.onSubmitted,
       textInputAction: TextInputAction.search,
-      style: AppTextStyles.font14Regular.copyWith(
-        color: colors.textPrimary,
-      ),
+      style: AppTextStyles.font14Regular.copyWith(color: colors.textPrimary),
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: AppTextStyles.font14Regular.copyWith(
-          color: colors.textHint,
-        ),
+        hintStyle: AppTextStyles.font14Regular.copyWith(color: colors.textHint),
         filled: true,
         fillColor: colors.surface,
         isDense: true,

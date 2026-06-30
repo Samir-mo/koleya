@@ -14,17 +14,20 @@ class AuthResponseModel extends Equatable {
     //   { accessToken, data: { user } }  |  { token, name, email, ... }
     final nested = json['data'] as Map<String, dynamic>?;
 
-    final token = (json['token']
-            ?? json['accessToken']
-            ?? nested?['token']
-            ?? nested?['accessToken']
-            ?? '') as String;
+    final token =
+        (json['token'] ??
+                json['accessToken'] ??
+                nested?['token'] ??
+                nested?['accessToken'] ??
+                '')
+            as String;
 
     // Walk every plausible location for the user object; fall back to root.
-    final userMap = nested?['user'] as Map<String, dynamic>?
-            ?? json['user'] as Map<String, dynamic>?
-            ?? nested
-            ?? json;
+    final userMap =
+        nested?['user'] as Map<String, dynamic>? ??
+        json['user'] as Map<String, dynamic>? ??
+        nested ??
+        json;
 
     return AuthResponseModel(token: token, user: UserModel.fromJson(userMap));
   }

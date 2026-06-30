@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
 
 class ServiceTypeChip extends StatelessWidget {
   final String label;
@@ -55,8 +55,7 @@ class ServiceTypeChip extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: rf(13),
-                fontWeight:
-                    isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected ? AppColors.white : colors.textPrimary,
               ),
             ),

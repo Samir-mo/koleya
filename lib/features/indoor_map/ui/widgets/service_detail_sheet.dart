@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
+import '../../../../core/shared/models/service_model.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/widgets/custom_text_button.dart';
 
 class ServiceDetailSheet extends StatelessWidget {
   final ServiceModel service;
@@ -65,7 +65,8 @@ class ServiceDetailSheet extends StatelessWidget {
                               width: rw(72),
                               height: rh(72),
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _placeholder(colors),
+                              errorBuilder: (_, __, ___) =>
+                                  _placeholder(colors),
                             )
                           : _placeholder(colors),
                     ),
@@ -92,8 +93,11 @@ class ServiceDetailSheet extends StatelessWidget {
                                     color: colors.surfaceVariant,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(Icons.close,
-                                      size: rr(16), color: colors.iconSecondary),
+                                  child: Icon(
+                                    Icons.close,
+                                    size: rr(16),
+                                    color: colors.iconSecondary,
+                                  ),
                                 ),
                               ),
                             ],
@@ -101,9 +105,13 @@ class ServiceDetailSheet extends StatelessWidget {
                           verticalSpacing(5),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: rw(8), vertical: rh(3)),
+                              horizontal: rw(8),
+                              vertical: rh(3),
+                            ),
                             decoration: BoxDecoration(
-                              color: AppColors.primary200.withValues(alpha: 0.08),
+                              color: AppColors.primary200.withValues(
+                                alpha: 0.08,
+                              ),
                               borderRadius: BorderRadius.circular(rr(6)),
                             ),
                             child: Text(
@@ -138,8 +146,11 @@ class ServiceDetailSheet extends StatelessWidget {
                                 ),
                               ),
                               horizontalSpacing(10),
-                              Icon(Icons.star_rounded,
-                                  size: rr(13), color: AppColors.secondary200),
+                              Icon(
+                                Icons.star_rounded,
+                                size: rr(13),
+                                color: AppColors.secondary200,
+                              ),
                               horizontalSpacing(3),
                               Text(
                                 service.rating.toStringAsFixed(1),
@@ -171,13 +182,17 @@ class ServiceDetailSheet extends StatelessWidget {
                       label: service.gate?.isNotEmpty == true
                           ? '${"flights.gate".tr()} ${service.gate}'
                           : service.zone.isNotEmpty
-                              ? 'indoor_map.zone'.tr(namedArgs: {'name': service.zone})
-                              : '${"flights.terminal".tr()} ${service.terminal}',
+                          ? 'indoor_map.zone'.tr(
+                              namedArgs: {'name': service.zone},
+                            )
+                          : '${"flights.terminal".tr()} ${service.terminal}',
                     ),
                     if (service.waitTime > 0)
                       _InfoChip(
                         icon: Icons.timer_outlined,
-                        label: 'indoor_map.min_wait'.tr(namedArgs: {'n': '${service.waitTime}'}),
+                        label: 'indoor_map.min_wait'.tr(
+                          namedArgs: {'n': '${service.waitTime}'},
+                        ),
                         highlight: true,
                       ),
                   ],
@@ -213,8 +228,11 @@ class ServiceDetailSheet extends StatelessWidget {
                 CustomTextButton(
                   text: 'indoor_map.navigate'.tr(),
                   onPressed: onNavigate,
-                  prefixIcon: Icon(Icons.navigation_rounded,
-                      color: AppColors.secondary200, size: rr(18)),
+                  prefixIcon: Icon(
+                    Icons.navigation_rounded,
+                    color: AppColors.secondary200,
+                    size: rr(18),
+                  ),
                   foregroundColor: AppColors.secondary200,
                 ),
               ],
@@ -226,14 +244,18 @@ class ServiceDetailSheet extends StatelessWidget {
   }
 
   Widget _placeholder(dynamic colors) => Container(
-        width: rw(72),
-        height: rh(72),
-        decoration: BoxDecoration(
-          color: colors.surfaceVariant,
-          borderRadius: BorderRadius.circular(rr(12)),
-        ),
-        child: Icon(Icons.storefront_outlined, size: rr(30), color: AppColors.primary200),
-      );
+    width: rw(72),
+    height: rh(72),
+    decoration: BoxDecoration(
+      color: colors.surfaceVariant,
+      borderRadius: BorderRadius.circular(rr(12)),
+    ),
+    child: Icon(
+      Icons.storefront_outlined,
+      size: rr(30),
+      color: AppColors.primary200,
+    ),
+  );
 }
 
 class _InfoChip extends StatelessWidget {

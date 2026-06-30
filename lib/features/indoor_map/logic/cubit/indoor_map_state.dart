@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/features/indoor_map/domain/airport_waypoints.dart';
+import '../../../../core/shared/models/service_model.dart';
+import '../../domain/airport_waypoints.dart';
 import 'package:latlong2/latlong.dart';
 
 enum MapCategory {
@@ -16,14 +16,14 @@ enum MapCategory {
   final String value;
 
   String get label => switch (this) {
-        MapCategory.all => 'All',
-        MapCategory.restaurants => 'Dining',
-        MapCategory.shops => 'Shops',
-        MapCategory.vipServices => 'VIP',
-        MapCategory.financial => 'Finance',
-        MapCategory.counters => 'Counters',
-        MapCategory.accessibility => 'Access',
-      };
+    MapCategory.all => 'All',
+    MapCategory.restaurants => 'Dining',
+    MapCategory.shops => 'Shops',
+    MapCategory.vipServices => 'VIP',
+    MapCategory.financial => 'Finance',
+    MapCategory.counters => 'Counters',
+    MapCategory.accessibility => 'Access',
+  };
 }
 
 enum NavigationMode { none, routing, navigating }
@@ -98,8 +98,9 @@ class IndoorMapLoaded extends IndoorMapState {
       allServices: allServices ?? this.allServices,
       filteredServices: filteredServices ?? this.filteredServices,
       selectedCategory: selectedCategory ?? this.selectedCategory,
-      selectedService:
-          clearSelected ? null : (selectedService ?? this.selectedService),
+      selectedService: clearSelected
+          ? null
+          : (selectedService ?? this.selectedService),
       navigationMode: navigationMode ?? this.navigationMode,
       activeRoute: clearRoute ? null : (activeRoute ?? this.activeRoute),
       navigationDestination: clearDestination
@@ -113,17 +114,17 @@ class IndoorMapLoaded extends IndoorMapState {
 
   @override
   List<Object?> get props => [
-        allServices,
-        filteredServices,
-        selectedCategory,
-        selectedService,
-        navigationMode,
-        activeRoute,
-        navigationDestination,
-        currentStepIndex,
-        userPosition,
-        simulationPointIndex,
-      ];
+    allServices,
+    filteredServices,
+    selectedCategory,
+    selectedService,
+    navigationMode,
+    activeRoute,
+    navigationDestination,
+    currentStepIndex,
+    userPosition,
+    simulationPointIndex,
+  ];
 }
 
 class IndoorMapError extends IndoorMapState {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/utils/spacing.dart';
 
 class HomeSection extends StatelessWidget {
   final Widget header;

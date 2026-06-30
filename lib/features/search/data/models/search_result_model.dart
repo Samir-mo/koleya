@@ -33,43 +33,48 @@ class SearchResultModel extends Equatable {
       final m = f as Map<String, dynamic>;
       final route = m['route'] as Map<String, dynamic>? ?? {};
       final airline = m['airline'] as Map<String, dynamic>? ?? {};
-      results.add(SearchResultModel(
-        id: m['_id'] as String? ?? '',
-        type: SearchResultType.flight,
-        title: '${m['flightNumber'] ?? ''} — ${airline['name'] ?? ''}',
-        subtitle:
-            '${route['fromCode'] ?? ''} → ${route['toCode'] ?? ''}',
-        badge: m['status'] as String?,
-        raw: m,
-      ));
+      results.add(
+        SearchResultModel(
+          id: m['_id'] as String? ?? '',
+          type: SearchResultType.flight,
+          title: '${m['flightNumber'] ?? ''} — ${airline['name'] ?? ''}',
+          subtitle: '${route['fromCode'] ?? ''} → ${route['toCode'] ?? ''}',
+          badge: m['status'] as String?,
+          raw: m,
+        ),
+      );
     }
 
     // services
     final services = data['services'] as List<dynamic>? ?? [];
     for (final s in services) {
       final m = s as Map<String, dynamic>;
-      results.add(SearchResultModel(
-        id: m['_id'] as String? ?? '',
-        type: SearchResultType.service,
-        title: m['name'] as String? ?? '',
-        subtitle:
-            '${m['category'] ?? ''} · ${m['zone'] ?? m['terminal'] ?? ''}',
-        badge: m['category'] as String?,
-        raw: m,
-      ));
+      results.add(
+        SearchResultModel(
+          id: m['_id'] as String? ?? '',
+          type: SearchResultType.service,
+          title: m['name'] as String? ?? '',
+          subtitle:
+              '${m['category'] ?? ''} · ${m['zone'] ?? m['terminal'] ?? ''}',
+          badge: m['category'] as String?,
+          raw: m,
+        ),
+      );
     }
 
     // places
     final places = data['places'] as List<dynamic>? ?? [];
     for (final p in places) {
       final m = p as Map<String, dynamic>;
-      results.add(SearchResultModel(
-        id: m['_id'] as String? ?? '',
-        type: SearchResultType.place,
-        title: m['name'] as String? ?? '',
-        subtitle: m['description'] as String? ?? '',
-        raw: m,
-      ));
+      results.add(
+        SearchResultModel(
+          id: m['_id'] as String? ?? '',
+          type: SearchResultType.place,
+          title: m['name'] as String? ?? '',
+          subtitle: m['description'] as String? ?? '',
+          raw: m,
+        ),
+      );
     }
 
     // flat list fallback (if API returns a single array)
@@ -82,15 +87,18 @@ class SearchResultModel extends Equatable {
         final kind = (m['type'] ?? m['kind'] ?? '') as String;
         SearchResultType t = SearchResultType.unknown;
         if (kind.toLowerCase().contains('flight')) t = SearchResultType.flight;
-        if (kind.toLowerCase().contains('service')) t = SearchResultType.service;
+        if (kind.toLowerCase().contains('service'))
+          t = SearchResultType.service;
         if (kind.toLowerCase().contains('place')) t = SearchResultType.place;
-        results.add(SearchResultModel(
-          id: m['_id'] as String? ?? '',
-          type: t,
-          title: m['name'] ?? m['flightNumber'] ?? '',
-          subtitle: m['description'] ?? m['status'] ?? '',
-          raw: m,
-        ));
+        results.add(
+          SearchResultModel(
+            id: m['_id'] as String? ?? '',
+            type: t,
+            title: m['name'] ?? m['flightNumber'] ?? '',
+            subtitle: m['description'] ?? m['status'] ?? '',
+            raw: m,
+          ),
+        );
       }
     }
 

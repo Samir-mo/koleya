@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/shared/models/service_model.dart';
 
 abstract class ExplorePlacesRepo {
   Future<Either<Failure, List<ServiceModel>>> getPlaces({String? category});

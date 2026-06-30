@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gate_buddy/features/search/data/models/search_result_model.dart';
+import '../../data/models/search_result_model.dart';
 
 enum SearchStatus { initial, loading, success, failure }
 
@@ -27,13 +27,12 @@ class SearchState extends Equatable {
     String? query,
     String? error,
     bool clearError = false,
-  }) =>
-      SearchState(
-        status: status ?? this.status,
-        results: results ?? this.results,
-        query: query ?? this.query,
-        error: clearError ? null : (error ?? this.error),
-      );
+  }) => SearchState(
+    status: status ?? this.status,
+    results: results ?? this.results,
+    query: query ?? this.query,
+    error: clearError ? null : (error ?? this.error),
+  );
 
   @override
   List<Object?> get props => [status, results, query, error];

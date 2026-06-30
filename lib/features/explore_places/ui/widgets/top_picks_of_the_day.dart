@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/features/explore_places/ui/widgets/pick_thumbnail.dart';
+import '../../../../core/utils/spacing.dart';
+import 'pick_thumbnail.dart';
 
 class TopPicksOfTheDay extends StatelessWidget {
   const TopPicksOfTheDay({super.key});

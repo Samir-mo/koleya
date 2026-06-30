@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../../../core/shared/models/service_model.dart';
 
 enum ServicesCategoryStatus { initial, loading, success, failure }
 

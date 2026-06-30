@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_text_styles.dart';
+import '../utils/extensions/context_ext.dart';
+import '../utils/spacing.dart';
 
 /// Compact info chip used in flight cards to display gate, terminal, etc.
 ///
@@ -58,18 +58,27 @@ class FlightInfoChip extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    style: AppTextStyles.font12Regular
-                        .copyWith(color: colors.textHint)),
-                Text(value!,
-                    style: AppTextStyles.font12Medium
-                        .copyWith(color: colors.textPrimary)),
+                Text(
+                  label,
+                  style: AppTextStyles.font12Regular.copyWith(
+                    color: colors.textHint,
+                  ),
+                ),
+                Text(
+                  value!,
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: colors.textPrimary,
+                  ),
+                ),
               ],
             )
           else
-            Text(label,
-                style: AppTextStyles.font12Medium
-                    .copyWith(color: colors.textPrimary)),
+            Text(
+              label,
+              style: AppTextStyles.font12Medium.copyWith(
+                color: colors.textPrimary,
+              ),
+            ),
         ],
       ),
     );

@@ -24,10 +24,7 @@ abstract class AuthRepo {
 
   Future<void> forgotPassword({required String email});
 
-  Future<String> verifyResetCode({
-    required String email,
-    required String code,
-  });
+  Future<String> verifyResetCode({required String email, required String code});
 
   Future<AuthResponseModel> resetPassword({
     required String resetToken,

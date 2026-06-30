@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
+import '../../../../core/errors/failure.dart';
 
 import '../../data/models/flight_model.dart';
 import '../../data/repo/flights_repo.dart';
@@ -17,16 +17,17 @@ class FlightsCubit extends Cubit<FlightsState> {
     emit(state.copyWith(status: FlightsStatus.loading, clearError: true));
     try {
       final all = await repo.getFlights();
-      emit(state.copyWith(
-        status: FlightsStatus.success,
-        departures: all.where((f) => f.direction == 'departure').toList(),
-        arrivals: all.where((f) => f.direction == 'arrival').toList(),
-      ));
+      emit(
+        state.copyWith(
+          status: FlightsStatus.success,
+          departures: all.where((f) => f.direction == 'departure').toList(),
+          arrivals: all.where((f) => f.direction == 'arrival').toList(),
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: FlightsStatus.failure,
-        error: _errorMessage(e),
-      ));
+      emit(
+        state.copyWith(status: FlightsStatus.failure, error: _errorMessage(e)),
+      );
     }
   }
 
@@ -50,11 +51,18 @@ class FlightsCubit extends Cubit<FlightsState> {
     try {
       final results = await repo.searchFlights(query);
       if (!isClosed) {
-        emit(state.copyWith(status: FlightsStatus.success, searchResults: results));
+        emit(
+          state.copyWith(status: FlightsStatus.success, searchResults: results),
+        );
       }
     } catch (e) {
       if (!isClosed) {
-        emit(state.copyWith(status: FlightsStatus.failure, error: _errorMessage(e)));
+        emit(
+          state.copyWith(
+            status: FlightsStatus.failure,
+            error: _errorMessage(e),
+          ),
+        );
       }
     }
   }
@@ -93,11 +101,13 @@ class FlightsCubit extends Cubit<FlightsState> {
     FlightModel update(FlightModel f) =>
         f.id == id ? f.copyWith(isTracked: isTracked) : f;
 
-    emit(state.copyWith(
-      clearTracking: true,
-      departures: state.departures.map(update).toList(),
-      arrivals: state.arrivals.map(update).toList(),
-      searchResults: state.searchResults.map(update).toList(),
-    ));
+    emit(
+      state.copyWith(
+        clearTracking: true,
+        departures: state.departures.map(update).toList(),
+        arrivals: state.arrivals.map(update).toList(),
+        searchResults: state.searchResults.map(update).toList(),
+      ),
+    );
   }
 }

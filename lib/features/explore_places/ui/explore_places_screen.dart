@@ -1,16 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
-import 'package:gate_buddy/features/explore_places/logic/explore_state.dart';
-import 'package:gate_buddy/features/explore_places/ui/widgets/featured_place_card.dart';
-import 'package:gate_buddy/features/explore_places/ui/widgets/place_card.dart';
-import 'package:gate_buddy/features/explore_places/ui/widgets/service_type_chip.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../logic/explore_cubit.dart';
+import '../logic/explore_state.dart';
+import 'widgets/featured_place_card.dart';
+import 'widgets/place_card.dart';
+import 'widgets/service_type_chip.dart';
 
 class ExplorePlacesScreen extends StatefulWidget {
   const ExplorePlacesScreen({super.key});
@@ -25,19 +25,50 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
 
   // Values must match the backend's 'category' field exactly (uppercase)
   late final _types = [
-    (label: 'explore_places.category_all'.tr(), value: null, icon: Icons.grid_view_rounded),
-    (label: 'explore_places.category_restaurants'.tr(), value: 'RESTAURANTS', icon: Icons.restaurant_rounded),
-    (label: 'explore_places.category_shops'.tr(), value: 'SHOPS', icon: Icons.shopping_bag_rounded),
-    (label: 'explore_places.category_vip'.tr(), value: 'VIP_SERVICES', icon: Icons.stars_rounded),
-    (label: 'explore_places.category_financial'.tr(), value: 'FINANCIAL', icon: Icons.account_balance_rounded),
-    (label: 'explore_places.category_counters'.tr(), value: 'COUNTERS', icon: Icons.confirmation_number_rounded),
-    (label: 'explore_places.category_accessibility'.tr(), value: 'ACCESSIBILITY', icon: Icons.accessibility_new_rounded),
+    (
+      label: 'explore_places.category_all'.tr(),
+      value: null,
+      icon: Icons.grid_view_rounded,
+    ),
+    (
+      label: 'explore_places.category_restaurants'.tr(),
+      value: 'RESTAURANTS',
+      icon: Icons.restaurant_rounded,
+    ),
+    (
+      label: 'explore_places.category_shops'.tr(),
+      value: 'SHOPS',
+      icon: Icons.shopping_bag_rounded,
+    ),
+    (
+      label: 'explore_places.category_vip'.tr(),
+      value: 'VIP_SERVICES',
+      icon: Icons.stars_rounded,
+    ),
+    (
+      label: 'explore_places.category_financial'.tr(),
+      value: 'FINANCIAL',
+      icon: Icons.account_balance_rounded,
+    ),
+    (
+      label: 'explore_places.category_counters'.tr(),
+      value: 'COUNTERS',
+      icon: Icons.confirmation_number_rounded,
+    ),
+    (
+      label: 'explore_places.category_accessibility'.tr(),
+      value: 'ACCESSIBILITY',
+      icon: Icons.accessibility_new_rounded,
+    ),
   ];
 
   late final _financialSubCategories = [
     (label: 'explore_places.financial_all'.tr(), value: null),
     (label: 'explore_places.financial_atms'.tr(), value: 'ATMs'),
-    (label: 'explore_places.financial_currency_exchange'.tr(), value: 'Currency Exchange'),
+    (
+      label: 'explore_places.financial_currency_exchange'.tr(),
+      value: 'Currency Exchange',
+    ),
     (label: 'explore_places.financial_insurance'.tr(), value: 'Insurance'),
   ];
 
@@ -61,7 +92,8 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
               builder: (context, state) {
                 if (state is ExploreLoading) return _buildLoading();
                 if (state is ExploreError) return _buildError(context, state);
-                if (state is ExploreLoaded) return _buildContent(context, state);
+                if (state is ExploreLoaded)
+                  return _buildContent(context, state);
                 return const SizedBox.shrink();
               },
             ),
@@ -79,7 +111,10 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(8)),
+              padding: EdgeInsets.symmetric(
+                horizontal: rw(20),
+                vertical: rh(8),
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -88,7 +123,9 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
                       children: [
                         Text(
                           'explore_places.title'.tr(),
-                          style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
+                          style: AppTextStyles.font20Bold.copyWith(
+                            color: AppColors.white,
+                          ),
                         ),
                         verticalSpacing(2),
                         Text(
@@ -151,7 +188,9 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
                               size: rr(20),
                             ),
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: rh(14)),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: rh(14),
+                            ),
                           ),
                           onChanged: (q) =>
                               context.read<ExploreCubit>().onSearchChanged(q),
@@ -265,22 +304,30 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
                   margin: EdgeInsets.only(right: rw(8)),
-                  padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(6)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: rw(14),
+                    vertical: rh(6),
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.secondary200 : colors.surface,
                     borderRadius: BorderRadius.circular(rr(20)),
                     border: Border.all(
-                      color: isSelected ? AppColors.secondary200 : colors.border,
+                      color: isSelected
+                          ? AppColors.secondary200
+                          : colors.border,
                     ),
                   ),
                   child: Text(
                     sub.label,
-                    style: (isSelected
-                            ? AppTextStyles.font12Bold
-                            : AppTextStyles.font12Medium)
-                        .copyWith(
-                      color: isSelected ? AppColors.white : colors.textPrimary,
-                    ),
+                    style:
+                        (isSelected
+                                ? AppTextStyles.font12Bold
+                                : AppTextStyles.font12Medium)
+                            .copyWith(
+                              color: isSelected
+                                  ? AppColors.white
+                                  : colors.textPrimary,
+                            ),
                   ),
                 ),
               );
@@ -301,7 +348,11 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
             padding: EdgeInsets.symmetric(horizontal: rw(20)),
             child: Row(
               children: [
-                Icon(Icons.star_rounded, color: AppColors.secondary200, size: rr(18)),
+                Icon(
+                  Icons.star_rounded,
+                  color: AppColors.secondary200,
+                  size: rr(18),
+                ),
                 horizontalSpacing(6),
                 Text(
                   'explore_places.top_rated'.tr(),
@@ -319,7 +370,8 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: rw(20)),
               itemCount: state.topRated.length,
-              itemBuilder: (_, i) => FeaturedPlaceCard(place: state.topRated[i]),
+              itemBuilder: (_, i) =>
+                  FeaturedPlaceCard(place: state.topRated[i]),
             ),
           ),
           verticalSpacing(8),
@@ -404,7 +456,8 @@ class _ExplorePlacesScreenState extends State<ExplorePlacesScreen> {
         namedArgs: {'count': '${state.displayedPlaces.length}'},
       );
     }
-    if (state.selectedType == 'FINANCIAL' && state.selectedSubCategory != null) {
+    if (state.selectedType == 'FINANCIAL' &&
+        state.selectedSubCategory != null) {
       return '${state.selectedSubCategory} (${state.displayedPlaces.length})';
     }
     if (state.selectedType != null) {

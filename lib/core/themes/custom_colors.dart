@@ -9,7 +9,6 @@ import 'app_colors.dart';
 /// Light/Dark values are set in [_light()] and [_dark()] factories.
 
 class CustomColors {
-  
   final Color textPrimary;
   final Color textSecondary;
   final Color textHint;

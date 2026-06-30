@@ -1,6 +1,6 @@
-import 'package:gate_buddy/core/errors/error_handler.dart';
-import 'package:gate_buddy/core/service/secure_storage.dart';
-import 'package:gate_buddy/core/utils/app_constants.dart';
+import '../../../../core/errors/error_handler.dart';
+import '../../../../core/service/secure_storage.dart';
+import '../../../../core/utils/app_constants.dart';
 
 import '../models/auth_response_model.dart';
 import '../models/user_model.dart';
@@ -20,7 +20,10 @@ class AuthRepoImpl implements AuthRepo {
   }) async {
     try {
       final result = await remoteDs.login(email: email, password: password);
-      await storage.write(key: AppConstants.accessTokenKey, value: result.token);
+      await storage.write(
+        key: AppConstants.accessTokenKey,
+        value: result.token,
+      );
       return result;
     } catch (e) {
       throw ErrorHandler.handleFailure(e);
@@ -41,7 +44,10 @@ class AuthRepoImpl implements AuthRepo {
         password: password,
         passwordConfirm: passwordConfirm,
       );
-      await storage.write(key: AppConstants.accessTokenKey, value: result.token);
+      await storage.write(
+        key: AppConstants.accessTokenKey,
+        value: result.token,
+      );
       return result;
     } catch (e) {
       throw ErrorHandler.handleFailure(e);
@@ -120,7 +126,10 @@ class AuthRepoImpl implements AuthRepo {
         password: password,
         passwordConfirm: passwordConfirm,
       );
-      await storage.write(key: AppConstants.accessTokenKey, value: result.token);
+      await storage.write(
+        key: AppConstants.accessTokenKey,
+        value: result.token,
+      );
       return result;
     } catch (e) {
       throw ErrorHandler.handleFailure(e);

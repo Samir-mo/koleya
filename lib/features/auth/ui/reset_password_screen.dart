@@ -1,17 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/utils/validators.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/utils/validators.dart';
+import '../logic/cubit/auth_cubit.dart';
+import '../logic/cubit/auth_state.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/auth_primary_button.dart';
+import 'widgets/auth_text_field.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   final String resetToken;
@@ -50,10 +50,10 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
   void _onReset() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthCubit>().resetPassword(
-          resetToken: widget.resetToken,
-          password: _passwordController.text,
-          passwordConfirm: _confirmController.text,
-        );
+      resetToken: widget.resetToken,
+      password: _passwordController.text,
+      passwordConfirm: _confirmController.text,
+    );
   }
 
   @override
@@ -102,7 +102,9 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (_) => _onReset(),
                             validator: (v) => Validators.confirmPassword(
-                                v, _passwordController.text),
+                              v,
+                              _passwordController.text,
+                            ),
                           ),
                           verticalSpacing(28),
                           AuthPrimaryButton(
@@ -123,7 +125,6 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
       ),
     );
   }
-
 }
 
 class _LockIllustration extends StatelessWidget {

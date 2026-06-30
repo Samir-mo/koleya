@@ -1,7 +1,7 @@
-import 'package:gate_buddy/core/errors/error_handler.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
-import 'package:gate_buddy/features/tracked_flight/data/remote/tracked_flight_remote_ds.dart';
-import 'package:gate_buddy/features/tracked_flight/data/repo/tracked_flight_repo.dart';
+import '../../../../core/errors/error_handler.dart';
+import '../../../flights/data/models/flight_model.dart';
+import '../remote/tracked_flight_remote_ds.dart';
+import 'tracked_flight_repo.dart';
 
 class TrackedFlightRepoImpl implements TrackedFlightRepo {
   final TrackedFlightRemoteDs remoteDs;

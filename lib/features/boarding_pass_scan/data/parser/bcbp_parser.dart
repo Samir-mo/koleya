@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/data/models/boarding_pass_data.dart';
+import '../models/boarding_pass_data.dart';
 
 /// Parses IATA Bar Coded Boarding Pass (BCBP) format strings.
 /// Pure — no side effects, no exceptions thrown to callers.
@@ -14,14 +14,14 @@ class BcbpParser {
       if (s.length < 58) return null;
 
       // Fixed-width fields (1-based positions → 0-based substrings)
-      final pnrRaw = s.substring(22, 29).trim();          // pos 23-29
-      final fromCode = s.substring(29, 32).trim();         // pos 30-32
-      final toCode = s.substring(32, 35).trim();           // pos 33-35
-      final carrierRaw = s.substring(35, 38).trim();       // pos 36-38
-      final flightNumRaw = s.substring(38, 43).trim();     // pos 39-43
-      final julianRaw = s.substring(43, 46).trim();        // pos 44-46
-      final seatRaw = s.substring(47, 51).trim();          // pos 48-51
-      final nameRaw = s.substring(2, 22).trim();           // pos 3-22
+      final pnrRaw = s.substring(22, 29).trim(); // pos 23-29
+      final fromCode = s.substring(29, 32).trim(); // pos 30-32
+      final toCode = s.substring(32, 35).trim(); // pos 33-35
+      final carrierRaw = s.substring(35, 38).trim(); // pos 36-38
+      final flightNumRaw = s.substring(38, 43).trim(); // pos 39-43
+      final julianRaw = s.substring(43, 46).trim(); // pos 44-46
+      final seatRaw = s.substring(47, 51).trim(); // pos 48-51
+      final nameRaw = s.substring(2, 22).trim(); // pos 3-22
 
       if (fromCode.isEmpty || toCode.isEmpty || carrierRaw.isEmpty) return null;
 
@@ -30,7 +30,8 @@ class BcbpParser {
 
       // Flight number: airline code + numeric part stripped of leading zeros
       final numericPart = int.tryParse(flightNumRaw) ?? 0;
-      final flightNumber = '$carrierRaw${numericPart > 0 ? numericPart : flightNumRaw}';
+      final flightNumber =
+          '$carrierRaw${numericPart > 0 ? numericPart : flightNumRaw}';
 
       // Julian day → DateTime
       DateTime? departureDate;

@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/home/logic/cubit/home_state.dart';
-import 'package:gate_buddy/features/home/ui/widgets/home_error_view.dart';
-import 'package:gate_buddy/features/home/ui/widgets/home_loaded_view.dart';
-import 'package:gate_buddy/features/home/ui/widgets/home_loading_skeleton.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../logic/cubit/home_state.dart';
+import 'home_error_view.dart';
+import 'home_loaded_view.dart';
+import 'home_loading_skeleton.dart';
 
 class HomeBody extends StatelessWidget {
   final HomeState state;
@@ -37,7 +37,9 @@ class HomeBody extends StatelessWidget {
     }
     if (state.isSuccess && state.data != null) {
       return HomeLoadedView(
-          data: state.data!, scrollController: scrollController);
+        data: state.data!,
+        scrollController: scrollController,
+      );
     }
     return const HomeLoadingSkeleton();
   }

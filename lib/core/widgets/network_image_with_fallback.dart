@@ -49,13 +49,7 @@ class NetworkImageWithFallback extends StatelessWidget {
         color: AppColors.grey50,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
-      child: Center(
-        child: Icon(
-          fallbackIcon,
-          size: 40,
-          color: fallbackColor,
-        ),
-      ),
+      child: Center(child: Icon(fallbackIcon, size: 40, color: fallbackColor)),
     );
   }
 

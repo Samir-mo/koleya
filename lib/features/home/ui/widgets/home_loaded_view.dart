@@ -1,18 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/features/home/data/models/home_model.dart';
-import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
-import 'package:gate_buddy/features/home/ui/widgets/airport_services_grid.dart';
-import 'package:gate_buddy/features/home/ui/widgets/featured_services_section.dart';
-import 'package:gate_buddy/features/home/ui/widgets/flight_update_card.dart';
-import 'package:gate_buddy/features/home/ui/widgets/home_section.dart';
-import 'package:gate_buddy/features/home/ui/widgets/scan_boarding_pass_card.dart';
-import 'package:gate_buddy/features/home/ui/widgets/tracked_flight_card.dart';
-import 'package:gate_buddy/features/home/ui/widgets/tracked_flights_section.dart';
-import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../data/models/home_model.dart';
+import '../../logic/cubit/home_cubit.dart';
+import 'airport_services_grid.dart';
+import 'featured_services_section.dart';
+import 'flight_update_card.dart';
+import 'home_section.dart';
+import 'scan_boarding_pass_card.dart';
+import 'tracked_flight_card.dart';
+import 'tracked_flights_section.dart';
+import '../../../main_navigation/ui/main_scaffold.dart';
 
 class HomeLoadedView extends StatelessWidget {
   final HomeModel data;

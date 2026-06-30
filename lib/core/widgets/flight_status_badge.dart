@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_status_helpers.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../themes/app_text_styles.dart';
+import '../utils/helpers/flight_status_helpers.dart';
+import '../utils/spacing.dart';
 
 export 'package:gate_buddy/core/utils/helpers/flight_status_helpers.dart';
 

@@ -14,9 +14,7 @@ class PickThumbnail extends StatelessWidget {
             backgroundColor: Colors.black,
             foregroundColor: Colors.white,
           ),
-          body: Center(
-            child: InteractiveViewer(child: Image.asset(imagePath)),
-          ),
+          body: Center(child: InteractiveViewer(child: Image.asset(imagePath))),
         ),
       ),
     );
@@ -35,10 +33,7 @@ class PickThumbnail extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           color: Colors.grey.shade200,
           image: path != null
-              ? DecorationImage(
-                  image: AssetImage(path),
-                  fit: BoxFit.cover,
-                )
+              ? DecorationImage(image: AssetImage(path), fit: BoxFit.cover)
               : null,
         ),
         child: path == null ? _Placeholder() : null,
@@ -53,11 +48,7 @@ class _Placeholder extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          Icons.image_outlined,
-          color: Colors.grey.shade400,
-          size: 28,
-        ),
+        Icon(Icons.image_outlined, color: Colors.grey.shade400, size: 28),
         const SizedBox(height: 4),
         Text(
           'No Image',

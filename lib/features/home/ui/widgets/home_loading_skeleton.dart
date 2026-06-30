@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
+import '../../../../core/themes/app_colors.dart';
 
 class HomeLoadingSkeleton extends StatelessWidget {
   const HomeLoadingSkeleton({super.key});

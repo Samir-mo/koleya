@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
+import '../../../../core/errors/failure.dart';
 
 import '../../data/repo/auth_repo.dart';
 import 'auth_state.dart';
@@ -17,11 +17,13 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await repo.getMe();
       emit(state.copyWith(status: AuthStatus.authenticated, user: user));
     } catch (_) {
-      emit(state.copyWith(
-        status: AuthStatus.unauthenticated,
-        clearUser: true,
-        clearError: true,
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.unauthenticated,
+          clearUser: true,
+          clearError: true,
+        ),
+      );
     }
   }
 
@@ -31,8 +33,13 @@ class AuthCubit extends Cubit<AuthState> {
       final result = await repo.login(email: email, password: password);
       emit(state.copyWith(status: AuthStatus.authenticated, user: result.user));
     } catch (e) {
-      emit(state.copyWith(
-          status: AuthStatus.error, error: _message(e), clearUser: true));
+      emit(
+        state.copyWith(
+          status: AuthStatus.error,
+          error: _message(e),
+          clearUser: true,
+        ),
+      );
     }
   }
 
@@ -52,8 +59,13 @@ class AuthCubit extends Cubit<AuthState> {
       );
       emit(state.copyWith(status: AuthStatus.authenticated, user: result.user));
     } catch (e) {
-      emit(state.copyWith(
-          status: AuthStatus.error, error: _message(e), clearUser: true));
+      emit(
+        state.copyWith(
+          status: AuthStatus.error,
+          error: _message(e),
+          clearUser: true,
+        ),
+      );
     }
   }
 
@@ -80,8 +92,13 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     emit(state.copyWith(status: AuthStatus.loading));
     await repo.logout();
-    emit(state.copyWith(
-        status: AuthStatus.unauthenticated, clearUser: true, clearError: true));
+    emit(
+      state.copyWith(
+        status: AuthStatus.unauthenticated,
+        clearUser: true,
+        clearError: true,
+      ),
+    );
   }
 
   Future<void> resetPassword({
@@ -98,8 +115,13 @@ class AuthCubit extends Cubit<AuthState> {
       );
       emit(state.copyWith(status: AuthStatus.authenticated, user: result.user));
     } catch (e) {
-      emit(state.copyWith(
-          status: AuthStatus.error, error: _message(e), clearUser: true));
+      emit(
+        state.copyWith(
+          status: AuthStatus.error,
+          error: _message(e),
+          clearUser: true,
+        ),
+      );
     }
   }
 
@@ -107,10 +129,13 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
       await repo.deleteMe();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           status: AuthStatus.unauthenticated,
           clearUser: true,
-          clearError: true));
+          clearError: true,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(status: AuthStatus.error, error: _message(e)));
     }

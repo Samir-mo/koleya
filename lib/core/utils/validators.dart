@@ -92,8 +92,9 @@ class Validators {
     }
 
     if (value.length < length) {
-      return 'validators.min_length'
-          .tr(args: [fieldName ?? 'field', length.toString()]);
+      return 'validators.min_length'.tr(
+        args: [fieldName ?? 'field', length.toString()],
+      );
     }
 
     return null;
@@ -109,8 +110,9 @@ class Validators {
     }
 
     if (value.length > length) {
-      return 'validators.max_length'
-          .tr(args: [fieldName ?? 'field', length.toString()]);
+      return 'validators.max_length'.tr(
+        args: [fieldName ?? 'field', length.toString()],
+      );
     }
 
     return null;

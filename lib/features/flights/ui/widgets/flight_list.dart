@@ -1,18 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/core/widgets/empty_state.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
-import 'package:gate_buddy/features/flights/logic/cubit/flights_cubit.dart';
-import 'package:gate_buddy/features/flights/logic/cubit/flights_state.dart';
-import 'package:gate_buddy/features/flights/ui/flight_details_screen.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/flight_card.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/flight_card_shimmer.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/widgets/custom_text_button.dart';
+import '../../../../core/widgets/empty_state.dart';
+import '../../data/models/flight_model.dart';
+import '../../logic/cubit/flights_cubit.dart';
+import '../../logic/cubit/flights_state.dart';
+import '../flight_details_screen.dart';
+import 'flight_card.dart';
+import 'flight_card_shimmer.dart';
 
 class FlightList extends StatelessWidget {
   final List<FlightModel> flights;

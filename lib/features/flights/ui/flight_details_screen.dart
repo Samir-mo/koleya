@@ -2,14 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_status_helpers.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/helpers/flight_status_helpers.dart';
+import '../../../core/utils/helpers/flight_time_helpers.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../../tracked_flight/ui/tracked_flight_screen.dart';
 
 import '../data/models/flight_model.dart';
 import '../logic/cubit/flights_cubit.dart';
@@ -24,7 +24,11 @@ class FlightDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocSelector<FlightsCubit, FlightsState, FlightModel>(
       selector: (state) {
-        final all = [...state.departures, ...state.arrivals, ...state.searchResults];
+        final all = [
+          ...state.departures,
+          ...state.arrivals,
+          ...state.searchResults,
+        ];
         return all.firstWhere((f) => f.id == flight.id, orElse: () => flight);
       },
       builder: (context, current) => _FlightDetailsView(flight: current),
@@ -108,8 +112,11 @@ class _DetailAppBar extends StatelessWidget {
           child: CircleAvatar(
             backgroundColor: AppColors.primary300,
             radius: rr(16),
-            child: Icon(Icons.arrow_back_ios_new_rounded,
-                color: AppColors.white, size: rw(14)),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.white,
+              size: rw(14),
+            ),
           ),
         ),
       ),
@@ -193,8 +200,11 @@ class _AppBarBackground extends StatelessWidget {
                                 size: rw(28),
                               ),
                             )
-                          : Icon(Icons.flight,
-                              color: AppColors.grey400, size: rw(28)),
+                          : Icon(
+                              Icons.flight,
+                              color: AppColors.grey400,
+                              size: rw(28),
+                            ),
                     ),
                   ),
                   horizontalSpacing(16),
@@ -214,7 +224,9 @@ class _AppBarBackground extends StatelessWidget {
                           children: [
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: rw(8), vertical: rh(3)),
+                                horizontal: rw(8),
+                                vertical: rh(3),
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.primary300,
                                 borderRadius: BorderRadius.circular(rr(6)),
@@ -229,7 +241,9 @@ class _AppBarBackground extends StatelessWidget {
                             horizontalSpacing(8),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: rw(8), vertical: rh(3)),
+                                horizontal: rw(8),
+                                vertical: rh(3),
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.primary300,
                                 borderRadius: BorderRadius.circular(rr(6)),
@@ -284,7 +298,11 @@ class _StatusCard extends StatelessWidget {
               color: color.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: Icon(flightStatusIcon(flight.status), color: color, size: rw(22)),
+            child: Icon(
+              flightStatusIcon(flight.status),
+              color: color,
+              size: rw(22),
+            ),
           ),
           horizontalSpacing(14),
           Column(
@@ -322,7 +340,6 @@ class _StatusCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 // ── Route Card ────────────────────────────────────────────────────────────────
@@ -374,8 +391,7 @@ class _RouteCard extends StatelessWidget {
                         children: [
                           Expanded(child: _DashedLine()),
                           Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: rw(8)),
+                            padding: EdgeInsets.symmetric(horizontal: rw(8)),
                             child: Container(
                               width: rw(36),
                               height: rw(36),
@@ -383,8 +399,11 @@ class _RouteCard extends StatelessWidget {
                                 color: AppColors.secondary200,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.flight_rounded,
-                                  color: AppColors.white, size: rw(18)),
+                              child: Icon(
+                                Icons.flight_rounded,
+                                color: AppColors.white,
+                                size: rw(18),
+                              ),
                             ),
                           ),
                           Expanded(child: _DashedLine()),
@@ -449,7 +468,6 @@ class _RouteCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class _AirportBlock extends StatelessWidget {
@@ -472,16 +490,21 @@ class _AirportBlock extends StatelessWidget {
     return Column(
       crossAxisAlignment: align,
       children: [
-        Text(code,
-            style: AppTextStyles.font24Bold.copyWith(
-                color: AppColors.primary200)),
-        Text(time,
-            style: AppTextStyles.font16SemiBold.copyWith(
-                color: colors.textPrimary)),
+        Text(
+          code,
+          style: AppTextStyles.font24Bold.copyWith(color: AppColors.primary200),
+        ),
+        Text(
+          time,
+          style: AppTextStyles.font16SemiBold.copyWith(
+            color: colors.textPrimary,
+          ),
+        ),
         if (label.isNotEmpty)
-          Text(label,
-              style: AppTextStyles.font12Regular.copyWith(
-                  color: colors.textHint)),
+          Text(
+            label,
+            style: AppTextStyles.font12Regular.copyWith(color: colors.textHint),
+          ),
       ],
     );
   }
@@ -506,12 +529,14 @@ class _QuickInfo extends StatelessWidget {
       children: [
         Icon(icon, size: rw(18), color: AppColors.primary200),
         verticalSpacing(4),
-        Text(value,
-            style: AppTextStyles.font14Bold.copyWith(
-                color: colors.textPrimary)),
-        Text(label,
-            style: AppTextStyles.font12Regular.copyWith(
-                color: colors.textHint)),
+        Text(
+          value,
+          style: AppTextStyles.font14Bold.copyWith(color: colors.textPrimary),
+        ),
+        Text(
+          label,
+          style: AppTextStyles.font12Regular.copyWith(color: colors.textHint),
+        ),
       ],
     );
   }
@@ -540,7 +565,10 @@ class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 1, height: rh(40), color: context.customColors.divider);
+      width: 1,
+      height: rh(40),
+      color: context.customColors.divider,
+    );
   }
 }
 
@@ -583,9 +611,12 @@ class _ScheduleSection extends StatelessWidget {
                 child: Icon(icon, size: rw(16), color: AppColors.primary200),
               ),
               horizontalSpacing(10),
-              Text(title,
-                  style: AppTextStyles.font16SemiBold.copyWith(
-                      color: colors.textPrimary)),
+              Text(
+                title,
+                style: AppTextStyles.font16SemiBold.copyWith(
+                  color: colors.textPrimary,
+                ),
+              ),
             ],
           ),
           verticalSpacing(14),
@@ -659,20 +690,21 @@ class _TimeRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: AppTextStyles.font14Regular.copyWith(
-                color: colors.textSecondary)),
+        Text(
+          label,
+          style: AppTextStyles.font14Regular.copyWith(
+            color: colors.textSecondary,
+          ),
+        ),
         Text(
           formatted,
           style: isHighlighted
               ? AppTextStyles.font14Bold.copyWith(color: AppColors.primary200)
-              : AppTextStyles.font14Regular.copyWith(
-                  color: colors.textPrimary),
+              : AppTextStyles.font14Regular.copyWith(color: colors.textPrimary),
         ),
       ],
     );
   }
-
 }
 
 class _InfoTag extends StatelessWidget {
@@ -689,8 +721,10 @@ class _InfoTag extends StatelessWidget {
         borderRadius: BorderRadius.circular(rr(8)),
         border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
-      child: Text(label,
-          style: AppTextStyles.font12Medium.copyWith(color: color)),
+      child: Text(
+        label,
+        style: AppTextStyles.font12Medium.copyWith(color: color),
+      ),
     );
   }
 }
@@ -717,11 +751,18 @@ class _UpdatesSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.update_rounded, size: rw(18), color: AppColors.amber300),
+              Icon(
+                Icons.update_rounded,
+                size: rw(18),
+                color: AppColors.amber300,
+              ),
               horizontalSpacing(8),
-              Text('flights.recent_updates'.tr(),
-                  style: AppTextStyles.font14SemiBold.copyWith(
-                      color: AppColors.amber400)),
+              Text(
+                'flights.recent_updates'.tr(),
+                style: AppTextStyles.font14SemiBold.copyWith(
+                  color: AppColors.amber400,
+                ),
+              ),
             ],
           ),
           verticalSpacing(12),
@@ -764,12 +805,14 @@ class _UpdateTile extends StatelessWidget {
                 Text(
                   fieldLabel,
                   style: AppTextStyles.font12Medium.copyWith(
-                      color: AppColors.amber400),
+                    color: AppColors.amber400,
+                  ),
                 ),
                 Text(
                   '${_trim(update.before)} → ${_trim(update.after)}',
                   style: AppTextStyles.font12Regular.copyWith(
-                      color: colors.textSecondary),
+                    color: colors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -823,11 +866,13 @@ class _TrackBar extends StatelessWidget {
             ? _TrackedButtons(
                 key: const ValueKey('tracked'),
                 flight: flight,
-                isLoading: isTracking)
+                isLoading: isTracking,
+              )
             : _TrackButton(
                 key: const ValueKey('untracked'),
                 flight: flight,
-                isLoading: isTracking),
+                isLoading: isTracking,
+              ),
       ),
     );
   }
@@ -836,8 +881,11 @@ class _TrackBar extends StatelessWidget {
 class _TrackButton extends StatelessWidget {
   final FlightModel flight;
   final bool isLoading;
-  const _TrackButton(
-      {super.key, required this.flight, required this.isLoading});
+  const _TrackButton({
+    super.key,
+    required this.flight,
+    required this.isLoading,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -853,8 +901,11 @@ class _TrackButton extends StatelessWidget {
 class _TrackedButtons extends StatelessWidget {
   final FlightModel flight;
   final bool isLoading;
-  const _TrackedButtons(
-      {super.key, required this.flight, required this.isLoading});
+  const _TrackedButtons({
+    super.key,
+    required this.flight,
+    required this.isLoading,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -874,20 +925,24 @@ class _TrackedButtons extends StatelessWidget {
         Expanded(
           child: CustomTextButton(
             text: 'flights.view_tracked'.tr(),
-            onPressed: () =>
-                Navigator.of(context, rootNavigator: true).push(
+            onPressed: () => Navigator.of(context, rootNavigator: true).push(
               PageRouteBuilder(
                 pageBuilder: (_, __, ___) =>
                     TrackedFlightScreen(flight: flight),
                 transitionsBuilder: (_, animation, __, child) =>
                     SlideTransition(
-                  position: Tween(
-                          begin: const Offset(1, 0), end: Offset.zero)
-                      .animate(CurvedAnimation(
-                          parent: animation,
-                          curve: Curves.easeInOutCubic)),
-                  child: child,
-                ),
+                      position:
+                          Tween(
+                            begin: const Offset(1, 0),
+                            end: Offset.zero,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeInOutCubic,
+                            ),
+                          ),
+                      child: child,
+                    ),
                 transitionDuration: const Duration(milliseconds: 300),
               ),
             ),

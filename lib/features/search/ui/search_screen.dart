@@ -1,14 +1,14 @@
-﻿import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/features/search/data/models/search_result_model.dart';
-import 'package:gate_buddy/features/search/logic/cubit/search_cubit.dart';
-import 'package:gate_buddy/features/search/logic/cubit/search_state.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../data/models/search_result_model.dart';
+import '../logic/cubit/search_cubit.dart';
+import '../logic/cubit/search_state.dart';
 import 'package:get_it/get_it.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -39,7 +39,9 @@ class _SearchViewState extends State<_SearchView> {
     super.initState();
     _controller = TextEditingController();
     _focusNode = FocusNode();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _focusNode.requestFocus());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _focusNode.requestFocus(),
+    );
   }
 
   @override
@@ -74,8 +76,11 @@ class _SearchViewState extends State<_SearchView> {
                     color: AppColors.primary300,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.arrow_back_ios_new_rounded,
-                      color: AppColors.white, size: rw(16)),
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: AppColors.white,
+                    size: rw(16),
+                  ),
                 ),
               ),
               horizontalSpacing(12),
@@ -88,7 +93,8 @@ class _SearchViewState extends State<_SearchView> {
                     color: AppColors.white.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(rr(22)),
                     border: Border.all(
-                        color: AppColors.white.withValues(alpha: 0.2)),
+                      color: AppColors.white.withValues(alpha: 0.2),
+                    ),
                   ),
                   child: BlocBuilder<SearchCubit, SearchState>(
                     builder: (context, state) {
@@ -97,32 +103,39 @@ class _SearchViewState extends State<_SearchView> {
                         focusNode: _focusNode,
                         onChanged: (v) =>
                             context.read<SearchCubit>().onQueryChanged(v),
-                        style: AppTextStyles.font14Regular
-                            .copyWith(color: AppColors.white),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.white,
+                        ),
                         cursorColor: AppColors.secondary200,
                         decoration: InputDecoration(
                           hintText: 'search.hint'.tr(),
-                          hintStyle: AppTextStyles.font14Regular
-                              .copyWith(
-                                  color: AppColors.white
-                                      .withValues(alpha: 0.5)),
-                          prefixIcon: Icon(Icons.search_rounded,
-                              color: AppColors.secondary200, size: rw(20)),
+                          hintStyle: AppTextStyles.font14Regular.copyWith(
+                            color: AppColors.white.withValues(alpha: 0.5),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search_rounded,
+                            color: AppColors.secondary200,
+                            size: rw(20),
+                          ),
                           suffixIcon: state.query.isNotEmpty
                               ? GestureDetector(
                                   onTap: () {
                                     _controller.clear();
                                     context.read<SearchCubit>().clear();
                                   },
-                                  child: Icon(Icons.close_rounded,
-                                      color: AppColors.white
-                                          .withValues(alpha: 0.7),
-                                      size: rw(18)),
+                                  child: Icon(
+                                    Icons.close_rounded,
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.7,
+                                    ),
+                                    size: rw(18),
+                                  ),
                                 )
                               : null,
                           border: InputBorder.none,
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: rh(12)),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: rh(12),
+                          ),
                         ),
                       );
                     },
@@ -206,8 +219,7 @@ class _EmptyPrompt extends StatelessWidget {
           verticalSpacing(8),
           Text(
             'search.quick_access'.tr(),
-            style: AppTextStyles.font16Bold
-                .copyWith(color: colors.textPrimary),
+            style: AppTextStyles.font16Bold.copyWith(color: colors.textPrimary),
           ),
           verticalSpacing(16),
           GridView.builder(
@@ -223,10 +235,13 @@ class _EmptyPrompt extends StatelessWidget {
             itemBuilder: (_, i) {
               final item = categories[i];
               return GestureDetector(
-                onTap: () => context.pushNamed(item.route, arguments: item.args),
+                onTap: () =>
+                    context.pushNamed(item.route, arguments: item.args),
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: rw(14), vertical: rh(10)),
+                    horizontal: rw(14),
+                    vertical: rh(10),
+                  ),
                   decoration: BoxDecoration(
                     color: colors.surface,
                     borderRadius: BorderRadius.circular(rr(14)),
@@ -241,15 +256,15 @@ class _EmptyPrompt extends StatelessWidget {
                           color: item.color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(rr(10)),
                         ),
-                        child: Icon(item.icon,
-                            size: rw(17), color: item.color),
+                        child: Icon(item.icon, size: rw(17), color: item.color),
                       ),
                       horizontalSpacing(10),
                       Expanded(
                         child: Text(
                           item.label,
-                          style: AppTextStyles.font14SemiBold
-                              .copyWith(color: colors.textPrimary),
+                          style: AppTextStyles.font14SemiBold.copyWith(
+                            color: colors.textPrimary,
+                          ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -273,11 +288,12 @@ class _QuickItem {
   final String route;
   final Map<String, dynamic>? args;
   const _QuickItem({
-      required this.icon,
-      required this.label,
-      required this.color,
-      required this.route,
-      this.args});
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.route,
+    this.args,
+  });
 }
 
 // ── Loading ───────────────────────────────────────────────────────────────────
@@ -308,19 +324,20 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.wifi_off_rounded,
-                size: rw(52), color: colors.textHint),
+            Icon(Icons.wifi_off_rounded, size: rw(52), color: colors.textHint),
             verticalSpacing(16),
             Text(
               'errors.error_screen_title'.tr(),
-              style: AppTextStyles.font16Bold
-                  .copyWith(color: colors.textPrimary),
+              style: AppTextStyles.font16Bold.copyWith(
+                color: colors.textPrimary,
+              ),
             ),
             verticalSpacing(8),
             Text(
               error,
-              style: AppTextStyles.font14Regular
-                  .copyWith(color: colors.textSecondary),
+              style: AppTextStyles.font14Regular.copyWith(
+                color: colors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -345,19 +362,24 @@ class _NoResults extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.search_off_rounded,
-                size: rw(52), color: colors.textHint),
+            Icon(
+              Icons.search_off_rounded,
+              size: rw(52),
+              color: colors.textHint,
+            ),
             verticalSpacing(16),
             Text(
               'search.no_results'.tr(),
-              style: AppTextStyles.font16Bold
-                  .copyWith(color: colors.textPrimary),
+              style: AppTextStyles.font16Bold.copyWith(
+                color: colors.textPrimary,
+              ),
             ),
             verticalSpacing(8),
             Text(
               '"$query"',
-              style: AppTextStyles.font14Regular
-                  .copyWith(color: colors.textSecondary),
+              style: AppTextStyles.font14Regular.copyWith(
+                color: colors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -425,16 +447,18 @@ class _ResultCard extends StatelessWidget {
               children: [
                 Text(
                   result.title,
-                  style: AppTextStyles.font14SemiBold
-                      .copyWith(color: colors.textPrimary),
+                  style: AppTextStyles.font14SemiBold.copyWith(
+                    color: colors.textPrimary,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 verticalSpacing(3),
                 Text(
                   result.subtitle,
-                  style: AppTextStyles.font12Regular
-                      .copyWith(color: colors.textSecondary),
+                  style: AppTextStyles.font12Regular.copyWith(
+                    color: colors.textSecondary,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -444,22 +468,23 @@ class _ResultCard extends StatelessWidget {
           if (result.badge != null) ...[
             horizontalSpacing(10),
             Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: rw(8), vertical: rh(4)),
+              padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(rr(20)),
               ),
               child: Text(
                 result.badge!,
-                style:
-                    AppTextStyles.font12Medium.copyWith(color: color),
+                style: AppTextStyles.font12Medium.copyWith(color: color),
               ),
             ),
           ],
           horizontalSpacing(8),
-          Icon(Icons.arrow_forward_ios_rounded,
-              size: rw(14), color: colors.textHint),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: rw(14),
+            color: colors.textHint,
+          ),
         ],
       ),
     );
@@ -478,4 +503,3 @@ class _ResultCard extends StatelessWidget {
     }
   }
 }
-

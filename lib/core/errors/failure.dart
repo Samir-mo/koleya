@@ -19,9 +19,7 @@ class CacheFailure extends Failure {
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure({
-    super.message = 'errors.no_internet',
-  });
+  const NetworkFailure({super.message = 'errors.no_internet'});
 }
 
 class UnauthorizedFailure extends Failure {
@@ -39,10 +37,7 @@ class ForbiddenFailure extends Failure {
 }
 
 class NotFoundFailure extends Failure {
-  const NotFoundFailure({
-    super.message = 'errors.not_found',
-    super.code = 404,
-  });
+  const NotFoundFailure({super.message = 'errors.not_found', super.code = 404});
 }
 
 class ValidationFailure extends Failure {
@@ -58,16 +53,11 @@ class ValidationFailure extends Failure {
 }
 
 class ConflictFailure extends Failure {
-  const ConflictFailure({
-    super.message = 'errors.conflict',
-    super.code = 409,
-  });
+  const ConflictFailure({super.message = 'errors.conflict', super.code = 409});
 }
 
 class TimeoutFailure extends Failure {
-  const TimeoutFailure({
-    super.message = 'errors.timeout',
-  });
+  const TimeoutFailure({super.message = 'errors.timeout'});
 }
 
 class TooManyRequestsFailure extends Failure {

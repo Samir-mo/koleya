@@ -12,30 +12,19 @@ double rr(final double radius) => radius.r;
 double rf(final double fontSize) => fontSize.sp;
 
 // ─── Responsive Padding ───────────────────────────────────────────────────
-EdgeInsets responsivePaddingAll(final double value) =>
-    EdgeInsets.all(value.r);
+EdgeInsets responsivePaddingAll(final double value) => EdgeInsets.all(value.r);
 
 EdgeInsets responsivePaddingSymmetric({
   final double horizontal = 0,
   final double vertical = 0,
-}) =>
-    EdgeInsets.symmetric(
-      horizontal: horizontal.w,
-      vertical: vertical.h,
-    );
+}) => EdgeInsets.symmetric(horizontal: horizontal.w, vertical: vertical.h);
 
 EdgeInsets responsivePaddingFromLTRB(
   final double left,
   final double top,
   final double right,
   final double bottom,
-) =>
-    EdgeInsets.fromLTRB(
-      left.w,
-      top.h,
-      right.w,
-      bottom.h,
-    );
+) => EdgeInsets.fromLTRB(left.w, top.h, right.w, bottom.h);
 
 // ─── Responsive Border Radius ─────────────────────────────────────────────
 BorderRadius responsiveBorderRadiusAll(final double radius) =>
@@ -46,10 +35,9 @@ BorderRadius responsiveBorderRadiusOnly({
   final double topRight = 0,
   final double bottomLeft = 0,
   final double bottomRight = 0,
-}) =>
-    BorderRadius.only(
-      topLeft: Radius.circular(topLeft.r),
-      topRight: Radius.circular(topRight.r),
-      bottomLeft: Radius.circular(bottomLeft.r),
-      bottomRight: Radius.circular(bottomRight.r),
-    );
+}) => BorderRadius.only(
+  topLeft: Radius.circular(topLeft.r),
+  topRight: Radius.circular(topRight.r),
+  bottomLeft: Radius.circular(bottomLeft.r),
+  bottomRight: Radius.circular(bottomRight.r),
+);

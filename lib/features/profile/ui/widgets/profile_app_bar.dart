@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
 
 class ProfileAppBar extends StatelessWidget {
   final String title;
@@ -22,7 +22,12 @@ class ProfileAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.primary200,
-      padding: EdgeInsets.only(top: rh(44), left: rw(16), right: rw(16), bottom: rh(16)),
+      padding: EdgeInsets.only(
+        top: rh(44),
+        left: rw(16),
+        right: rw(16),
+        bottom: rh(16),
+      ),
       child: Row(
         children: [
           IconButton(
@@ -40,7 +45,10 @@ class ProfileAppBar extends StatelessWidget {
             GestureDetector(
               onTap: onEdit,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(6)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: rw(12),
+                  vertical: rh(6),
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary300,
                   borderRadius: BorderRadius.circular(rr(20)),
@@ -48,7 +56,11 @@ class ProfileAppBar extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.edit_outlined, size: rr(14), color: AppColors.secondary200),
+                    Icon(
+                      Icons.edit_outlined,
+                      size: rr(14),
+                      color: AppColors.secondary200,
+                    ),
                     horizontalSpacing(4),
                     Text(
                       'profile.edit_button'.tr(),

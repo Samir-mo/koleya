@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
-import 'package:gate_buddy/core/errors/handlers/dio_handler.dart';
+import 'failure.dart';
+import 'handlers/dio_handler.dart';
 
 import 'exceptions.dart';
 

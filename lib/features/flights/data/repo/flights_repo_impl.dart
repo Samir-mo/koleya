@@ -1,4 +1,4 @@
-import 'package:gate_buddy/core/errors/error_handler.dart';
+import '../../../../core/errors/error_handler.dart';
 
 import '../models/flight_model.dart';
 import '../remote/flights_remote_ds.dart';
@@ -10,7 +10,10 @@ class FlightsRepoImpl implements FlightsRepo {
   FlightsRepoImpl({required this.remoteDs});
 
   @override
-  Future<List<FlightModel>> getFlights({String? direction, String? status}) async {
+  Future<List<FlightModel>> getFlights({
+    String? direction,
+    String? status,
+  }) async {
     try {
       return await remoteDs.getFlights(direction: direction, status: status);
     } catch (e) {
@@ -67,7 +70,8 @@ class FlightsRepoImpl implements FlightsRepo {
   Future<FlightModel> scanBoardingPass(String rawBoardingPassData) async {
     try {
       return await remoteDs.scanBoardingPass(
-          rawBoardingPassData: rawBoardingPassData);
+        rawBoardingPassData: rawBoardingPassData,
+      );
     } catch (e) {
       throw ErrorHandler.handleFailure(e);
     }

@@ -1,14 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/custom_tab_bar.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/flight_list.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/search_field.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import 'widgets/custom_tab_bar.dart';
+import 'widgets/flight_list.dart';
+import 'widgets/search_field.dart';
 
 import '../logic/cubit/flights_cubit.dart';
 import '../logic/cubit/flights_state.dart';

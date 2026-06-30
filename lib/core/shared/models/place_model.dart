@@ -1,7 +1,7 @@
 class PlaceModel {
   final int id;
   final String name;
-  final String type;        // Restaurant / Shop
+  final String type; // Restaurant / Shop
   final String terminal;
   final String gate;
   final String description;

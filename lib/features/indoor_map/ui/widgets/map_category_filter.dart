@@ -1,9 +1,9 @@
-﻿import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../logic/cubit/indoor_map_state.dart';
 
 class MapCategoryFilter extends StatelessWidget {
   final MapCategory selected;
@@ -31,7 +31,10 @@ class MapCategoryFilter extends StatelessWidget {
               onTap: () => onSelected(cat),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(horizontal: rw(14), vertical: rh(8)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: rw(14),
+                  vertical: rh(8),
+                ),
                 decoration: BoxDecoration(
                   color: isActive ? AppColors.primary200 : colors.surface,
                   borderRadius: BorderRadius.circular(rr(20)),
@@ -55,7 +58,9 @@ class MapCategoryFilter extends StatelessWidget {
                     Icon(
                       _iconForCategory(cat),
                       size: rr(13),
-                      color: isActive ? AppColors.secondary200 : colors.iconSecondary,
+                      color: isActive
+                          ? AppColors.secondary200
+                          : colors.iconSecondary,
                     ),
                     horizontalSpacing(5),
                     Text(
@@ -76,12 +81,12 @@ class MapCategoryFilter extends StatelessWidget {
   }
 
   IconData _iconForCategory(MapCategory cat) => switch (cat) {
-        MapCategory.all => Icons.layers_outlined,
-        MapCategory.restaurants => Icons.restaurant_outlined,
-        MapCategory.shops => Icons.storefront_outlined,
-        MapCategory.vipServices => Icons.workspace_premium_outlined,
-        MapCategory.financial => Icons.account_balance_outlined,
-        MapCategory.counters => Icons.confirmation_number_outlined,
-        MapCategory.accessibility => Icons.accessibility_new_outlined,
-      };
+    MapCategory.all => Icons.layers_outlined,
+    MapCategory.restaurants => Icons.restaurant_outlined,
+    MapCategory.shops => Icons.storefront_outlined,
+    MapCategory.vipServices => Icons.workspace_premium_outlined,
+    MapCategory.financial => Icons.account_balance_outlined,
+    MapCategory.counters => Icons.confirmation_number_outlined,
+    MapCategory.accessibility => Icons.accessibility_new_outlined,
+  };
 }

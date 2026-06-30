@@ -1,4 +1,4 @@
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
+import '../../../flights/data/models/flight_model.dart';
 
 abstract class TrackedFlightRepo {
   Future<List<FlightModel>> getTrackedFlights();

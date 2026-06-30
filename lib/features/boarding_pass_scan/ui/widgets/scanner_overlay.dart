@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/utils/spacing.dart';
 
 class ScannerOverlay extends StatelessWidget {
   const ScannerOverlay({super.key});

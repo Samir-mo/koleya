@@ -18,12 +18,11 @@ class VerifyCodeState extends Equatable {
     String? resetToken,
     String? error,
     bool clearError = false,
-  }) =>
-      VerifyCodeState(
-        status: status ?? this.status,
-        resetToken: resetToken ?? this.resetToken,
-        error: clearError ? null : error ?? this.error,
-      );
+  }) => VerifyCodeState(
+    status: status ?? this.status,
+    resetToken: resetToken ?? this.resetToken,
+    error: clearError ? null : error ?? this.error,
+  );
 
   bool get isLoading => status == VerifyCodeStatus.loading;
 

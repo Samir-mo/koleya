@@ -1,18 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/features/ai_chat/ui/widgets/assistant_app_bar.dart';
-import 'package:gate_buddy/features/ai_chat/ui/widgets/input_bar.dart';
-import 'package:gate_buddy/features/ai_chat/ui/widgets/message_bubble.dart';
-import 'package:gate_buddy/features/ai_chat/ui/widgets/typing_indicator.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import 'widgets/assistant_app_bar.dart';
+import 'widgets/input_bar.dart';
+import 'widgets/message_bubble.dart';
+import 'widgets/typing_indicator.dart';
+import '../../auth/logic/cubit/auth_cubit.dart';
+import '../../auth/logic/cubit/auth_state.dart';
 
 import '../logic/cubit/ai_chat_cubit.dart';
 import '../logic/cubit/ai_chat_state.dart';
@@ -44,8 +44,7 @@ class _AssistantViewState extends State<_AssistantView> {
     super.dispose();
   }
 
-  bool get _isAuthenticated =>
-      context.read<AuthCubit>().state.isAuthenticated;
+  bool get _isAuthenticated => context.read<AuthCubit>().state.isAuthenticated;
 
   void _send() {
     final text = _inputController.text.trim();
@@ -77,7 +76,9 @@ class _AssistantViewState extends State<_AssistantView> {
     showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(rr(16))),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(rr(16)),
+        ),
         title: Text('ai_chat.login_required'.tr()),
         content: Text('ai_chat.login_required_message'.tr()),
         actions: [
@@ -182,19 +183,27 @@ class _AuthBanner extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(10)),
       child: Row(
         children: [
-          Icon(Icons.lock_outline_rounded, size: rr(16), color: AppColors.amber300),
+          Icon(
+            Icons.lock_outline_rounded,
+            size: rr(16),
+            color: AppColors.amber300,
+          ),
           horizontalSpacing(8),
           Expanded(
             child: Text(
               'ai_chat.login_banner'.tr(),
-              style: AppTextStyles.font12Regular.copyWith(color: AppColors.amber400),
+              style: AppTextStyles.font12Regular.copyWith(
+                color: AppColors.amber400,
+              ),
             ),
           ),
           GestureDetector(
             onTap: () => context.pushNamed(Routes.login),
             child: Text(
               'common.login'.tr(),
-              style: AppTextStyles.font12Medium.copyWith(color: AppColors.amber400),
+              style: AppTextStyles.font12Medium.copyWith(
+                color: AppColors.amber400,
+              ),
             ),
           ),
         ],
@@ -232,7 +241,9 @@ class _EmptyState extends StatelessWidget {
           verticalSpacing(16),
           Text(
             'ai_chat.welcome_title'.tr(),
-            style: AppTextStyles.font18Bold.copyWith(color: AppColors.primary200),
+            style: AppTextStyles.font18Bold.copyWith(
+              color: AppColors.primary200,
+            ),
           ),
           verticalSpacing(8),
           Text(

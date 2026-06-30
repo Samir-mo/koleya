@@ -51,7 +51,12 @@ class _UserPositionMarkerState extends State<UserPositionMarker>
             height: 40 * _pulse.value,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Color.fromRGBO(33, 150, 243, 0.2 * (1 - _pulse.value + 0.3)),
+              color: Color.fromRGBO(
+                33,
+                150,
+                243,
+                0.2 * (1 - _pulse.value + 0.3),
+              ),
             ),
           ),
           // Inner accuracy ring

@@ -2,17 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_status_helpers.dart';
-import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
-import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
-import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
-import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_state.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/helpers/flight_status_helpers.dart';
+import '../../../core/utils/helpers/flight_time_helpers.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../../flights/data/models/flight_model.dart';
+import '../../main_navigation/ui/main_scaffold.dart';
+import '../logic/cubit/tracked_flight_cubit.dart';
+import '../logic/cubit/tracked_flight_state.dart';
 import 'package:get_it/get_it.dart';
 
 class TrackedFlightScreen extends StatelessWidget {
@@ -45,11 +45,13 @@ class _View extends StatelessWidget {
       listenWhen: (prev, curr) => curr.isCancelled && !prev.isCancelled,
       listener: (context, state) {
         Navigator.pop(context, true);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('tracked_flight.cancelled'.tr()),
-          backgroundColor: context.customColors.success,
-          behavior: SnackBarBehavior.floating,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('tracked_flight.cancelled'.tr()),
+            backgroundColor: context.customColors.success,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       },
       builder: (context, state) {
         if (state.isLoading) return const _LoadingView();
@@ -137,8 +139,11 @@ class _AppBar extends StatelessWidget {
           child: CircleAvatar(
             backgroundColor: AppColors.white.withValues(alpha: 0.12),
             radius: rw(16),
-            child: Icon(Icons.arrow_back_ios_new_rounded,
-                color: AppColors.white, size: rw(14)),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.white,
+              size: rw(14),
+            ),
           ),
         ),
       ),
@@ -146,41 +151,50 @@ class _AppBar extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(right: rw(16), top: rh(8), bottom: rh(8)),
           child: Container(
-            padding:
-                EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(6)),
+            padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(6)),
             decoration: BoxDecoration(
               color: AppColors.secondary200.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(rr(20)),
               border: Border.all(
-                  color: AppColors.secondary200.withValues(alpha: 0.5)),
+                color: AppColors.secondary200.withValues(alpha: 0.5),
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.bookmark_rounded,
-                    size: rw(13), color: AppColors.secondary200),
+                Icon(
+                  Icons.bookmark_rounded,
+                  size: rw(13),
+                  color: AppColors.secondary200,
+                ),
                 horizontalSpacing(5),
-                Text('tracked_flight.tracking'.tr(),
-                    style: AppTextStyles.font12Medium
-                        .copyWith(color: AppColors.secondary200)),
+                Text(
+                  'tracked_flight.tracking'.tr(),
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: AppColors.secondary200,
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding:
-            EdgeInsets.fromLTRB(rw(56), 0, rw(100), rh(14)),
+        titlePadding: EdgeInsets.fromLTRB(rw(56), 0, rw(100), rh(14)),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(flight.flightNumber,
-                style: AppTextStyles.font16Bold
-                    .copyWith(color: AppColors.white)),
-            Text(flight.airline.name,
-                style: AppTextStyles.font12Regular
-                    .copyWith(color: AppColors.primary50)),
+            Text(
+              flight.flightNumber,
+              style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
+            ),
+            Text(
+              flight.airline.name,
+              style: AppTextStyles.font12Regular.copyWith(
+                color: AppColors.primary50,
+              ),
+            ),
           ],
         ),
         background: _AppBarBg(flight: flight),
@@ -264,8 +278,11 @@ class _AppBarBg extends StatelessWidget {
                                 size: rw(30),
                               ),
                             )
-                          : Icon(Icons.flight,
-                              color: AppColors.primary200, size: rw(30)),
+                          : Icon(
+                              Icons.flight,
+                              color: AppColors.primary200,
+                              size: rw(30),
+                            ),
                     ),
                   ),
                   horizontalSpacing(16),
@@ -274,20 +291,25 @@ class _AppBarBg extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(flight.airline.name,
-                            style: AppTextStyles.font18Bold
-                                .copyWith(color: AppColors.white)),
+                        Text(
+                          flight.airline.name,
+                          style: AppTextStyles.font18Bold.copyWith(
+                            color: AppColors.white,
+                          ),
+                        ),
                         verticalSpacing(6),
                         Row(
                           children: [
                             _Badge(
-                                label: flight.flightNumber,
-                                color: AppColors.secondary200),
+                              label: flight.flightNumber,
+                              color: AppColors.secondary200,
+                            ),
                             if (flight.type.isNotEmpty) ...[
                               horizontalSpacing(8),
                               _Badge(
-                                  label: flight.type.toUpperCase(),
-                                  color: AppColors.primary50),
+                                label: flight.type.toUpperCase(),
+                                color: AppColors.primary50,
+                              ),
                             ],
                           ],
                         ),
@@ -318,8 +340,10 @@ class _Badge extends StatelessWidget {
         borderRadius: BorderRadius.circular(rr(6)),
         border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
-      child: Text(label,
-          style: AppTextStyles.font12Medium.copyWith(color: color)),
+      child: Text(
+        label,
+        style: AppTextStyles.font12Medium.copyWith(color: color),
+      ),
     );
   }
 }
@@ -342,8 +366,7 @@ class _RouteHero extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primary300,
         borderRadius: BorderRadius.circular(rr(20)),
-        border: Border.all(
-            color: AppColors.primary100.withValues(alpha: 0.25)),
+        border: Border.all(color: AppColors.primary100.withValues(alpha: 0.25)),
       ),
       child: Column(
         children: [
@@ -355,20 +378,29 @@ class _RouteHero extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(flight.route.fromCode,
-                        style: AppTextStyles.font24Bold
-                            .copyWith(color: AppColors.white)),
+                    Text(
+                      flight.route.fromCode,
+                      style: AppTextStyles.font24Bold.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
                     verticalSpacing(2),
-                    Text(flight.route.from,
-                        style: AppTextStyles.font12Regular
-                            .copyWith(color: AppColors.primary50),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
+                    Text(
+                      flight.route.from,
+                      style: AppTextStyles.font12Regular.copyWith(
+                        color: AppColors.primary50,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     if (depTime != null) ...[
                       verticalSpacing(6),
-                      Text(formatHm(depTime),
-                          style: AppTextStyles.font20Bold
-                              .copyWith(color: AppColors.secondary200)),
+                      Text(
+                        formatHm(depTime),
+                        style: AppTextStyles.font20Bold.copyWith(
+                          color: AppColors.secondary200,
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -389,15 +421,19 @@ class _RouteHero extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.secondary200
-                                .withValues(alpha: 0.35),
+                            color: AppColors.secondary200.withValues(
+                              alpha: 0.35,
+                            ),
                             blurRadius: 12,
                             spreadRadius: 2,
                           ),
                         ],
                       ),
-                      child: Icon(Icons.flight_rounded,
-                          color: AppColors.white, size: rw(22)),
+                      child: Icon(
+                        Icons.flight_rounded,
+                        color: AppColors.white,
+                        size: rw(22),
+                      ),
                     ),
                     verticalSpacing(4),
                     _DashedLine(),
@@ -410,21 +446,30 @@ class _RouteHero extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(flight.route.toCode,
-                        style: AppTextStyles.font24Bold
-                            .copyWith(color: AppColors.white)),
+                    Text(
+                      flight.route.toCode,
+                      style: AppTextStyles.font24Bold.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
                     verticalSpacing(2),
-                    Text(flight.route.to,
-                        style: AppTextStyles.font12Regular
-                            .copyWith(color: AppColors.primary50),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.end),
+                    Text(
+                      flight.route.to,
+                      style: AppTextStyles.font12Regular.copyWith(
+                        color: AppColors.primary50,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
                     if (arrTime != null) ...[
                       verticalSpacing(6),
-                      Text(formatHm(arrTime),
-                          style: AppTextStyles.font20Bold
-                              .copyWith(color: AppColors.white)),
+                      Text(
+                        formatHm(arrTime),
+                        style: AppTextStyles.font20Bold.copyWith(
+                          color: AppColors.white,
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -444,24 +489,28 @@ class _RouteHero extends StatelessWidget {
               children: [
                 if (dep.gate != null)
                   _QuickChip(
-                      icon: Icons.door_sliding_outlined,
-                      label: '${"flights.gate".tr()} ${dep.gate}',
-                      sub: 'flights.departure'.tr()),
+                    icon: Icons.door_sliding_outlined,
+                    label: '${"flights.gate".tr()} ${dep.gate}',
+                    sub: 'flights.departure'.tr(),
+                  ),
                 if (dep.terminal != null)
                   _QuickChip(
-                      icon: Icons.business_outlined,
-                      label: 'T${dep.terminal}',
-                      sub: 'flights.terminal'.tr()),
+                    icon: Icons.business_outlined,
+                    label: 'T${dep.terminal}',
+                    sub: 'flights.terminal'.tr(),
+                  ),
                 if (arr.gate != null)
                   _QuickChip(
-                      icon: Icons.door_sliding_outlined,
-                      label: '${"flights.gate".tr()} ${arr.gate}',
-                      sub: 'flights.arrival'.tr()),
+                    icon: Icons.door_sliding_outlined,
+                    label: '${"flights.gate".tr()} ${arr.gate}',
+                    sub: 'flights.arrival'.tr(),
+                  ),
                 if (arr.terminal != null)
                   _QuickChip(
-                      icon: Icons.business_outlined,
-                      label: 'T${arr.terminal}',
-                      sub: 'flights.terminal'.tr()),
+                    icon: Icons.business_outlined,
+                    label: 'T${arr.terminal}',
+                    sub: 'flights.terminal'.tr(),
+                  ),
               ],
             ),
           ],
@@ -469,7 +518,6 @@ class _RouteHero extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class _DashedLine extends StatelessWidget {
@@ -504,8 +552,11 @@ class _QuickChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final String sub;
-  const _QuickChip(
-      {required this.icon, required this.label, required this.sub});
+  const _QuickChip({
+    required this.icon,
+    required this.label,
+    required this.sub,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -513,12 +564,16 @@ class _QuickChip extends StatelessWidget {
       children: [
         Icon(icon, size: rw(14), color: AppColors.secondary200),
         verticalSpacing(3),
-        Text(label,
-            style: AppTextStyles.font14SemiBold
-                .copyWith(color: AppColors.white)),
-        Text(sub,
-            style: AppTextStyles.font12Regular
-                .copyWith(color: AppColors.primary50)),
+        Text(
+          label,
+          style: AppTextStyles.font14SemiBold.copyWith(color: AppColors.white),
+        ),
+        Text(
+          sub,
+          style: AppTextStyles.font12Regular.copyWith(
+            color: AppColors.primary50,
+          ),
+        ),
       ],
     );
   }
@@ -537,8 +592,7 @@ class _StatusCard extends StatelessWidget {
     final label = status.replaceAll('_', ' ');
 
     return Container(
-      padding:
-          EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(14)),
+      padding: EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(14)),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(rr(16)),
@@ -560,12 +614,16 @@ class _StatusCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('tracked_flight.flight_status'.tr(),
-                    style: AppTextStyles.font12Regular
-                        .copyWith(color: AppColors.primary50)),
-                Text(label,
-                    style:
-                        AppTextStyles.font18Bold.copyWith(color: color)),
+                Text(
+                  'tracked_flight.flight_status'.tr(),
+                  style: AppTextStyles.font12Regular.copyWith(
+                    color: AppColors.primary50,
+                  ),
+                ),
+                Text(
+                  label,
+                  style: AppTextStyles.font18Bold.copyWith(color: color),
+                ),
               ],
             ),
           ),
@@ -577,9 +635,10 @@ class _StatusCard extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                    color: color.withValues(alpha: 0.6),
-                    blurRadius: 8,
-                    spreadRadius: 2),
+                  color: color.withValues(alpha: 0.6),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                ),
               ],
             ),
           ),
@@ -604,7 +663,6 @@ class _StatusCard extends StatelessWidget {
         return AppColors.grey400;
     }
   }
-
 }
 
 // ─── Schedule Row ─────────────────────────────────────────────────────────────
@@ -641,8 +699,11 @@ class _ScheduleCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final FlightScheduleModel schedule;
-  const _ScheduleCard(
-      {required this.title, required this.icon, required this.schedule});
+  const _ScheduleCard({
+    required this.title,
+    required this.icon,
+    required this.schedule,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -651,8 +712,7 @@ class _ScheduleCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primary300,
         borderRadius: BorderRadius.circular(rr(16)),
-        border: Border.all(
-            color: AppColors.primary100.withValues(alpha: 0.25)),
+        border: Border.all(color: AppColors.primary100.withValues(alpha: 0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -662,9 +722,12 @@ class _ScheduleCard extends StatelessWidget {
               Icon(icon, size: rw(14), color: AppColors.secondary200),
               horizontalSpacing(6),
               Flexible(
-                child: Text(title,
-                    style: AppTextStyles.font12Medium
-                        .copyWith(color: AppColors.primary50)),
+                child: Text(
+                  title,
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: AppColors.primary50,
+                  ),
+                ),
               ),
             ],
           ),
@@ -698,12 +761,14 @@ class _ScheduleCard extends StatelessWidget {
               children: [
                 if (schedule.gate != null)
                   _MiniTag(
-                      label: 'G${schedule.gate}',
-                      color: AppColors.secondary200),
+                    label: 'G${schedule.gate}',
+                    color: AppColors.secondary200,
+                  ),
                 if (schedule.terminal != null)
                   _MiniTag(
-                      label: 'T${schedule.terminal}',
-                      color: AppColors.primary50),
+                    label: 'T${schedule.terminal}',
+                    color: AppColors.primary50,
+                  ),
               ],
             ),
           ],
@@ -711,15 +776,17 @@ class _ScheduleCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class _TimeEntry extends StatelessWidget {
   final String label;
   final String value;
   final bool highlight;
-  const _TimeEntry(
-      {required this.label, required this.value, required this.highlight});
+  const _TimeEntry({
+    required this.label,
+    required this.value,
+    required this.highlight,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -727,17 +794,18 @@ class _TimeEntry extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
-          child: Text(label,
-              style: AppTextStyles.font12Regular
-                  .copyWith(color: AppColors.primary50)),
+          child: Text(
+            label,
+            style: AppTextStyles.font12Regular.copyWith(
+              color: AppColors.primary50,
+            ),
+          ),
         ),
         Text(
           value,
           style: highlight
-              ? AppTextStyles.font14Bold
-                  .copyWith(color: AppColors.secondary200)
-              : AppTextStyles.font14Regular
-                  .copyWith(color: AppColors.white),
+              ? AppTextStyles.font14Bold.copyWith(color: AppColors.secondary200)
+              : AppTextStyles.font14Regular.copyWith(color: AppColors.white),
         ),
       ],
     );
@@ -758,8 +826,10 @@ class _MiniTag extends StatelessWidget {
         borderRadius: BorderRadius.circular(rr(6)),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
-      child: Text(label,
-          style: AppTextStyles.font12Medium.copyWith(color: color)),
+      child: Text(
+        label,
+        style: AppTextStyles.font12Medium.copyWith(color: color),
+      ),
     );
   }
 }
@@ -778,30 +848,34 @@ class _DepartureCard extends StatelessWidget {
       title: 'tracked_flight.departure_info'.tr(),
       children: [
         _DetailRow(
-            label: 'tracked_flight.scheduled'.tr(),
-            value: formatHmDate(dep.scheduledTime)),
+          label: 'tracked_flight.scheduled'.tr(),
+          value: formatHmDate(dep.scheduledTime),
+        ),
         if (dep.estimatedTime != null)
           _DetailRow(
-              label: 'tracked_flight.estimated'.tr(),
-              value: formatHmDate(dep.estimatedTime),
-              highlight: true),
+            label: 'tracked_flight.estimated'.tr(),
+            value: formatHmDate(dep.estimatedTime),
+            highlight: true,
+          ),
         if (dep.actualTime != null)
           _DetailRow(
-              label: 'tracked_flight.actual'.tr(),
-              value: formatHmDate(dep.actualTime)),
+            label: 'tracked_flight.actual'.tr(),
+            value: formatHmDate(dep.actualTime),
+          ),
         if (dep.gate != null)
           _DetailRow(
-              label: 'tracked_flight.gate'.tr(),
-              value: dep.gate!,
-              highlight: true),
+            label: 'tracked_flight.gate'.tr(),
+            value: dep.gate!,
+            highlight: true,
+          ),
         if (dep.terminal != null)
           _DetailRow(
-              label: 'tracked_flight.terminal'.tr(),
-              value: dep.terminal!),
+            label: 'tracked_flight.terminal'.tr(),
+            value: dep.terminal!,
+          ),
       ],
     );
   }
-
 }
 
 // ─── Arrival Card ─────────────────────────────────────────────────────────────
@@ -818,30 +892,34 @@ class _ArrivalCard extends StatelessWidget {
       title: 'flights.arrival'.tr(),
       children: [
         _DetailRow(
-            label: 'tracked_flight.scheduled'.tr(),
-            value: formatHmDate(arr.scheduledTime)),
+          label: 'tracked_flight.scheduled'.tr(),
+          value: formatHmDate(arr.scheduledTime),
+        ),
         if (arr.estimatedTime != null)
           _DetailRow(
-              label: 'tracked_flight.estimated'.tr(),
-              value: formatHmDate(arr.estimatedTime),
-              highlight: true),
+            label: 'tracked_flight.estimated'.tr(),
+            value: formatHmDate(arr.estimatedTime),
+            highlight: true,
+          ),
         if (arr.actualTime != null)
           _DetailRow(
-              label: 'tracked_flight.actual'.tr(),
-              value: formatHmDate(arr.actualTime)),
+            label: 'tracked_flight.actual'.tr(),
+            value: formatHmDate(arr.actualTime),
+          ),
         if (arr.gate != null)
           _DetailRow(
-              label: 'tracked_flight.gate'.tr(),
-              value: arr.gate!,
-              highlight: true),
+            label: 'tracked_flight.gate'.tr(),
+            value: arr.gate!,
+            highlight: true,
+          ),
         if (arr.terminal != null)
           _DetailRow(
-              label: 'tracked_flight.terminal'.tr(),
-              value: arr.terminal!),
+            label: 'tracked_flight.terminal'.tr(),
+            value: arr.terminal!,
+          ),
       ],
     );
   }
-
 }
 
 // ─── Updates Card ─────────────────────────────────────────────────────────────
@@ -880,19 +958,27 @@ class _UpdateRow extends StatelessWidget {
             height: rw(6),
             margin: EdgeInsets.only(top: rh(5)),
             decoration: BoxDecoration(
-                color: colors.warning, shape: BoxShape.circle),
+              color: colors.warning,
+              shape: BoxShape.circle,
+            ),
           ),
           horizontalSpacing(10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('$label updated',
-                    style: AppTextStyles.font12Medium
-                        .copyWith(color: colors.warning)),
-                Text('${_trim(update.before)} → ${_trim(update.after)}',
-                    style: AppTextStyles.font12Regular
-                        .copyWith(color: AppColors.primary50)),
+                Text(
+                  '$label updated',
+                  style: AppTextStyles.font12Medium.copyWith(
+                    color: colors.warning,
+                  ),
+                ),
+                Text(
+                  '${_trim(update.before)} → ${_trim(update.after)}',
+                  style: AppTextStyles.font12Regular.copyWith(
+                    color: AppColors.primary50,
+                  ),
+                ),
               ],
             ),
           ),
@@ -918,11 +1004,12 @@ class _InfoCard extends StatelessWidget {
   final String title;
   final List<Widget> children;
   final Color? iconColor;
-  const _InfoCard(
-      {required this.icon,
-      required this.title,
-      required this.children,
-      this.iconColor});
+  const _InfoCard({
+    required this.icon,
+    required this.title,
+    required this.children,
+    this.iconColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -932,8 +1019,7 @@ class _InfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.primary300,
         borderRadius: BorderRadius.circular(rr(16)),
-        border: Border.all(
-            color: AppColors.primary100.withValues(alpha: 0.25)),
+        border: Border.all(color: AppColors.primary100.withValues(alpha: 0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -950,9 +1036,12 @@ class _InfoCard extends StatelessWidget {
                 child: Icon(icon, size: rw(16), color: accent),
               ),
               horizontalSpacing(10),
-              Text(title,
-                  style: AppTextStyles.font16SemiBold
-                      .copyWith(color: AppColors.white)),
+              Text(
+                title,
+                style: AppTextStyles.font16SemiBold.copyWith(
+                  color: AppColors.white,
+                ),
+              ),
             ],
           ),
           verticalSpacing(14),
@@ -967,8 +1056,11 @@ class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
   final bool highlight;
-  const _DetailRow(
-      {required this.label, required this.value, this.highlight = false});
+  const _DetailRow({
+    required this.label,
+    required this.value,
+    this.highlight = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -977,15 +1069,20 @@ class _DetailRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: AppTextStyles.font14Regular
-                  .copyWith(color: AppColors.primary50)),
-          Text(value,
-              style: highlight
-                  ? AppTextStyles.font14Bold
-                      .copyWith(color: AppColors.secondary200)
-                  : AppTextStyles.font14Regular
-                      .copyWith(color: AppColors.white)),
+          Text(
+            label,
+            style: AppTextStyles.font14Regular.copyWith(
+              color: AppColors.primary50,
+            ),
+          ),
+          Text(
+            value,
+            style: highlight
+                ? AppTextStyles.font14Bold.copyWith(
+                    color: AppColors.secondary200,
+                  )
+                : AppTextStyles.font14Regular.copyWith(color: AppColors.white),
+          ),
         ],
       ),
     );
@@ -1003,24 +1100,25 @@ class _BottomBar extends StatelessWidget {
     final bottom = MediaQuery.of(context).padding.bottom;
     final colors = context.customColors;
     final isCancelling = context.select<TrackedFlightCubit, bool>(
-        (c) => c.state.isCancelling);
+      (c) => c.state.isCancelling,
+    );
 
     return Container(
-      padding:
-          EdgeInsets.fromLTRB(rw(16), rh(12), rw(16), bottom + rh(12)),
+      padding: EdgeInsets.fromLTRB(rw(16), rh(12), rw(16), bottom + rh(12)),
       decoration: BoxDecoration(
         color: AppColors.primary300,
         border: Border(
-            top: BorderSide(
-                color: AppColors.primary100.withValues(alpha: 0.25))),
+          top: BorderSide(color: AppColors.primary100.withValues(alpha: 0.25)),
+        ),
       ),
       child: CustomTextButton.outlined(
         text: 'tracked_flight.cancel_tracking'.tr(),
         isLoading: isCancelling,
         foregroundColor: colors.error,
         borderColor: colors.error,
-        onPressed:
-            isCancelling ? null : () => _confirmCancel(context, flight.id),
+        onPressed: isCancelling
+            ? null
+            : () => _confirmCancel(context, flight.id),
         prefixIcon: const Icon(Icons.cancel_outlined),
       ),
     );
@@ -1033,25 +1131,34 @@ class _BottomBar extends StatelessWidget {
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.primary300,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(rr(16))),
-        title: Text('tracked_flight.confirm_cancel_title'.tr(),
-            style:
-                AppTextStyles.font16Bold.copyWith(color: AppColors.white)),
-        content: Text('tracked_flight.confirm_cancel_body'.tr(),
-            style: AppTextStyles.font14Regular
-                .copyWith(color: AppColors.primary50)),
+          borderRadius: BorderRadius.circular(rr(16)),
+        ),
+        title: Text(
+          'tracked_flight.confirm_cancel_title'.tr(),
+          style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
+        ),
+        content: Text(
+          'tracked_flight.confirm_cancel_body'.tr(),
+          style: AppTextStyles.font14Regular.copyWith(
+            color: AppColors.primary50,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('common.cancel'.tr(),
-                style: AppTextStyles.font14SemiBold
-                    .copyWith(color: AppColors.primary50)),
+            child: Text(
+              'common.cancel'.tr(),
+              style: AppTextStyles.font14SemiBold.copyWith(
+                color: AppColors.primary50,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('tracked_flight.stop_tracking'.tr(),
-                style: AppTextStyles.font14SemiBold
-                    .copyWith(color: colors.error)),
+            child: Text(
+              'tracked_flight.stop_tracking'.tr(),
+              style: AppTextStyles.font14SemiBold.copyWith(color: colors.error),
+            ),
           ),
         ],
       ),
@@ -1084,14 +1191,18 @@ class _LoadingView extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: AppColors.white.withValues(alpha: 0.12),
               radius: rw(16),
-              child: Icon(Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.white, size: rw(14)),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: AppColors.white,
+                size: rw(14),
+              ),
             ),
           ),
         ),
-        title: Text('tracked_flight.title'.tr(),
-            style:
-                AppTextStyles.font16Bold.copyWith(color: AppColors.white)),
+        title: Text(
+          'tracked_flight.title'.tr(),
+          style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
+        ),
       ),
       body: const Center(
         child: CircularProgressIndicator(color: AppColors.secondary200),
@@ -1119,8 +1230,11 @@ class _ErrorView extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: AppColors.white.withValues(alpha: 0.12),
               radius: rw(16),
-              child: Icon(Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.white, size: rw(14)),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: AppColors.white,
+                size: rw(14),
+              ),
             ),
           ),
         ),
@@ -1131,14 +1245,19 @@ class _ErrorView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloud_off_rounded,
-                  size: rw(56),
-                  color: AppColors.white.withValues(alpha: 0.3)),
+              Icon(
+                Icons.cloud_off_rounded,
+                size: rw(56),
+                color: AppColors.white.withValues(alpha: 0.3),
+              ),
               verticalSpacing(16),
-              Text(error,
-                  style: AppTextStyles.font14Regular
-                      .copyWith(color: AppColors.primary50),
-                  textAlign: TextAlign.center),
+              Text(
+                error,
+                style: AppTextStyles.font14Regular.copyWith(
+                  color: AppColors.primary50,
+                ),
+                textAlign: TextAlign.center,
+              ),
               verticalSpacing(24),
               CustomTextButton(
                 text: 'errors.error_screen_button'.tr(),
@@ -1170,14 +1289,18 @@ class _NoTrackingView extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: AppColors.white.withValues(alpha: 0.12),
               radius: rw(16),
-              child: Icon(Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.white, size: rw(14)),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: AppColors.white,
+                size: rw(14),
+              ),
             ),
           ),
         ),
-        title: Text('tracked_flight.title'.tr(),
-            style:
-                AppTextStyles.font16Bold.copyWith(color: AppColors.white)),
+        title: Text(
+          'tracked_flight.title'.tr(),
+          style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
+        ),
       ),
       body: Center(
         child: Padding(
@@ -1192,20 +1315,28 @@ class _NoTrackingView extends StatelessWidget {
                   color: AppColors.white.withValues(alpha: 0.06),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.airplanemode_off_rounded,
-                    size: rw(42),
-                    color: AppColors.white.withValues(alpha: 0.3)),
+                child: Icon(
+                  Icons.airplanemode_off_rounded,
+                  size: rw(42),
+                  color: AppColors.white.withValues(alpha: 0.3),
+                ),
               ),
               verticalSpacing(24),
-              Text('tracked_flight.no_tracking'.tr(),
-                  style: AppTextStyles.font18Bold
-                      .copyWith(color: AppColors.white),
-                  textAlign: TextAlign.center),
+              Text(
+                'tracked_flight.no_tracking'.tr(),
+                style: AppTextStyles.font18Bold.copyWith(
+                  color: AppColors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
               verticalSpacing(10),
-              Text('tracked_flight.no_tracking_hint'.tr(),
-                  style: AppTextStyles.font14Regular
-                      .copyWith(color: AppColors.primary50),
-                  textAlign: TextAlign.center),
+              Text(
+                'tracked_flight.no_tracking_hint'.tr(),
+                style: AppTextStyles.font14Regular.copyWith(
+                  color: AppColors.primary50,
+                ),
+                textAlign: TextAlign.center,
+              ),
               verticalSpacing(32),
               CustomTextButton(
                 text: 'tracked_flight.find_flight'.tr(),

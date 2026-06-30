@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/spacing.dart';
 
 class AuthPrimaryButton extends StatelessWidget {
   final String label;
@@ -25,8 +25,9 @@ class AuthPrimaryButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary200,
           disabledBackgroundColor: AppColors.primary100,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(rr(14))),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(rr(14)),
+          ),
           elevation: 0,
         ),
         child: isLoading
@@ -34,12 +35,15 @@ class AuthPrimaryButton extends StatelessWidget {
                 width: rw(22),
                 height: rh(22),
                 child: const CircularProgressIndicator(
-                    strokeWidth: 2.5, color: AppColors.white),
+                  strokeWidth: 2.5,
+                  color: AppColors.white,
+                ),
               )
             : Text(
                 label,
                 style: AppTextStyles.font16SemiBold.copyWith(
-                    color: AppColors.white),
+                  color: AppColors.white,
+                ),
               ),
       ),
     );

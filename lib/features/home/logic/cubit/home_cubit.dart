@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/errors/exceptions.dart';
+import '../../../../core/errors/exceptions.dart';
 import '../../data/repo/home_repo.dart';
 import 'home_state.dart';
 

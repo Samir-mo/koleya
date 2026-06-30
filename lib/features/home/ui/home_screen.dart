@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
-import 'package:gate_buddy/features/home/logic/cubit/home_state.dart';
-import 'package:gate_buddy/features/home/ui/widgets/home_app_bar.dart';
-import 'package:gate_buddy/features/home/ui/widgets/home_body.dart';
+import '../../../core/themes/app_colors.dart';
+import '../logic/cubit/home_cubit.dart';
+import '../logic/cubit/home_state.dart';
+import 'widgets/home_app_bar.dart';
+import 'widgets/home_body.dart';
 
 class HomeScreen extends StatelessWidget {
   final ScrollController scrollController;

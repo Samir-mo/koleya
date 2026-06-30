@@ -1,14 +1,14 @@
-﻿import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
+import '../../../core/shared/models/service_model.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../logic/cubit/indoor_map_cubit.dart';
+import '../logic/cubit/indoor_map_state.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'widgets/map_category_filter.dart';
@@ -57,24 +57,24 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
   }
 
   Color _markerColor(String category) => switch (category.toUpperCase()) {
-        'RESTAURANTS' => AppColors.primary200,
-        'SHOPS' => AppColors.primary300,
-        'VIP_SERVICES' => AppColors.secondary200,
-        'FINANCIAL' => const Color(0xFF059669),
-        'COUNTERS' => const Color(0xFF0284C7),
-        'ACCESSIBILITY' => const Color(0xFF0891B2),
-        _ => AppColors.primary200,
-      };
+    'RESTAURANTS' => AppColors.primary200,
+    'SHOPS' => AppColors.primary300,
+    'VIP_SERVICES' => AppColors.secondary200,
+    'FINANCIAL' => const Color(0xFF059669),
+    'COUNTERS' => const Color(0xFF0284C7),
+    'ACCESSIBILITY' => const Color(0xFF0891B2),
+    _ => AppColors.primary200,
+  };
 
   IconData _markerIcon(String category) => switch (category.toUpperCase()) {
-        'RESTAURANTS' => Icons.restaurant_rounded,
-        'SHOPS' => Icons.storefront_rounded,
-        'VIP_SERVICES' => Icons.workspace_premium_rounded,
-        'FINANCIAL' => Icons.account_balance_rounded,
-        'COUNTERS' => Icons.confirmation_number_rounded,
-        'ACCESSIBILITY' => Icons.accessibility_new_rounded,
-        _ => Icons.place_rounded,
-      };
+    'RESTAURANTS' => Icons.restaurant_rounded,
+    'SHOPS' => Icons.storefront_rounded,
+    'VIP_SERVICES' => Icons.workspace_premium_rounded,
+    'FINANCIAL' => Icons.account_balance_rounded,
+    'COUNTERS' => Icons.confirmation_number_rounded,
+    'ACCESSIBILITY' => Icons.accessibility_new_rounded,
+    _ => Icons.place_rounded,
+  };
 
   Marker _buildServiceMarker(
     ServiceModel service,
@@ -160,8 +160,9 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                           right: 0,
                           child: MapCategoryFilter(
                             selected: state.selectedCategory,
-                            onSelected: (cat) =>
-                                context.read<IndoorMapCubit>().filterByCategory(cat),
+                            onSelected: (cat) => context
+                                .read<IndoorMapCubit>()
+                                .filterByCategory(cat),
                           ),
                         ),
                       if (state is IndoorMapLoaded && !state.isNavigating)
@@ -212,9 +213,11 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                   Text(
                     isNav
                         ? 'indoor_map.navigation_active'.tr()
-                        : 'indoor_map.services_nearby'.tr(namedArgs: {
-                            'count': '${state.filteredServices.length}',
-                          }),
+                        : 'indoor_map.services_nearby'.tr(
+                            namedArgs: {
+                              'count': '${state.filteredServices.length}',
+                            },
+                          ),
                     style: AppTextStyles.font12Regular.copyWith(
                       color: AppColors.white.withValues(alpha: 0.7),
                     ),
@@ -325,16 +328,25 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.secondary200.withValues(alpha: 0.45),
+                            color: AppColors.secondary200.withValues(
+                              alpha: 0.45,
+                            ),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
                         ],
                       ),
-                      child: Icon(Icons.place_rounded,
-                          color: AppColors.white, size: rr(20)),
+                      child: Icon(
+                        Icons.place_rounded,
+                        color: AppColors.white,
+                        size: rr(20),
+                      ),
                     ),
-                    Container(width: 2, height: rh(10), color: AppColors.secondary200),
+                    Container(
+                      width: 2,
+                      height: rh(10),
+                      color: AppColors.secondary200,
+                    ),
                   ],
                 ),
               ),
@@ -349,7 +361,8 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
       return Padding(
         padding: EdgeInsets.all(rr(24)),
         child: const Center(
-            child: CircularProgressIndicator(color: AppColors.white)),
+          child: CircularProgressIndicator(color: AppColors.white),
+        ),
       );
     }
 
@@ -366,8 +379,7 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
             Icon(Icons.error_outline, color: AppColors.red200),
             horizontalSpacing(10),
             Expanded(
-              child: Text(state.message,
-                  style: AppTextStyles.font12Regular),
+              child: Text(state.message, style: AppTextStyles.font12Regular),
             ),
             CustomTextButton.text(
               text: 'errors.error_screen_button'.tr(),
@@ -394,8 +406,9 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
       return ServiceDetailSheet(
         service: state.selectedService!,
         onClose: () => context.read<IndoorMapCubit>().clearSelection(),
-        onNavigate: () =>
-            context.read<IndoorMapCubit>().startNavigation(state.selectedService!),
+        onNavigate: () => context.read<IndoorMapCubit>().startNavigation(
+          state.selectedService!,
+        ),
       );
     }
 
@@ -435,7 +448,10 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                     Container(
                       width: rw(8),
                       height: rw(8),
-                      decoration: BoxDecoration(color: item.$2, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                        color: item.$2,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                     horizontalSpacing(6),
                     Text(

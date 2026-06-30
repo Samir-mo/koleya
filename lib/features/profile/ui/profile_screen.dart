@@ -1,22 +1,22 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/settings/cubit/app_settings_cubit.dart';
-import 'package:gate_buddy/core/settings/cubit/app_settings_state.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/ui/dialogs/app_dialogs.dart';
-import 'package:gate_buddy/features/auth/data/models/user_model.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
-import 'package:gate_buddy/features/on_boarding/ui/onboarding_screen.dart';
-import 'package:gate_buddy/features/profile/ui/widgets/edit_profile_sheet.dart';
-import 'package:gate_buddy/features/profile/ui/widgets/profile_app_bar.dart';
-import 'package:gate_buddy/features/profile/ui/widgets/profile_avatar.dart';
-import 'package:gate_buddy/features/profile/ui/widgets/profile_section.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/settings/cubit/app_settings_cubit.dart';
+import '../../../core/settings/cubit/app_settings_state.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/ui/dialogs/app_dialogs.dart';
+import '../../auth/data/models/user_model.dart';
+import '../../auth/logic/cubit/auth_cubit.dart';
+import '../../auth/logic/cubit/auth_state.dart';
+import '../../on_boarding/ui/onboarding_screen.dart';
+import 'widgets/edit_profile_sheet.dart';
+import 'widgets/profile_app_bar.dart';
+import 'widgets/profile_avatar.dart';
+import 'widgets/profile_section.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -466,8 +466,11 @@ class _ActionTile extends StatelessWidget {
                   style: AppTextStyles.font14SemiBold.copyWith(color: color),
                 ),
               ),
-              Icon(Icons.arrow_forward_ios_rounded,
-                  size: rr(14), color: color.withValues(alpha: 0.5)),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: rr(14),
+                color: color.withValues(alpha: 0.5),
+              ),
             ],
           ),
         ),

@@ -24,6 +24,11 @@ class BoardingPassData extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [flightNumber, airlineCode, fromCode, toCode, departureDate];
+  List<Object?> get props => [
+    flightNumber,
+    airlineCode,
+    fromCode,
+    toCode,
+    departureDate,
+  ];
 }

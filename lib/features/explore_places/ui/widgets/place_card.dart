@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../../../core/router/routes.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/shared/models/service_model.dart';
 
 class PlaceCard extends StatelessWidget {
   final ServiceModel place;
@@ -38,20 +38,26 @@ class PlaceCard extends StatelessWidget {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.horizontal(left: Radius.circular(rr(16))),
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.circular(rr(16)),
+              ),
               child: CachedNetworkImage(
                 imageUrl: place.primaryImage ?? '',
                 width: rw(110),
                 height: rh(110),
                 fit: BoxFit.cover,
                 placeholder: (_, __) => _placeholder(colors.surfaceVariant),
-                errorWidget: (_, __, ___) => _placeholder(colors.surfaceVariant),
+                errorWidget: (_, __, ___) =>
+                    _placeholder(colors.surfaceVariant),
               ),
             ),
 
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(12)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: rw(12),
+                  vertical: rh(12),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -137,11 +143,15 @@ class PlaceCard extends StatelessWidget {
   }
 
   Widget _placeholder(Color bg) => Container(
-        width: rw(110),
-        height: rh(110),
-        color: bg,
-        child: Icon(Icons.storefront_outlined, size: rr(36), color: AppColors.grey400),
-      );
+    width: rw(110),
+    height: rh(110),
+    color: bg,
+    child: Icon(
+      Icons.storefront_outlined,
+      size: rr(36),
+      color: AppColors.grey400,
+    ),
+  );
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -158,7 +168,9 @@ class _StatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(rr(20)),
       ),
       child: Text(
-        isOpen ? 'explore_places.open_short'.tr() : 'explore_places.closed'.tr(),
+        isOpen
+            ? 'explore_places.open_short'.tr()
+            : 'explore_places.closed'.tr(),
         style: AppTextStyles.font12Bold.copyWith(color: color),
       ),
     );

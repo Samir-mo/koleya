@@ -1,6 +1,6 @@
-﻿import 'package:gate_buddy/core/errors/error_handler.dart';
-import 'package:gate_buddy/features/profile/data/remote/profile_remote_ds.dart';
-import 'package:gate_buddy/features/profile/data/repo/profile_repo.dart';
+﻿import '../../../../core/errors/error_handler.dart';
+import '../remote/profile_remote_ds.dart';
+import 'profile_repo.dart';
 
 class ProfileRepoImpl implements ProfileRepo {
   final ProfileRemoteDs remoteDs;

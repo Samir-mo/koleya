@@ -24,9 +24,9 @@ ThemeData getLightTheme() {
 
     // ─── Text ─────────────────────────────────────────────────────────────
     textTheme: ThemeData.light().textTheme.apply(
-          bodyColor: AppColors.black,
-          displayColor: AppColors.black,
-        ),
+      bodyColor: AppColors.black,
+      displayColor: AppColors.black,
+    ),
 
     // ─── Elevated Button ──────────────────────────────────────────────────
     elevatedButtonTheme: ElevatedButtonThemeData(

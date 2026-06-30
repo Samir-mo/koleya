@@ -1,18 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/utils/validators.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/forget_password_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/forget_password_state.dart';
-import 'package:gate_buddy/features/auth/ui/get_code_screen.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/utils/validators.dart';
+import '../logic/cubit/forget_password_cubit.dart';
+import '../logic/cubit/forget_password_state.dart';
+import 'get_code_screen.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/auth_primary_button.dart';
+import 'widgets/auth_text_field.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   const ForgetPasswordScreen({super.key});
@@ -45,9 +45,7 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
 
   void _onSend() {
     if (!_formKey.currentState!.validate()) return;
-    context
-        .read<ForgetPasswordCubit>()
-        .sendCode(_emailController.text.trim());
+    context.read<ForgetPasswordCubit>().sendCode(_emailController.text.trim());
   }
 
   @override
@@ -113,7 +111,8 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
                               child: Text(
                                 'auth.forget_password.back'.tr(),
                                 style: AppTextStyles.font14SemiBold.copyWith(
-                                    color: AppColors.primary200),
+                                  color: AppColors.primary200,
+                                ),
                               ),
                             ),
                           ),
@@ -130,7 +129,6 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
       ),
     );
   }
-
 }
 
 class _EnvelopeIllustration extends StatelessWidget {

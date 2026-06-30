@@ -1,17 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/utils/validators.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/utils/validators.dart';
+import '../logic/cubit/auth_cubit.dart';
+import '../logic/cubit/auth_state.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/auth_primary_button.dart';
+import 'widgets/auth_text_field.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -39,11 +39,11 @@ class _SignupScreenState extends State<SignupScreen> {
   void _onSignup() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthCubit>().signup(
-          name: _nameController.text.trim(),
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-          passwordConfirm: _confirmController.text,
-        );
+      name: _nameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+      passwordConfirm: _confirmController.text,
+    );
   }
 
   @override
@@ -80,8 +80,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             label: 'auth.signup.full_name'.tr(),
                             hint: 'John Doe',
                             prefixIcon: Icons.person_outline_rounded,
-                            validator: (v) => Validators.minLength(v, 3,
-                                fieldName: 'auth.signup.full_name'.tr()),
+                            validator: (v) => Validators.minLength(
+                              v,
+                              3,
+                              fieldName: 'auth.signup.full_name'.tr(),
+                            ),
                           ),
                           verticalSpacing(16),
                           AuthTextField(
@@ -109,7 +112,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (_) => _onSignup(),
                             validator: (v) => Validators.confirmPassword(
-                                v, _passwordController.text),
+                              v,
+                              _passwordController.text,
+                            ),
                           ),
                           verticalSpacing(28),
                           AuthPrimaryButton(
@@ -141,18 +146,19 @@ class _SignupScreenState extends State<SignupScreen> {
         Text(
           'auth.signup.login_prompt'.tr(),
           style: AppTextStyles.font14Regular.copyWith(
-              color: colors.textSecondary),
+            color: colors.textSecondary,
+          ),
         ),
         GestureDetector(
           onTap: () => context.pop(),
           child: Text(
             'auth.signup.login_link'.tr(),
             style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.primary200),
+              color: AppColors.primary200,
+            ),
           ),
         ),
       ],
     );
   }
-
 }

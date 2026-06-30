@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
 
 class ProfileSection extends StatelessWidget {
   final String title;
@@ -41,11 +41,7 @@ class ProfileSection extends StatelessWidget {
               for (int i = 0; i < children.length; i++) ...[
                 children[i],
                 if (i < children.length - 1)
-                  Divider(
-                    height: 1,
-                    indent: rw(52),
-                    color: colors.divider,
-                  ),
+                  Divider(height: 1, indent: rw(52), color: colors.divider),
               ],
             ],
           ),
@@ -111,22 +107,31 @@ class ProfileTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label,
-                        style: AppTextStyles.font14Regular
-                            .copyWith(color: labelColor)),
+                    Text(
+                      label,
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: labelColor,
+                      ),
+                    ),
                     if (value != null) ...[
                       verticalSpacing(2),
-                      Text(value!,
-                          style: AppTextStyles.font12Regular.copyWith(
-                              color: colors.textHint)),
+                      Text(
+                        value!,
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: colors.textHint,
+                        ),
+                      ),
                     ],
                   ],
                 ),
               ),
               trailing ??
                   (onTap != null
-                      ? Icon(Icons.chevron_right_rounded,
-                          size: rr(20), color: colors.textHint)
+                      ? Icon(
+                          Icons.chevron_right_rounded,
+                          size: rr(20),
+                          color: colors.textHint,
+                        )
                       : const SizedBox.shrink()),
             ],
           ),

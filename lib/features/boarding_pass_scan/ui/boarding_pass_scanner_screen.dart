@@ -1,16 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/core/widgets/ui/dialogs/app_dialogs.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/logic/cubit/boarding_pass_scan_cubit.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/logic/cubit/boarding_pass_scan_state.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/ui/widgets/scan_hint_card.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/ui/widgets/scanner_overlay.dart';
-import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../../../core/widgets/ui/dialogs/app_dialogs.dart';
+import '../logic/cubit/boarding_pass_scan_cubit.dart';
+import '../logic/cubit/boarding_pass_scan_state.dart';
+import 'widgets/scan_hint_card.dart';
+import 'widgets/scanner_overlay.dart';
+import '../../tracked_flight/ui/tracked_flight_screen.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class BoardingPassScannerScreen extends StatefulWidget {
@@ -21,8 +21,7 @@ class BoardingPassScannerScreen extends StatefulWidget {
       _BoardingPassScannerScreenState();
 }
 
-class _BoardingPassScannerScreenState
-    extends State<BoardingPassScannerScreen> {
+class _BoardingPassScannerScreenState extends State<BoardingPassScannerScreen> {
   late final MobileScannerController _controller;
 
   @override
@@ -62,7 +61,10 @@ class _BoardingPassScannerScreenState
                 ? state.error!.tr()
                 : (state.error ?? 'errors.unknown'.tr()),
           );
-          Future.delayed(const Duration(milliseconds: 300), cubit.resumeScanning);
+          Future.delayed(
+            const Duration(milliseconds: 300),
+            cubit.resumeScanning,
+          );
         }
       },
       child: Scaffold(
@@ -84,9 +86,9 @@ class _BoardingPassScannerScreenState
                     if (capture.barcodes.isEmpty) return;
                     final raw = capture.barcodes.first.rawValue;
                     if (raw != null) {
-                      context
-                          .read<BoardingPassScanCubit>()
-                          .onBarcodeDetected(raw);
+                      context.read<BoardingPassScanCubit>().onBarcodeDetected(
+                        raw,
+                      );
                     }
                   },
                 ),
@@ -98,7 +100,9 @@ class _BoardingPassScannerScreenState
                 SafeArea(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: rw(16), vertical: rh(8)),
+                      horizontal: rw(16),
+                      vertical: rh(8),
+                    ),
                     child: Row(
                       children: [
                         GestureDetector(
@@ -120,8 +124,9 @@ class _BoardingPassScannerScreenState
                         horizontalSpacing(12),
                         Text(
                           'boarding_pass.scan_title'.tr(),
-                          style: AppTextStyles.font18Bold
-                              .copyWith(color: AppColors.white),
+                          style: AppTextStyles.font18Bold.copyWith(
+                            color: AppColors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -135,8 +140,9 @@ class _BoardingPassScannerScreenState
                     left: rw(24),
                     right: rw(24),
                     child: _ParseFailureCard(
-                      onRetry: () =>
-                          context.read<BoardingPassScanCubit>().resumeScanning(),
+                      onRetry: () => context
+                          .read<BoardingPassScanCubit>()
+                          .resumeScanning(),
                     ),
                   ),
 
@@ -159,7 +165,8 @@ class _BoardingPassScannerScreenState
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const CircularProgressIndicator(
-                              color: AppColors.secondary200),
+                            color: AppColors.secondary200,
+                          ),
                           verticalSpacing(16),
                           Text(
                             state.status == BoardingPassScanStatus.submitting ||
@@ -167,8 +174,9 @@ class _BoardingPassScannerScreenState
                                         BoardingPassScanStatus.parsed
                                 ? 'boarding_pass.submitting'.tr()
                                 : 'boarding_pass.parsing'.tr(),
-                            style: AppTextStyles.font16Regular
-                                .copyWith(color: AppColors.white),
+                            style: AppTextStyles.font16Regular.copyWith(
+                              color: AppColors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -197,14 +205,18 @@ class _ParseFailureCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.error_outline_rounded,
-              color: AppColors.white, size: rr(22)),
+          Icon(
+            Icons.error_outline_rounded,
+            color: AppColors.white,
+            size: rr(22),
+          ),
           horizontalSpacing(12),
           Expanded(
             child: Text(
               'boarding_pass.failure_invalid'.tr(),
-              style:
-                  AppTextStyles.font12Regular.copyWith(color: AppColors.white),
+              style: AppTextStyles.font12Regular.copyWith(
+                color: AppColors.white,
+              ),
             ),
           ),
           horizontalSpacing(12),

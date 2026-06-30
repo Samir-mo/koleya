@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../../../core/router/routes.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/shared/models/service_model.dart';
 
 class ServiceListItem extends StatelessWidget {
   final ServiceModel service;
@@ -37,8 +37,9 @@ class ServiceListItem extends StatelessWidget {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius:
-                  BorderRadius.horizontal(left: Radius.circular(rr(16))),
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.circular(rr(16)),
+              ),
               child: CachedNetworkImage(
                 imageUrl: service.primaryImage ?? '',
                 width: rw(110),
@@ -52,7 +53,9 @@ class ServiceListItem extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: rw(12), vertical: rh(12)),
+                  horizontal: rw(12),
+                  vertical: rh(12),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -61,8 +64,9 @@ class ServiceListItem extends StatelessWidget {
                         Expanded(
                           child: Text(
                             service.name,
-                            style: AppTextStyles.font14Bold
-                                .copyWith(color: colors.textPrimary),
+                            style: AppTextStyles.font14Bold.copyWith(
+                              color: colors.textPrimary,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -74,8 +78,9 @@ class ServiceListItem extends StatelessWidget {
                     verticalSpacing(4),
                     Text(
                       service.categoryLabel,
-                      style: AppTextStyles.font12Medium
-                          .copyWith(color: AppColors.secondary200),
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: AppColors.secondary200,
+                      ),
                     ),
                     verticalSpacing(8),
                     Row(
@@ -91,8 +96,9 @@ class ServiceListItem extends StatelessWidget {
                             service.terminal.isNotEmpty
                                 ? '${"flights.terminal".tr()} ${service.terminal}'
                                 : service.airport,
-                            style: AppTextStyles.font12Regular
-                                .copyWith(color: colors.textSecondary),
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: colors.textSecondary,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -110,8 +116,9 @@ class ServiceListItem extends StatelessWidget {
                         horizontalSpacing(3),
                         Text(
                           service.rating.toStringAsFixed(1),
-                          style: AppTextStyles.font12Medium
-                              .copyWith(color: colors.textPrimary),
+                          style: AppTextStyles.font12Medium.copyWith(
+                            color: colors.textPrimary,
+                          ),
                         ),
                         const Spacer(),
                         _PriceLevel(level: service.priceLevel),
@@ -128,12 +135,15 @@ class ServiceListItem extends StatelessWidget {
   }
 
   Widget _placeholder(Color bg) => Container(
-        width: rw(110),
-        height: rh(110),
-        color: bg,
-        child: Icon(Icons.storefront_outlined,
-            size: rr(36), color: AppColors.grey400),
-      );
+    width: rw(110),
+    height: rh(110),
+    color: bg,
+    child: Icon(
+      Icons.storefront_outlined,
+      size: rr(36),
+      color: AppColors.grey400,
+    ),
+  );
 }
 
 class _StatusBadge extends StatelessWidget {
@@ -150,7 +160,9 @@ class _StatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(rr(20)),
       ),
       child: Text(
-        isOpen ? 'explore_places.open_short'.tr() : 'explore_places.closed'.tr(),
+        isOpen
+            ? 'explore_places.open_short'.tr()
+            : 'explore_places.closed'.tr(),
         style: AppTextStyles.font12Bold.copyWith(color: color),
       ),
     );

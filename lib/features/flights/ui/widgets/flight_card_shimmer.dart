@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/utils/spacing.dart';
 
 class FlightCardShimmer extends StatefulWidget {
   const FlightCardShimmer({super.key});
@@ -21,9 +21,10 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat();
-    _animation = Tween<double>(begin: -1.5, end: 1.5).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: -1.5,
+      end: 1.5,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -48,8 +49,7 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
             _shimmerBox(
               width: double.infinity,
               height: rh(5),
-              radius:
-                  const BorderRadius.vertical(top: Radius.circular(14)),
+              radius: const BorderRadius.vertical(top: Radius.circular(14)),
             ),
             Padding(
               padding: EdgeInsets.all(rw(14)),
@@ -59,9 +59,10 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
                   Row(
                     children: [
                       _shimmerBox(
-                          width: rw(44),
-                          height: rw(44),
-                          radius: BorderRadius.circular(rr(10))),
+                        width: rw(44),
+                        height: rw(44),
+                        radius: BorderRadius.circular(rr(10)),
+                      ),
                       horizontalSpacing(10),
                       Expanded(
                         child: Column(
@@ -74,9 +75,10 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
                         ),
                       ),
                       _shimmerBox(
-                          width: rw(70),
-                          height: rh(26),
-                          radius: BorderRadius.circular(rr(8))),
+                        width: rw(70),
+                        height: rh(26),
+                        radius: BorderRadius.circular(rr(8)),
+                      ),
                     ],
                   ),
                   verticalSpacing(14),
@@ -91,14 +93,16 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
                   Row(
                     children: [
                       _shimmerBox(
-                          width: rw(70),
-                          height: rh(26),
-                          radius: BorderRadius.circular(rr(8))),
+                        width: rw(70),
+                        height: rh(26),
+                        radius: BorderRadius.circular(rr(8)),
+                      ),
                       horizontalSpacing(8),
                       _shimmerBox(
-                          width: rw(50),
-                          height: rh(26),
-                          radius: BorderRadius.circular(rr(8))),
+                        width: rw(50),
+                        height: rh(26),
+                        radius: BorderRadius.circular(rr(8)),
+                      ),
                     ],
                   ),
                 ],
@@ -123,11 +127,7 @@ class _FlightCardShimmerState extends State<FlightCardShimmer>
         gradient: LinearGradient(
           begin: Alignment(_animation.value - 1, 0),
           end: Alignment(_animation.value + 1, 0),
-          colors: const [
-            AppColors.grey50,
-            AppColors.grey100,
-            AppColors.grey50,
-          ],
+          colors: const [AppColors.grey50, AppColors.grey100, AppColors.grey50],
         ),
       ),
     );

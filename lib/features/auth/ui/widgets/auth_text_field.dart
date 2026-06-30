@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
 
 class AuthTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -50,12 +50,15 @@ class _AuthTextFieldState extends State<AuthTextField> {
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hint,
-        labelStyle:
-            AppTextStyles.font14Regular.copyWith(color: colors.textHint),
-        hintStyle:
-            AppTextStyles.font14Regular.copyWith(color: colors.textHint),
-        prefixIcon:
-            Icon(widget.prefixIcon, color: AppColors.primary200, size: rr(20)),
+        labelStyle: AppTextStyles.font14Regular.copyWith(
+          color: colors.textHint,
+        ),
+        hintStyle: AppTextStyles.font14Regular.copyWith(color: colors.textHint),
+        prefixIcon: Icon(
+          widget.prefixIcon,
+          color: AppColors.primary200,
+          size: rr(20),
+        ),
         suffixIcon: widget.isPassword
             ? GestureDetector(
                 onTap: () => setState(() => _obscure = !_obscure),
@@ -70,8 +73,10 @@ class _AuthTextFieldState extends State<AuthTextField> {
             : null,
         filled: true,
         fillColor: colors.surface,
-        contentPadding:
-            EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(18)),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: rw(16),
+          vertical: rh(18),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(rr(12)),
           borderSide: BorderSide(color: colors.border),
@@ -82,8 +87,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(rr(12)),
-          borderSide:
-              const BorderSide(color: AppColors.primary200, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary200, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(rr(12)),
@@ -93,8 +97,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
           borderRadius: BorderRadius.circular(rr(12)),
           borderSide: const BorderSide(color: AppColors.red200, width: 1.5),
         ),
-        errorStyle: AppTextStyles.font12Regular
-            .copyWith(color: AppColors.red200),
+        errorStyle: AppTextStyles.font12Regular.copyWith(
+          color: AppColors.red200,
+        ),
       ),
     );
   }

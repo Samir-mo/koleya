@@ -3,8 +3,10 @@ import 'package:equatable/equatable.dart';
 class PlaceOfServiceModel extends Equatable {
   final String id;
   final String name;
-  final String type; // RESTAURANTS|SHOPS|ACCESSIBILITY|VIP_SERVICES|FINANCIAL|COUNTERS
-  final String? subCategory; // e.g. ATMs|Currency Exchange|Insurance (for FINANCIAL)
+  final String
+  type; // RESTAURANTS|SHOPS|ACCESSIBILITY|VIP_SERVICES|FINANCIAL|COUNTERS
+  final String?
+  subCategory; // e.g. ATMs|Currency Exchange|Insurance (for FINANCIAL)
   final String airport;
   final String terminal;
   final String description;
@@ -90,5 +92,13 @@ class PlaceOfServiceModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name, type, subCategory, airport, terminal, rating];
+  List<Object?> get props => [
+    id,
+    name,
+    type,
+    subCategory,
+    airport,
+    terminal,
+    rating,
+  ];
 }

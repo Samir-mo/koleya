@@ -21,10 +21,7 @@ class _FilterChipRowState extends State<FilterChipRow> {
           onTap: () => setState(() => _selectedIndex = index),
           child: Container(
             margin: const EdgeInsets.only(right: 25),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 5,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             decoration: BoxDecoration(
               color: isSelected ? Colors.amber : Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -37,12 +34,8 @@ class _FilterChipRowState extends State<FilterChipRow> {
             child: Text(
               _options[index],
               style: TextStyle(
-                color: isSelected
-                    ? Color(0xFF002D6B)
-                    : Colors.black87,
-                fontWeight: isSelected
-                    ? FontWeight.bold
-                    : FontWeight.normal,
+                color: isSelected ? Color(0xFF002D6B) : Colors.black87,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 14,
               ),
             ),

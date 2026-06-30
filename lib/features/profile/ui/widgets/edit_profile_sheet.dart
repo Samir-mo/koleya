@@ -1,15 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/spacing.dart';
-import 'package:gate_buddy/core/utils/validators.dart';
-import 'package:gate_buddy/core/widgets/custom_text_button.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/custom_text_button.dart';
+import '../../../auth/logic/cubit/auth_cubit.dart';
+import '../../../auth/logic/cubit/auth_state.dart';
+import '../../../auth/ui/widgets/auth_text_field.dart';
 
 class EditProfileSheet extends StatefulWidget {
   final String currentName;
@@ -64,14 +64,19 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
             children: [
               Row(
                 children: [
-                  Text('profile.edit_title'.tr(),
-                      style: AppTextStyles.font18Bold.copyWith(
-                          color: AppColors.primary200)),
+                  Text(
+                    'profile.edit_title'.tr(),
+                    style: AppTextStyles.font18Bold.copyWith(
+                      color: AppColors.primary200,
+                    ),
+                  ),
                   const Spacer(),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.close_rounded,
-                        color: AppColors.grey400),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      color: AppColors.grey400,
+                    ),
                   ),
                 ],
               ),
@@ -80,8 +85,11 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                 controller: _nameController,
                 label: 'auth.signup.full_name'.tr(),
                 prefixIcon: Icons.person_outline_rounded,
-                validator: (v) => Validators.minLength(v, 3,
-                    fieldName: 'auth.signup.full_name'.tr()),
+                validator: (v) => Validators.minLength(
+                  v,
+                  3,
+                  fieldName: 'auth.signup.full_name'.tr(),
+                ),
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _onSave(),
               ),

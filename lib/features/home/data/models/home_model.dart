@@ -39,8 +39,13 @@ class HomeModel extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [userTrack, updatedFlights, featuredServices, metrics, categories];
+  List<Object?> get props => [
+    userTrack,
+    updatedFlights,
+    featuredServices,
+    metrics,
+    categories,
+  ];
 }
 
 // ── UserTrack ─────────────────────────────────────────────────────────────────
@@ -59,12 +64,13 @@ class UserTrackModel extends Equatable {
   });
 
   factory UserTrackModel.fromJson(Map<String, dynamic> json) => UserTrackModel(
-        id: json['_id'] as String? ?? '',
-        isActive: json['isActive'] as bool? ?? false,
-        reminderMinutes: json['reminderMinutes'] as int? ?? 0,
-        flight: TrackFlightModel.fromJson(
-            json['flight'] as Map<String, dynamic>? ?? {}),
-      );
+    id: json['_id'] as String? ?? '',
+    isActive: json['isActive'] as bool? ?? false,
+    reminderMinutes: json['reminderMinutes'] as int? ?? 0,
+    flight: TrackFlightModel.fromJson(
+      json['flight'] as Map<String, dynamic>? ?? {},
+    ),
+  );
 
   @override
   List<Object?> get props => [id, isActive, reminderMinutes, flight];
@@ -89,25 +95,33 @@ class TrackFlightModel extends Equatable {
     this.arrivalScheduledTime,
   });
 
-  factory TrackFlightModel.fromJson(Map<String, dynamic> json) =>
-      TrackFlightModel(
-        id: json['_id'] as String? ?? json['id'] as String? ?? '',
-        flightNumber: json['flightNumber'] as String? ?? '',
-        airline:
-            AirlineModel.fromJson(json['airline'] as Map<String, dynamic>? ?? {}),
-        status: json['status'] as String? ?? '',
-        route:
-            RouteModel.fromJson(json['route'] as Map<String, dynamic>? ?? {}),
-        departure: DepartureModel.fromJson(
-            json['departure'] as Map<String, dynamic>? ?? {}),
-        arrivalScheduledTime:
-            (json['arrival'] as Map<String, dynamic>?)?['scheduledTime']
-                as String?,
-      );
+  factory TrackFlightModel.fromJson(
+    Map<String, dynamic> json,
+  ) => TrackFlightModel(
+    id: json['_id'] as String? ?? json['id'] as String? ?? '',
+    flightNumber: json['flightNumber'] as String? ?? '',
+    airline: AirlineModel.fromJson(
+      json['airline'] as Map<String, dynamic>? ?? {},
+    ),
+    status: json['status'] as String? ?? '',
+    route: RouteModel.fromJson(json['route'] as Map<String, dynamic>? ?? {}),
+    departure: DepartureModel.fromJson(
+      json['departure'] as Map<String, dynamic>? ?? {},
+    ),
+    arrivalScheduledTime:
+        (json['arrival'] as Map<String, dynamic>?)?['scheduledTime'] as String?,
+  );
 
   @override
-  List<Object?> get props =>
-      [id, flightNumber, airline, status, route, departure, arrivalScheduledTime];
+  List<Object?> get props => [
+    id,
+    flightNumber,
+    airline,
+    status,
+    route,
+    departure,
+    arrivalScheduledTime,
+  ];
 }
 
 // ── UpdatedFlight ─────────────────────────────────────────────────────────────
@@ -137,7 +151,8 @@ class UpdatedFlightModel extends Equatable {
       id: json['_id'] as String? ?? '',
       flightNumber: json['flightNumber'] as String? ?? '',
       airline: AirlineModel.fromJson(
-          json['airline'] as Map<String, dynamic>? ?? {}),
+        json['airline'] as Map<String, dynamic>? ?? {},
+      ),
       status: json['status'] as String? ?? '',
       route: RouteModel.fromJson(json['route'] as Map<String, dynamic>? ?? {}),
       gate: dep?['gate'] as String?,
@@ -146,8 +161,15 @@ class UpdatedFlightModel extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, flightNumber, airline, status, route, gate, scheduledTime];
+  List<Object?> get props => [
+    id,
+    flightNumber,
+    airline,
+    status,
+    route,
+    gate,
+    scheduledTime,
+  ];
 }
 
 // ── FeaturedService ───────────────────────────────────────────────────────────
@@ -186,8 +208,16 @@ class FeaturedServiceModel extends Equatable {
       );
 
   @override
-  List<Object?> get props =>
-      [id, name, category, zone, terminal, rating, operatingHours, description];
+  List<Object?> get props => [
+    id,
+    name,
+    category,
+    zone,
+    terminal,
+    rating,
+    operatingHours,
+    description,
+  ];
 }
 
 // ── Metrics ───────────────────────────────────────────────────────────────────
@@ -208,24 +238,29 @@ class MetricsModel extends Equatable {
   });
 
   factory MetricsModel.empty() => const MetricsModel(
-        activeUsers: 0,
-        flightsTracked: 0,
-        delays: 0,
-        airportsCovered: 0,
-        userRating: '—',
-      );
+    activeUsers: 0,
+    flightsTracked: 0,
+    delays: 0,
+    airportsCovered: 0,
+    userRating: '—',
+  );
 
   factory MetricsModel.fromJson(Map<String, dynamic> json) => MetricsModel(
-        activeUsers: json['activeUsers'] as int? ?? 0,
-        flightsTracked: json['flightsTracked'] as int? ?? 0,
-        delays: json['delays'] as int? ?? 0,
-        airportsCovered: json['airportsCovered'] as int? ?? 0,
-        userRating: json['userRating'] as String? ?? '—',
-      );
+    activeUsers: json['activeUsers'] as int? ?? 0,
+    flightsTracked: json['flightsTracked'] as int? ?? 0,
+    delays: json['delays'] as int? ?? 0,
+    airportsCovered: json['airportsCovered'] as int? ?? 0,
+    userRating: json['userRating'] as String? ?? '—',
+  );
 
   @override
-  List<Object?> get props =>
-      [activeUsers, flightsTracked, delays, airportsCovered, userRating];
+  List<Object?> get props => [
+    activeUsers,
+    flightsTracked,
+    delays,
+    airportsCovered,
+    userRating,
+  ];
 }
 
 // ── Shared sub-models ─────────────────────────────────────────────────────────
@@ -237,9 +272,9 @@ class AirlineModel extends Equatable {
   const AirlineModel({required this.name, this.logo});
 
   factory AirlineModel.fromJson(Map<String, dynamic> json) => AirlineModel(
-        name: json['name'] as String? ?? '',
-        logo: json['logo'] as String?,
-      );
+    name: json['name'] as String? ?? '',
+    logo: json['logo'] as String?,
+  );
 
   @override
   List<Object?> get props => [name, logo];
@@ -259,11 +294,11 @@ class RouteModel extends Equatable {
   });
 
   factory RouteModel.fromJson(Map<String, dynamic> json) => RouteModel(
-        from: json['from'] as String? ?? '',
-        fromCode: json['fromCode'] as String? ?? '',
-        to: json['to'] as String? ?? '',
-        toCode: json['toCode'] as String? ?? '',
-      );
+    from: json['from'] as String? ?? '',
+    fromCode: json['fromCode'] as String? ?? '',
+    to: json['to'] as String? ?? '',
+    toCode: json['toCode'] as String? ?? '',
+  );
 
   @override
   List<Object?> get props => [from, fromCode, to, toCode];
@@ -287,15 +322,21 @@ class DepartureModel extends Equatable {
   });
 
   factory DepartureModel.fromJson(Map<String, dynamic> json) => DepartureModel(
-        terminal: json['terminal'] as String?,
-        gate: json['gate'] as String?,
-        scheduledTime: json['scheduledTime'] as String?,
-        estimatedTime: json['estimatedTime'] as String?,
-        boardingTime: json['boardingTime'] as String?,
-        checkInCounter: json['checkInCounter'] as String?,
-      );
+    terminal: json['terminal'] as String?,
+    gate: json['gate'] as String?,
+    scheduledTime: json['scheduledTime'] as String?,
+    estimatedTime: json['estimatedTime'] as String?,
+    boardingTime: json['boardingTime'] as String?,
+    checkInCounter: json['checkInCounter'] as String?,
+  );
 
   @override
-  List<Object?> get props =>
-      [terminal, gate, scheduledTime, estimatedTime, boardingTime, checkInCounter];
+  List<Object?> get props => [
+    terminal,
+    gate,
+    scheduledTime,
+    estimatedTime,
+    boardingTime,
+    checkInCounter,
+  ];
 }

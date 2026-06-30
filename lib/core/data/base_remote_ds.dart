@@ -1,4 +1,4 @@
-import 'package:gate_buddy/core/errors/error_handler.dart';
+import '../errors/error_handler.dart';
 
 mixin BaseRemoteDs {
   /// Wraps API calls with try/catch + ErrorHandler.handle()
