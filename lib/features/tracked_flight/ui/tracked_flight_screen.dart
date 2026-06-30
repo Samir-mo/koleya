@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_status_helpers.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
@@ -364,7 +366,7 @@ class _RouteHero extends StatelessWidget {
                         overflow: TextOverflow.ellipsis),
                     if (depTime != null) ...[
                       verticalSpacing(6),
-                      Text(_fmt(depTime),
+                      Text(formatHm(depTime),
                           style: AppTextStyles.font20Bold
                               .copyWith(color: AppColors.secondary200)),
                     ],
@@ -420,7 +422,7 @@ class _RouteHero extends StatelessWidget {
                         textAlign: TextAlign.end),
                     if (arrTime != null) ...[
                       verticalSpacing(6),
-                      Text(_fmt(arrTime),
+                      Text(formatHm(arrTime),
                           style: AppTextStyles.font20Bold
                               .copyWith(color: AppColors.white)),
                     ],
@@ -468,8 +470,6 @@ class _RouteHero extends StatelessWidget {
     );
   }
 
-  String _fmt(DateTime dt) =>
-      '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
 }
 
 class _DashedLine extends StatelessWidget {
@@ -553,7 +553,7 @@ class _StatusCard extends StatelessWidget {
               color: color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: Icon(_statusIcon(status), color: color, size: rw(22)),
+            child: Icon(flightStatusIcon(status), color: color, size: rw(22)),
           ),
           horizontalSpacing(14),
           Expanded(
@@ -605,26 +605,6 @@ class _StatusCard extends StatelessWidget {
     }
   }
 
-  static IconData _statusIcon(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':
-        return Icons.check_circle_outline_rounded;
-      case 'SCHEDULED':
-        return Icons.schedule_rounded;
-      case 'DELAYED':
-        return Icons.schedule_rounded;
-      case 'CANCELLED':
-        return Icons.cancel_outlined;
-      case 'BOARDING':
-        return Icons.door_back_door_outlined;
-      case 'DEPARTED':
-        return Icons.flight_takeoff_rounded;
-      case 'LANDED':
-        return Icons.flight_land_rounded;
-      default:
-        return Icons.info_outline_rounded;
-    }
-  }
 }
 
 // ─── Schedule Row ─────────────────────────────────────────────────────────────
@@ -691,14 +671,14 @@ class _ScheduleCard extends StatelessWidget {
           verticalSpacing(10),
           _TimeEntry(
             label: 'tracked_flight.scheduled'.tr(),
-            value: _fmtTime(schedule.scheduledTime),
+            value: formatHmOrDash(schedule.scheduledTime),
             highlight: false,
           ),
           if (schedule.estimatedTime != null) ...[
             verticalSpacing(6),
             _TimeEntry(
               label: 'tracked_flight.estimated'.tr(),
-              value: _fmtTime(schedule.estimatedTime),
+              value: formatHmOrDash(schedule.estimatedTime),
               highlight: true,
             ),
           ],
@@ -706,7 +686,7 @@ class _ScheduleCard extends StatelessWidget {
             verticalSpacing(6),
             _TimeEntry(
               label: 'tracked_flight.actual'.tr(),
-              value: _fmtTime(schedule.actualTime),
+              value: formatHmOrDash(schedule.actualTime),
               highlight: false,
             ),
           ],
@@ -732,10 +712,6 @@ class _ScheduleCard extends StatelessWidget {
     );
   }
 
-  String _fmtTime(DateTime? dt) {
-    if (dt == null) return '—';
-    return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-  }
 }
 
 class _TimeEntry extends StatelessWidget {
@@ -803,16 +779,16 @@ class _DepartureCard extends StatelessWidget {
       children: [
         _DetailRow(
             label: 'tracked_flight.scheduled'.tr(),
-            value: _fmtFull(dep.scheduledTime)),
+            value: formatHmDate(dep.scheduledTime)),
         if (dep.estimatedTime != null)
           _DetailRow(
               label: 'tracked_flight.estimated'.tr(),
-              value: _fmtFull(dep.estimatedTime),
+              value: formatHmDate(dep.estimatedTime),
               highlight: true),
         if (dep.actualTime != null)
           _DetailRow(
               label: 'tracked_flight.actual'.tr(),
-              value: _fmtFull(dep.actualTime)),
+              value: formatHmDate(dep.actualTime)),
         if (dep.gate != null)
           _DetailRow(
               label: 'tracked_flight.gate'.tr(),
@@ -826,10 +802,6 @@ class _DepartureCard extends StatelessWidget {
     );
   }
 
-  String _fmtFull(DateTime? dt) {
-    if (dt == null) return '—';
-    return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')} · ${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}';
-  }
 }
 
 // ─── Arrival Card ─────────────────────────────────────────────────────────────
@@ -847,16 +819,16 @@ class _ArrivalCard extends StatelessWidget {
       children: [
         _DetailRow(
             label: 'tracked_flight.scheduled'.tr(),
-            value: _fmtFull(arr.scheduledTime)),
+            value: formatHmDate(arr.scheduledTime)),
         if (arr.estimatedTime != null)
           _DetailRow(
               label: 'tracked_flight.estimated'.tr(),
-              value: _fmtFull(arr.estimatedTime),
+              value: formatHmDate(arr.estimatedTime),
               highlight: true),
         if (arr.actualTime != null)
           _DetailRow(
               label: 'tracked_flight.actual'.tr(),
-              value: _fmtFull(arr.actualTime)),
+              value: formatHmDate(arr.actualTime)),
         if (arr.gate != null)
           _DetailRow(
               label: 'tracked_flight.gate'.tr(),
@@ -870,10 +842,6 @@ class _ArrivalCard extends StatelessWidget {
     );
   }
 
-  String _fmtFull(DateTime? dt) {
-    if (dt == null) return '—';
-    return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')} · ${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}';
-  }
 }
 
 // ─── Updates Card ─────────────────────────────────────────────────────────────

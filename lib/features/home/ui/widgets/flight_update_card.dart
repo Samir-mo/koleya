@@ -4,6 +4,8 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
+import 'package:gate_buddy/core/widgets/flight_status_badge.dart';
 import 'package:gate_buddy/features/home/data/models/home_model.dart';
 
 class FlightUpdateCard extends StatelessWidget {
@@ -13,7 +15,7 @@ class FlightUpdateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.customColors;
-    final statusColor = _statusColor(flight.status);
+    final statusColor = flightStatusColor(flight.status);
     final updatedInfo = _updatedInfo(flight);
 
     return Container(
@@ -126,31 +128,7 @@ class FlightUpdateCard extends StatelessWidget {
                   horizontalSpacing(12),
 
                   // ── Status badge ─────────────────────────────────────────
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: rw(10), vertical: rh(5)),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(rr(20)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: rw(6),
-                          height: rw(6),
-                          decoration: BoxDecoration(
-                              color: statusColor, shape: BoxShape.circle),
-                        ),
-                        horizontalSpacing(5),
-                        Text(
-                          _statusLabel(flight.status),
-                          style: AppTextStyles.font12Medium
-                              .copyWith(color: statusColor),
-                        ),
-                      ],
-                    ),
-                  ),
+                  FlightStatusBadge(status: flight.status, showBorder: false),
                 ],
               ),
             ),
@@ -169,56 +147,14 @@ class FlightUpdateCard extends StatelessWidget {
         break;
       case 'DELAYED':
         if (f.scheduledTime != null) {
-          return '${'home.updated_time'.tr()}: ${_fmt(f.scheduledTime)}';
+          return '${'home.updated_time'.tr()}: ${formatHmFromIso(f.scheduledTime)}';
         }
         break;
       default:
         if (f.gate != null) return '${'home.gate'.tr()}: ${f.gate}';
-        if (f.scheduledTime != null) return _fmt(f.scheduledTime);
+        if (f.scheduledTime != null) return formatHmFromIso(f.scheduledTime);
     }
     return null;
   }
 
-  Color _statusColor(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':
-      case 'BOARDING':
-        return AppColors.green200;
-      case 'DELAYED':
-        return AppColors.amber200;
-      case 'CANCELLED':
-        return AppColors.red200;
-      case 'GATE_CHANGED':
-        return AppColors.blue200;
-      default:
-        return AppColors.grey400;
-    }
-  }
-
-  String _statusLabel(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':
-        return 'home.status_on_time'.tr();
-      case 'BOARDING':
-        return 'home.status_boarding'.tr();
-      case 'DELAYED':
-        return 'home.status_delayed'.tr();
-      case 'CANCELLED':
-        return 'home.status_cancelled'.tr();
-      case 'GATE_CHANGED':
-        return 'home.status_gate_changed'.tr();
-      default:
-        return s;
-    }
-  }
-
-  String _fmt(String? iso) {
-    if (iso == null) return '';
-    try {
-      final dt = DateTime.parse(iso).toLocal();
-      return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-    } catch (_) {
-      return '';
-    }
-  }
 }

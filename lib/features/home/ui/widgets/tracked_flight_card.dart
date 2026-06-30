@@ -4,8 +4,11 @@ import 'package:gate_buddy/core/router/routes.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/widgets/custom_text_button.dart';
+import 'package:gate_buddy/core/widgets/flight_info_chip.dart';
+import 'package:gate_buddy/core/widgets/flight_status_badge.dart';
 import 'package:gate_buddy/features/home/data/models/home_model.dart';
 
 class TrackedFlightCard extends StatelessWidget {
@@ -17,7 +20,7 @@ class TrackedFlightCard extends StatelessWidget {
     final colors = context.customColors;
     final flight = track.flight;
     final dep = flight.departure;
-    final depTime = _fmt(dep.scheduledTime ?? dep.estimatedTime);
+    final depTime = formatHmFromIso(dep.scheduledTime ?? dep.estimatedTime);
 
     return Container(
       decoration: BoxDecoration(
@@ -81,7 +84,7 @@ class TrackedFlightCard extends StatelessWidget {
                   ),
                   horizontalSpacing(10),
                 ],
-                _StatusPill(status: flight.status),
+                FlightStatusBadge(status: flight.status),
               ],
             ),
           ),
@@ -126,25 +129,25 @@ class TrackedFlightCard extends StatelessWidget {
                 runSpacing: rh(8),
                 children: [
                   if (dep.gate != null)
-                    _Chip(
+                    FlightInfoChip(
                       icon: Icons.door_sliding_outlined,
                       label: 'home.gate'.tr(),
                       value: dep.gate!,
                     ),
                   if (dep.terminal != null)
-                    _Chip(
+                    FlightInfoChip(
                       icon: Icons.business_outlined,
                       label: 'home.terminal'.tr(),
                       value: dep.terminal!,
                     ),
                   if (dep.boardingTime != null)
-                    _Chip(
+                    FlightInfoChip(
                       icon: Icons.access_time_rounded,
                       label: 'home.boards_at'.tr(),
-                      value: _fmt(dep.boardingTime),
+                      value: formatHmFromIso(dep.boardingTime),
                     ),
                   if (dep.checkInCounter != null)
-                    _Chip(
+                    FlightInfoChip(
                       icon: Icons.luggage_outlined,
                       label: 'home.check_in'.tr(),
                       value: dep.checkInCounter!,
@@ -199,15 +202,6 @@ class TrackedFlightCard extends StatelessWidget {
       dep.boardingTime != null ||
       dep.checkInCounter != null;
 
-  String _fmt(String? iso) {
-    if (iso == null) return '';
-    try {
-      final dt = DateTime.parse(iso).toLocal();
-      return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-    } catch (_) {
-      return '—';
-    }
-  }
 }
 
 // ── Airline logo avatar ───────────────────────────────────────────────────────
@@ -277,110 +271,4 @@ class _AirportInfo extends StatelessWidget {
   }
 }
 
-// ── Detail chip ───────────────────────────────────────────────────────────────
 
-class _Chip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  const _Chip({required this.icon, required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.customColors;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(7)),
-      decoration: BoxDecoration(
-        color: AppColors.primary200.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(rr(10)),
-        border: Border.all(color: colors.border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: rw(13), color: AppColors.primary200),
-          horizontalSpacing(5),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label,
-                  style: AppTextStyles.font12Regular
-                      .copyWith(color: colors.textHint)),
-              Text(value,
-                  style: AppTextStyles.font12Medium
-                      .copyWith(color: colors.textPrimary)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Status pill ───────────────────────────────────────────────────────────────
-
-class _StatusPill extends StatelessWidget {
-  final String status;
-  const _StatusPill({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = _color(status);
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(5)),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(rr(20)),
-        border: Border.all(color: color.withValues(alpha: 0.4)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: rw(6),
-            height: rw(6),
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          horizontalSpacing(5),
-          Text(
-            _label(status),
-            style: AppTextStyles.font12Medium.copyWith(color: color),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _color(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':
-      case 'BOARDING':
-        return AppColors.green200;
-      case 'DELAYED':
-        return AppColors.amber200;
-      case 'CANCELLED':
-        return AppColors.red200;
-      case 'GATE_CHANGED':
-        return AppColors.blue200;
-      default:
-        return AppColors.grey400;
-    }
-  }
-
-  String _label(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':
-        return 'home.status_on_time'.tr();
-      case 'BOARDING':
-        return 'home.status_boarding'.tr();
-      case 'DELAYED':
-        return 'home.status_delayed'.tr();
-      case 'CANCELLED':
-        return 'home.status_cancelled'.tr();
-      case 'GATE_CHANGED':
-        return 'home.status_gate_changed'.tr();
-      default:
-        return s;
-    }
-  }
-}

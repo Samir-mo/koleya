@@ -7,21 +7,20 @@ import 'package:gate_buddy/features/auth/ui/get_code_screen.dart';
 import 'package:gate_buddy/features/auth/ui/login_screen.dart';
 import 'package:gate_buddy/features/auth/ui/reset_password_screen.dart';
 import 'package:gate_buddy/features/auth/ui/signup_screen.dart';
+import 'package:gate_buddy/features/boarding_pass_scan/logic/cubit/boarding_pass_scan_cubit.dart';
+import 'package:gate_buddy/features/boarding_pass_scan/ui/boarding_pass_scanner_screen.dart';
 import 'package:gate_buddy/features/explore_places/ui/place_details_screens.dart';
+import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 import 'package:gate_buddy/features/indoor_map/ui/indoor_map_screen.dart';
 import 'package:gate_buddy/features/main_navigation/ui/main_scaffold.dart';
 import 'package:gate_buddy/features/notifications/ui/notifications_screen.dart';
 import 'package:gate_buddy/features/on_boarding/ui/onboarding_screen.dart';
 import 'package:gate_buddy/features/profile/ui/profile_screen.dart';
-import 'package:gate_buddy/features/profile/ui/settings_screen.dart';
 import 'package:gate_buddy/features/search/ui/search_screen.dart';
-import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
-import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
-import 'package:gate_buddy/features/tracked_flight/ui/tracked_flights_list_screen.dart';
 import 'package:gate_buddy/features/services_category/logic/cubit/services_category_cubit.dart';
 import 'package:gate_buddy/features/services_category/ui/services_category_screen.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/logic/cubit/boarding_pass_scan_cubit.dart';
-import 'package:gate_buddy/features/boarding_pass_scan/ui/boarding_pass_scanner_screen.dart';
+import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
+import 'package:gate_buddy/features/tracked_flight/ui/tracked_flights_list_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -55,13 +54,13 @@ class AppRouter {
         );
 
       case Routes.mainScaffold:
-        return _buildRoute(MainScaffold(key: MainScaffold.scaffoldKey), settings);
+        return _buildRoute(
+          MainScaffold(key: MainScaffold.scaffoldKey),
+          settings,
+        );
 
       case Routes.profile:
         return _buildRoute(const ProfileScreen(), settings);
-
-      case Routes.settings:
-        return _buildRoute(const SettingsScreen(), settings);
 
       case Routes.notifications:
         return _buildRoute(const NotificationsScreen(), settings);
@@ -88,8 +87,7 @@ class AppRouter {
         final category = args?['category'] as String? ?? 'RESTAURANTS';
         return _buildRoute(
           BlocProvider(
-            create: (_) =>
-                getIt<ServicesCategoryCubit>()..load(category),
+            create: (_) => getIt<ServicesCategoryCubit>()..load(category),
             child: ServicesCategoryScreen(category: category),
           ),
           settings,

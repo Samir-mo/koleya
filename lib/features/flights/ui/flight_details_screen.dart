@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_status_helpers.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/widgets/custom_text_button.dart';
 import 'package:gate_buddy/features/tracked_flight/ui/tracked_flight_screen.dart';
@@ -262,7 +264,7 @@ class _StatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = _statusColor(flight.status);
+    final color = flightStatusColor(flight.status);
     final label = flight.status.replaceAll('_', ' ');
 
     return Container(
@@ -282,7 +284,7 @@ class _StatusCard extends StatelessWidget {
               color: color.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: Icon(_statusIcon(flight.status), color: color, size: rw(22)),
+            child: Icon(flightStatusIcon(flight.status), color: color, size: rw(22)),
           ),
           horizontalSpacing(14),
           Column(
@@ -321,29 +323,6 @@ class _StatusCard extends StatelessWidget {
     );
   }
 
-  static Color _statusColor(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':    return AppColors.green200;
-      case 'DELAYED':    return AppColors.amber200;
-      case 'CANCELLED':  return AppColors.red200;
-      case 'BOARDING':   return AppColors.blue200;
-      case 'DEPARTED':   return AppColors.grey400;
-      case 'LANDED':     return AppColors.success;
-      default:           return AppColors.grey300;
-    }
-  }
-
-  static IconData _statusIcon(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':    return Icons.check_circle_outline_rounded;
-      case 'DELAYED':    return Icons.schedule_rounded;
-      case 'CANCELLED':  return Icons.cancel_outlined;
-      case 'BOARDING':   return Icons.door_back_door_outlined;
-      case 'DEPARTED':   return Icons.flight_takeoff_rounded;
-      case 'LANDED':     return Icons.flight_land_rounded;
-      default:           return Icons.info_outline_rounded;
-    }
-  }
 }
 
 // ── Route Card ────────────────────────────────────────────────────────────────
@@ -379,7 +358,7 @@ class _RouteCard extends StatelessWidget {
             children: [
               _AirportBlock(
                 code: flight.route.fromCode,
-                time: _fmt(dep.estimatedTime ?? dep.scheduledTime),
+                time: formatHmOrDash(dep.estimatedTime ?? dep.scheduledTime),
                 label: dep.terminal != null
                     ? '${'flights.terminal'.tr()} ${dep.terminal}'
                     : '',
@@ -427,7 +406,7 @@ class _RouteCard extends StatelessWidget {
               ),
               _AirportBlock(
                 code: flight.route.toCode,
-                time: _fmt(arr.estimatedTime ?? arr.scheduledTime),
+                time: formatHmOrDash(arr.estimatedTime ?? arr.scheduledTime),
                 label: arr.terminal != null
                     ? '${'flights.terminal'.tr()} ${arr.terminal}'
                     : '',
@@ -471,12 +450,6 @@ class _RouteCard extends StatelessWidget {
     );
   }
 
-  String _fmt(DateTime? dt) {
-    if (dt == null) return '—';
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    return '$h:$m';
-  }
 }
 
 class _AirportBlock extends StatelessWidget {
@@ -682,7 +655,7 @@ class _TimeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatted = _fmtFull(time);
+    final formatted = formatHmDate(time);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -700,14 +673,6 @@ class _TimeRow extends StatelessWidget {
     );
   }
 
-  String _fmtFull(DateTime? dt) {
-    if (dt == null) return '—';
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    final day = dt.day.toString().padLeft(2, '0');
-    final month = dt.month.toString().padLeft(2, '0');
-    return '$h:$m · $day/$month';
-  }
 }
 
 class _InfoTag extends StatelessWidget {

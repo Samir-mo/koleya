@@ -6,6 +6,8 @@ import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
+import 'package:gate_buddy/core/widgets/flight_status_badge.dart';
 import '../../data/models/flight_model.dart';
 import '../../logic/cubit/flights_cubit.dart';
 
@@ -44,7 +46,7 @@ class FlightCard extends StatelessWidget {
             Container(
               height: rh(5),
               decoration: BoxDecoration(
-                color: _statusColor(flight.status),
+                color: flightStatusColor(flight.status),
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(rr(14)),
                 ),
@@ -81,7 +83,7 @@ class FlightCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      _StatusBadge(status: flight.status),
+                      FlightStatusBadge(status: flight.status, showBorder: false),
                       SizedBox(width: rw(8)),
                       _TrackButton(
                         flight: flight,
@@ -148,24 +150,6 @@ class FlightCard extends StatelessWidget {
     );
   }
 
-  static Color _statusColor(String status) {
-    switch (status.toUpperCase()) {
-      case 'ON_TIME':
-        return AppColors.green200;
-      case 'DELAYED':
-        return AppColors.amber200;
-      case 'CANCELLED':
-        return AppColors.red200;
-      case 'BOARDING':
-        return AppColors.blue200;
-      case 'DEPARTED':
-        return AppColors.grey400;
-      case 'LANDED':
-        return AppColors.success;
-      default:
-        return AppColors.grey300;
-    }
-  }
 }
 
 // ── Airline Logo ─────────────────────────────────────────────────────────────
@@ -200,42 +184,6 @@ class _AirlineLogo extends StatelessWidget {
       ),
     );
   }
-}
-
-// ── Status Badge ─────────────────────────────────────────────────────────────
-
-class _StatusBadge extends StatelessWidget {
-  final String status;
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = FlightCard._statusColor(status);
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(rr(8)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: rw(6),
-            height: rw(6),
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          horizontalSpacing(4),
-          Text(
-            _label(status),
-            style: AppTextStyles.font12Bold.copyWith(color: color),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _label(String s) => s.replaceAll('_', ' ');
 }
 
 // ── Track Button ─────────────────────────────────────────────────────────────
@@ -285,12 +233,6 @@ class _TrackButton extends StatelessWidget {
 
 // ── Route Row ────────────────────────────────────────────────────────────────
 
-String _formatTime(DateTime dt) {
-  final h = dt.hour.toString().padLeft(2, '0');
-  final m = dt.minute.toString().padLeft(2, '0');
-  return '$h:$m';
-}
-
 class _RouteRow extends StatelessWidget {
   final FlightModel flight;
   final dynamic colors;
@@ -308,7 +250,7 @@ class _RouteRow extends StatelessWidget {
         // From
         _TimeBlock(
           code: flight.route.fromCode,
-          time: depTime != null ? _formatTime(depTime) : '—',
+          time: depTime != null ? formatHm(depTime) : '—',
           label: 'Departure',
           colors: colors,
           align: CrossAxisAlignment.start,
@@ -358,7 +300,7 @@ class _RouteRow extends StatelessWidget {
         // To
         _TimeBlock(
           code: flight.route.toCode,
-          time: arrTime != null ? _formatTime(arrTime) : '—',
+          time: arrTime != null ? formatHm(arrTime) : '—',
           label: 'Arrival',
           colors: colors,
           align: CrossAxisAlignment.end,

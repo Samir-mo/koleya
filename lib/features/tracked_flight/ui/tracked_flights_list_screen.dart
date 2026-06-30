@@ -4,8 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gate_buddy/core/themes/app_colors.dart';
 import 'package:gate_buddy/core/themes/app_text_styles.dart';
 import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import 'package:gate_buddy/core/utils/helpers/flight_time_helpers.dart';
 import 'package:gate_buddy/core/utils/spacing.dart';
 import 'package:gate_buddy/core/widgets/custom_text_button.dart';
+import 'package:gate_buddy/core/widgets/flight_info_chip.dart';
+import 'package:gate_buddy/core/widgets/flight_status_badge.dart';
 import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
 import 'package:gate_buddy/features/tracked_flight/logic/cubit/tracked_flight_state.dart';
@@ -93,7 +96,6 @@ class _TrackedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.customColors;
-    final statusColor = _statusColor(flight.status);
     final dep = flight.departure;
     final depTime = dep.estimatedTime ?? dep.scheduledTime;
 
@@ -171,7 +173,7 @@ class _TrackedCard extends StatelessWidget {
                             size: rw(13),
                             color: AppColors.secondary200),
                         Text(
-                          _fmt(depTime),
+                          formatHm(depTime),
                           style: AppTextStyles.font16Bold
                               .copyWith(color: AppColors.white),
                         ),
@@ -179,8 +181,7 @@ class _TrackedCard extends StatelessWidget {
                     ),
                     horizontalSpacing(10),
                   ],
-                  _StatusBadge(
-                      status: flight.status, color: statusColor),
+                  FlightStatusBadge(status: flight.status),
                 ],
               ),
             ),
@@ -223,14 +224,14 @@ class _TrackedCard extends StatelessWidget {
                 child: Row(
                   children: [
                     if (dep.gate != null)
-                      _InfoChip(
+                      FlightInfoChip(
                           icon: Icons.door_sliding_outlined,
                           label:
                               '${'tracked_flight.gate'.tr()} ${dep.gate}'),
                     if (dep.gate != null && dep.terminal != null)
                       horizontalSpacing(8),
                     if (dep.terminal != null)
-                      _InfoChip(
+                      FlightInfoChip(
                           icon: Icons.business_outlined,
                           label:
                               '${'tracked_flight.terminal'.tr()} ${dep.terminal}'),
@@ -258,24 +259,6 @@ class _TrackedCard extends StatelessWidget {
     );
   }
 
-  String _fmt(DateTime dt) {
-    return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-  }
-
-  Color _statusColor(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME':
-        return AppColors.green200;
-      case 'BOARDING':
-        return AppColors.blue200;
-      case 'DELAYED':
-        return AppColors.amber200;
-      case 'CANCELLED':
-        return AppColors.red200;
-      default:
-        return AppColors.grey400;
-    }
-  }
 }
 
 // ── Sub-widgets ───────────────────────────────────────────────────────────────
@@ -314,41 +297,6 @@ class _AirlineLogo extends StatelessWidget {
       );
 }
 
-class _StatusBadge extends StatelessWidget {
-  final String status;
-  final Color color;
-  const _StatusBadge({required this.status, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding:
-          EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(rr(20)),
-        border: Border.all(color: color.withValues(alpha: 0.4)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: rw(5),
-            height: rw(5),
-            decoration:
-                BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          horizontalSpacing(4),
-          Text(
-            status.replaceAll('_', ' '),
-            style: AppTextStyles.font12Medium.copyWith(color: color),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _AirportCode extends StatelessWidget {
   final String code;
   final String city;
@@ -375,35 +323,6 @@ class _AirportCode extends StatelessWidget {
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  const _InfoChip({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.customColors;
-    return Container(
-      padding:
-          EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(5)),
-      decoration: BoxDecoration(
-        color: AppColors.primary200.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(rr(8)),
-        border: Border.all(color: colors.border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: rw(12), color: AppColors.primary200),
-          horizontalSpacing(5),
-          Text(label,
-              style: AppTextStyles.font12Medium
-                  .copyWith(color: context.customColors.textPrimary)),
-        ],
-      ),
-    );
-  }
-}
 
 class _ErrorView extends StatelessWidget {
   final String error;

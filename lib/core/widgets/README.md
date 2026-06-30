@@ -124,6 +124,21 @@ LoadingShimmer.circular(size: 48.w)
 LoadingShimmer.line(width: double.infinity, height: 12.h)
 ```
 
+## Flight UI
+
+### FlightStatusBadge
+Colored pill showing a flight status with a leading dot indicator.
+Also exports `flightStatusColor(String)` and `flightStatusLabel(String)` helpers
+for use in custom status accent bars / icons.
+```dart
+FlightStatusBadge(status: flight.status)
+FlightStatusBadge(status: flight.status, showBorder: false)
+
+// Use helpers directly:
+color: flightStatusColor(flight.status)
+label: flightStatusLabel(flight.status)
+```
+
 ## State & Messages
 
 ### EmptyState
