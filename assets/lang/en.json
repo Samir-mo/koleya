@@ -308,6 +308,9 @@
         "service_restaurants": "Restaurants",
         "updated_gate": "New Gate",
         "updated_time": "New Time",
+        "field_updated": "{} updated",
+        "no_updates": "No recent updates",
+        "no_updates_hint": "You're all caught up — check back later",
         "view_details": "View Details",
         "scan_boarding_pass_title": "Scan Boarding Pass",
         "scan_boarding_pass_subtitle": "Point your camera at your boarding pass to track your flight instantly"

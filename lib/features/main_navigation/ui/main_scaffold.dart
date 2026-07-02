@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+
 import '../../../core/di/dependency_injection.dart';
 import '../../../core/utils/extensions/context_ext.dart';
 import '../../../core/utils/spacing.dart';
@@ -12,7 +14,6 @@ import '../../home/logic/cubit/home_cubit.dart';
 import '../../home/ui/home_screen.dart';
 import '../../indoor_map/logic/cubit/indoor_map_cubit.dart';
 import '../../indoor_map/ui/indoor_map_screen.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});

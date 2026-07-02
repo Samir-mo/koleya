@@ -308,6 +308,9 @@
         "service_restaurants": "المطاعم",
         "updated_gate": "البوابة الجديدة",
         "updated_time": "الوقت الجديد",
+        "field_updated": "تم تحديث {}",
+        "no_updates": "لا توجد تحديثات حديثة",
+        "no_updates_hint": "أنت على اطلاع بكل شيء — تحقق لاحقاً",
         "view_details": "عرض التفاصيل",
         "scan_boarding_pass_title": "مسح بطاقة الصعود",
         "scan_boarding_pass_subtitle": "وجّه الكاميرا نحو بطاقة صعودك لتتبع رحلتك فوراً"

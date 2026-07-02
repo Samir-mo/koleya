@@ -11,4 +11,10 @@ class HomeRemoteDs with BaseRemoteDs {
     final response = await api.get(ApiEndpoints.home);
     return HomeModel.fromJson(response as Map<String, dynamic>);
   });
+  // Returns the raw response — the endpoint's envelope shape (`data` as a
+  // bare list vs. `data.updates`) is normalized in HomeRepoImpl, matching
+  // TrackedFlightRepoImpl's handling of the same endpoint.
+  Future<dynamic> getFlightUpdates(String flightId) => execute(
+    () => api.get(ApiEndpoints.flightUpdates.replaceFirst(':id', flightId)),
+  );
 }

@@ -2,12 +2,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
 import '../../../../core/utils/spacing.dart';
 import '../../data/models/home_model.dart';
 import '../../logic/cubit/home_cubit.dart';
+import '../../logic/cubit/home_state.dart';
 import 'airport_services_grid.dart';
 import 'featured_services_section.dart';
-import 'flight_update_card.dart';
+import 'flight_update_entry_card.dart';
 import 'home_section.dart';
 import 'scan_boarding_pass_card.dart';
 import 'tracked_flight_card.dart';
@@ -34,28 +37,39 @@ class HomeLoadedView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (data.updatedFlights.isNotEmpty) ...[
-              verticalSpacing(24),
-              HomeSection(
-                header: HomeSectionHeader(
-                  title: 'home.flight_updates'.tr(),
-                  actionLabel: 'home.view_all'.tr(),
-                  onAction: () =>
-                      MainScaffold.jumpToTab(MainScaffold.tabFlights),
-                ),
-                child: Column(
-                  children: data.updatedFlights
-                      .take(2)
-                      .map(
-                        (f) => Padding(
-                          padding: EdgeInsets.only(bottom: rh(10)),
-                          child: FlightUpdateCard(flight: f),
+            // ── Flight updates (always shown, first section) ────────────────
+            verticalSpacing(16),
+            BlocBuilder<HomeCubit, HomeState>(
+              buildWhen: (prev, curr) =>
+                  prev.flightUpdates != curr.flightUpdates,
+              builder: (context, state) {
+                final updates = state.flightUpdates;
+                return HomeSection(
+                  header: HomeSectionHeader(
+                    title: 'home.flight_updates'.tr(),
+                    actionLabel: updates.isNotEmpty
+                        ? 'home.view_all'.tr()
+                        : null,
+                    onAction: updates.isNotEmpty
+                        ? () => MainScaffold.jumpToTab(MainScaffold.tabFlights)
+                        : null,
+                  ),
+                  child: updates.isEmpty
+                      ? const _EmptyFlightUpdates()
+                      : Column(
+                          children: updates
+                              .take(3)
+                              .map(
+                                (u) => Padding(
+                                  padding: EdgeInsets.only(bottom: rh(10)),
+                                  child: FlightUpdateEntryCard(update: u),
+                                ),
+                              )
+                              .toList(),
                         ),
-                      )
-                      .toList(),
-                ),
-              ),
-            ],
+                );
+              },
+            ),
 
             // ── Tracked flight ────────────────────────────────────────────
             if (data.userTrack != null &&
@@ -89,6 +103,57 @@ class HomeLoadedView extends StatelessWidget {
             verticalSpacing(40),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _EmptyFlightUpdates extends StatelessWidget {
+  const _EmptyFlightUpdates();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.customColors;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(20)),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(14)),
+        border: Border.all(color: colors.border),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: rw(44),
+            height: rw(44),
+            decoration: BoxDecoration(
+              color: AppColors.primary200.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.notifications_none_rounded,
+              size: rw(22),
+              color: AppColors.primary200,
+            ),
+          ),
+          verticalSpacing(10),
+          Text(
+            'home.no_updates'.tr(),
+            style: AppTextStyles.font14SemiBold.copyWith(
+              color: colors.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          verticalSpacing(4),
+          Text(
+            'home.no_updates_hint'.tr(),
+            style: AppTextStyles.font12Regular.copyWith(
+              color: colors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
