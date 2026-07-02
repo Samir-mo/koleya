@@ -1,7 +1,6 @@
 import '../../../../core/api/api_consumer.dart';
 import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/data/base_remote_ds.dart';
-
 import '../models/ai_chat_reply_model.dart';
 
 class AssistantRemoteDs with BaseRemoteDs {

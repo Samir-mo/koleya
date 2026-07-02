@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../themes/app_colors.dart';
 import '../themes/app_text_styles.dart';
 import '../utils/spacing.dart';
@@ -20,7 +21,10 @@ class SplashView extends StatelessWidget {
               size: 64,
             ),
             verticalSpacing(16),
-            Text('GateBuddy', style: AppTextStyles.font20Bold),
+            Text(
+              'GateBuddy',
+              style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
+            ),
             verticalSpacing(16),
             const CircularProgressIndicator(
               color: AppColors.secondary200,
