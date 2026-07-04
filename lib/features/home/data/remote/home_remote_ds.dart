@@ -19,4 +19,8 @@ class HomeRemoteDs with BaseRemoteDs {
       'sort': '-updatedAt',
     }),
   );
+
+  // Returns comprehensive flight data from `/flights/my-flight`
+  Future<dynamic> getMyFlight() =>
+      execute(() => api.get(ApiEndpoints.myFlight));
 }

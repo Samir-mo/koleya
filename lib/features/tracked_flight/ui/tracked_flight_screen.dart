@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+
 import '../../../core/themes/app_colors.dart';
 import '../../../core/themes/app_text_styles.dart';
 import '../../../core/utils/extensions/context_ext.dart';
@@ -13,7 +15,9 @@ import '../../flights/data/models/flight_model.dart';
 import '../../main_navigation/ui/main_scaffold.dart';
 import '../logic/cubit/tracked_flight_cubit.dart';
 import '../logic/cubit/tracked_flight_state.dart';
-import 'package:get_it/get_it.dart';
+import 'widgets/airport_info_widget.dart';
+import 'widgets/recommendation_card.dart';
+import 'widgets/weather_info_widget.dart';
 
 class TrackedFlightScreen extends StatelessWidget {
   final FlightModel? flight;
@@ -29,6 +33,8 @@ class TrackedFlightScreen extends StatelessWidget {
         } else {
           cubit.loadAll();
         }
+        // Load comprehensive flight data
+        cubit.loadMyFlight();
         return cubit;
       },
       child: const _View(),
@@ -84,6 +90,8 @@ class _DetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasComprehensiveData = state.myFlightResponse != null;
+
     return Scaffold(
       backgroundColor: AppColors.primary200,
       body: CustomScrollView(
@@ -103,10 +111,41 @@ class _DetailView extends StatelessWidget {
                   verticalSpacing(16),
                   _DepartureCard(flight: flight),
                   verticalSpacing(16),
-                  _ArrivalCard(flight: flight),
-                  if (state.updates.isNotEmpty) ...[
+                  // Departure Weather
+                  if (hasComprehensiveData) ...[
+                    WeatherInfoWidget(
+                      weather: state.myFlightResponse!.weather,
+                      label: 'tracked_flight.weather_departure',
+                    ),
                     verticalSpacing(16),
+                  ],
+                  _ArrivalCard(flight: flight),
+                  verticalSpacing(16),
+                  // Arrival Weather
+                  if (hasComprehensiveData) ...[
+                    WeatherInfoWidget(
+                      weather: state.myFlightResponse!.weatherAtArrival,
+                      label: 'tracked_flight.weather_arrival',
+                    ),
+                    verticalSpacing(16),
+                  ],
+                  // Airport Info
+                  if (hasComprehensiveData &&
+                      state.myFlightResponse!.airport.name.isNotEmpty) ...[
+                    AirportInfoWidget(airport: state.myFlightResponse!.airport),
+                    verticalSpacing(16),
+                  ],
+                  // Recommendations
+                  if (hasComprehensiveData &&
+                      state.myFlightResponse!.hasRecommendations) ...[
+                    _RecommendationsSection(
+                      recommendations: state.myFlightResponse!.recommendations,
+                    ),
+                    verticalSpacing(16),
+                  ],
+                  if (state.updates.isNotEmpty) ...[
                     _UpdatesCard(updates: state.updates),
+                    verticalSpacing(16),
                   ],
                 ],
               ),
@@ -1085,6 +1124,64 @@ class _DetailRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ─── Recommendations Section ──────────────────────────────────────────────────
+
+class _RecommendationsSection extends StatelessWidget {
+  final List<dynamic> recommendations;
+  const _RecommendationsSection({required this.recommendations});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: rw(32),
+              height: rw(32),
+              decoration: BoxDecoration(
+                color: AppColors.amber200.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.star_rounded,
+                size: rw(16),
+                color: AppColors.amber200,
+              ),
+            ),
+            horizontalSpacing(10),
+            Text(
+              'tracked_flight.things_to_do'.tr(),
+              style: AppTextStyles.font16SemiBold.copyWith(
+                color: AppColors.white,
+              ),
+            ),
+          ],
+        ),
+        verticalSpacing(14),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: recommendations
+                .map(
+                  (rec) => RecommendationCard(
+                    recommendation: rec,
+                    onViewMaps: () {
+                      if (rec.googleMapsLink.isNotEmpty) {
+                        // TODO: Open Google Maps link
+                      }
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      ],
     );
   }
 }

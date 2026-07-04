@@ -29,4 +29,8 @@ class TrackedFlightRemoteDs with BaseRemoteDs {
       queryParameters: {'limit': 20},
     ),
   );
+
+  Future<dynamic> getMyFlight() => execute(
+    () => api.get(ApiEndpoints.myFlight),
+  );
 }

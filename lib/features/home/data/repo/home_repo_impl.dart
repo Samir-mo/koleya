@@ -1,5 +1,6 @@
 import 'package:gate_buddy/features/flights/data/models/flight_model.dart';
 
+import '../../../tracked_flight/data/models/my_flight_response_model.dart';
 import '../models/home_model.dart';
 import '../remote/home_remote_ds.dart';
 import 'home_repo.dart';
@@ -21,5 +22,12 @@ class HomeRepoImpl implements HomeRepo {
     return list
         .map((e) => FlightModel.fromJson(e as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<MyFlightResponseModel> getMyFlight() async {
+    final raw = await remoteDs.getMyFlight();
+    final data = raw is Map ? (raw['data'] ?? raw) : raw;
+    return MyFlightResponseModel.fromJson(data as Map<String, dynamic>);
   }
 }

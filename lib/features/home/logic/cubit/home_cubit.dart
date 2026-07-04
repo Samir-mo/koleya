@@ -14,8 +14,9 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final data = await repo.getHomeData();
       emit(state.copyWith(status: HomeStatus.success, data: data));
-      // Load recently updated flights in parallel
+      // Load recently updated flights and my flight in parallel
       loadUpdatedFlights();
+      loadMyFlight();
     } on AppException catch (e) {
       emit(state.copyWith(status: HomeStatus.failure, error: e.message));
     } catch (e) {
@@ -31,6 +32,17 @@ class HomeCubit extends Cubit<HomeState> {
       if (!isClosed) emit(state.copyWith(updatedFlights: flights));
     } catch (_) {
       // Non-fatal — updated flights are supplemental
+    }
+  }
+
+  /// Loads comprehensive flight data from `/flights/my-flight` endpoint.
+  /// Non-fatal if it fails since it's supplemental to the dashboard.
+  Future<void> loadMyFlight() async {
+    try {
+      final flight = await repo.getMyFlight();
+      if (!isClosed) emit(state.copyWith(myFlightResponse: flight));
+    } catch (_) {
+      // Non-fatal — comprehensive flight data is supplemental
     }
   }
 

@@ -1,5 +1,6 @@
 import '../../../../core/errors/error_handler.dart';
 import '../../../flights/data/models/flight_model.dart';
+import '../models/my_flight_response_model.dart';
 import '../remote/tracked_flight_remote_ds.dart';
 import 'tracked_flight_repo.dart';
 
@@ -48,6 +49,17 @@ class TrackedFlightRepoImpl implements TrackedFlightRepo {
       return list
           .map((e) => FlightUpdateModel.fromJson(e as Map<String, dynamic>))
           .toList();
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
+
+  @override
+  Future<MyFlightResponseModel> getMyFlight() async {
+    try {
+      final raw = await remoteDs.getMyFlight();
+      final data = raw is Map ? (raw['data'] ?? raw) : raw;
+      return MyFlightResponseModel.fromJson(data as Map<String, dynamic>);
     } catch (e) {
       throw ErrorHandler.handleFailure(e);
     }

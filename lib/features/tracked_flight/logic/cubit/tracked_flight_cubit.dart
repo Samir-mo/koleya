@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/errors/failure.dart';
 import '../../../flights/data/models/flight_model.dart';
 import '../../data/repo/tracked_flight_repo.dart';
@@ -52,6 +53,24 @@ class TrackedFlightCubit extends Cubit<TrackedFlightState> {
       if (!isClosed) emit(state.copyWith(updates: updates));
     } catch (_) {
       // non-fatal — updates are supplemental
+    }
+  }
+
+  /// Loads comprehensive flight data from /flights/my-flight endpoint
+  /// Includes weather, recommendations, airport info, and arrival times
+  Future<void> loadMyFlight() async {
+    emit(state.copyWith(status: TrackedFlightStatus.loading, clearError: true));
+    try {
+      final response = await repo.getMyFlight();
+      emit(
+        state.copyWith(
+          status: TrackedFlightStatus.success,
+          myFlightResponse: response,
+          flight: response.flight,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(status: TrackedFlightStatus.failure, error: _msg(e)));
     }
   }
 

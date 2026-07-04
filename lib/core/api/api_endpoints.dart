@@ -26,6 +26,7 @@ class ApiEndpoints {
   static const String trackFlight = "/flights/:id/track";
   static const String untrackFlight = "/flights/:id/track"; // DELETE
   static const String scanBoardingPass = "/flights/scan";
+  static const String myFlight = "/flights/my-flight";
 
   // ======================= Services =======================
   static const String services = "/services";
