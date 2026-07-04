@@ -311,6 +311,16 @@ class _VerticalDivider extends StatelessWidget {
 }
 
 class _PreferencesSection extends StatelessWidget {
+  String _getLanguageName(String languageCode) {
+    return switch (languageCode) {
+      'en' => 'profile.language_english'.tr(),
+      'ar' => 'profile.language_arabic'.tr(),
+      'es' => 'Español',
+      'ru' => 'Русский',
+      _ => 'profile.language_english'.tr(),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsCubit, AppSettingsState>(
@@ -335,13 +345,12 @@ class _PreferencesSection extends StatelessWidget {
             ProfileTile(
               icon: Icons.language_rounded,
               label: 'profile.language'.tr(),
-              value: settings.isArabic
-                  ? 'profile.language_arabic'.tr()
-                  : 'profile.language_english'.tr(),
+              value: _getLanguageName(settings.locale.languageCode),
               iconColor: AppColors.blue200,
-              trailing: _LanguageToggle(
-                isArabic: settings.isArabic,
-                onToggle: () => cubit.toggleLocale(context),
+              trailing: _LanguageSelector(
+                currentLocale: settings.locale,
+                onLanguageSelected: (locale) =>
+                    cubit.updateLocale(context, locale),
               ),
             ),
           ],
@@ -351,16 +360,19 @@ class _PreferencesSection extends StatelessWidget {
   }
 }
 
-class _LanguageToggle extends StatelessWidget {
-  final bool isArabic;
-  final VoidCallback onToggle;
+class _LanguageSelector extends StatelessWidget {
+  final Locale currentLocale;
+  final Function(Locale) onLanguageSelected;
 
-  const _LanguageToggle({required this.isArabic, required this.onToggle});
+  const _LanguageSelector({
+    required this.currentLocale,
+    required this.onLanguageSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onToggle,
+      onTap: () => _showLanguageModal(context),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(5)),
         decoration: BoxDecoration(
@@ -368,12 +380,95 @@ class _LanguageToggle extends StatelessWidget {
           borderRadius: BorderRadius.circular(rr(8)),
         ),
         child: Text(
-          isArabic ? 'AR → EN' : 'EN → AR',
+          currentLocale.languageCode.toUpperCase(),
           style: AppTextStyles.font12Medium.copyWith(
             color: AppColors.primary200,
           ),
         ),
       ),
+    );
+  }
+
+  void _showLanguageModal(BuildContext context) {
+    final languages = [
+      {'code': 'en', 'name': 'English'},
+      {'code': 'ar', 'name': 'العربية'},
+      {'code': 'es', 'name': 'Español'},
+      {'code': 'ru', 'name': 'Русский'},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: context.customColors.surface,
+      builder: (context) {
+        final colors = context.customColors;
+        return Padding(
+          padding: EdgeInsets.all(rw(16)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'profile.language'.tr(),
+                style: AppTextStyles.font16Bold.copyWith(
+                  color: colors.textPrimary,
+                ),
+              ),
+              verticalSpacing(16),
+              ...languages.map((lang) {
+                final isSelected = currentLocale.languageCode == lang['code'];
+                return GestureDetector(
+                  onTap: () {
+                    onLanguageSelected(Locale(lang['code']!));
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: rw(16),
+                      vertical: rh(14),
+                    ),
+                    margin: EdgeInsets.only(bottom: rh(8)),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primary200.withValues(alpha: 0.1)
+                          : colors.surface,
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primary200
+                            : colors.border,
+                      ),
+                      borderRadius: BorderRadius.circular(rr(12)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          lang['name']!,
+                          style: AppTextStyles.font14SemiBold.copyWith(
+                            color: isSelected
+                                ? AppColors.primary200
+                                : colors.textPrimary,
+                          ),
+                        ),
+                        if (isSelected)
+                          Icon(
+                            Icons.check_rounded,
+                            color: AppColors.primary200,
+                            size: rw(20),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              verticalSpacing(8),
+            ],
+          ),
+        );
+      },
     );
   }
 }

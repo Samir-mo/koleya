@@ -1,16 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/router/routes.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../core/utils/extensions/context_ext.dart';
 import '../../../../core/utils/spacing.dart';
 import '../../../../core/widgets/flight_status_badge.dart';
+import '../../../flights/data/models/flight_model.dart';
 import '../../data/models/home_model.dart';
 import '../../logic/cubit/home_cubit.dart';
 import '../../logic/cubit/home_state.dart';
-import '../../../flights/data/models/flight_model.dart';
 import 'airport_services_grid.dart';
 import 'featured_services_section.dart';
 import 'flight_update_entry_card.dart';
@@ -53,8 +54,10 @@ class HomeLoadedView extends StatelessWidget {
                         ? 'home.view_all'.tr()
                         : null,
                     onAction: flights.isNotEmpty
-                        ? () => Navigator.of(context, rootNavigator: true)
-                            .pushNamed(Routes.flightUpdates)
+                        ? () => Navigator.of(
+                            context,
+                            rootNavigator: true,
+                          ).pushNamed(Routes.flightUpdates)
                         : null,
                   ),
                   child: flights.isEmpty
@@ -206,7 +209,9 @@ class _UpdatedFlightCard extends StatelessWidget {
                     // Top updates (max 2)
                     if (flight.updates.isNotEmpty) ...[
                       verticalSpacing(10),
-                      ...flight.updates.take(2).map(
+                      ...flight.updates
+                          .take(2)
+                          .map(
                             (u) => Padding(
                               padding: EdgeInsets.only(bottom: rh(6)),
                               child: FlightUpdateEntryCard(update: u),
