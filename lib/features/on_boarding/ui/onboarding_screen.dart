@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/on_boarding/data/models/onboarding_page_data.dart';
-import 'package:gate_buddy/features/on_boarding/logic/cubit/onboarding_cubit.dart';
-import 'package:gate_buddy/features/on_boarding/ui/widgets/onboarding_page.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/utils/app_assets.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../data/models/onboarding_page_data.dart';
+import '../logic/cubit/onboarding_cubit.dart';
+import 'widgets/onboarding_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -18,15 +19,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static const List<OnboardingPageData> _pages = [
     OnboardingPageData(
-      imagePath: 'assets/images/on_boarding_1.png',
+      imagePath: AppAssets.onboardingPage1,
       titleKey: 'onboarding.page1_title',
     ),
     OnboardingPageData(
-      imagePath: 'assets/images/on_boarding_2.png',
+      imagePath: AppAssets.onboardingPage2,
       titleKey: 'onboarding.page2_title',
     ),
     OnboardingPageData(
-      imagePath: 'assets/images/on_boarding_3.png',
+      imagePath: AppAssets.onboardingPage3,
       titleKey: 'onboarding.page3_title',
     ),
   ];

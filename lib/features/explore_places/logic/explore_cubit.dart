@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo.dart';
+import '../../../core/shared/models/service_model.dart';
+import '../data/repo/explore_places_repo.dart';
 
 import 'explore_state.dart';
 
@@ -13,17 +13,20 @@ class ExploreCubit extends Cubit<ExploreState> {
   ExploreCubit({required this.repo}) : super(const ExploreInitial());
 
   Future<void> loadPlaces({String? category}) async {
-    final currentLoaded =
-        state is ExploreLoaded ? state as ExploreLoaded : null;
+    final currentLoaded = state is ExploreLoaded
+        ? state as ExploreLoaded
+        : null;
 
     if (currentLoaded != null) {
-      emit(currentLoaded.copyWith(
-        isSearching: true,
-        selectedType: category,
-        clearType: category == null,
-        clearSubCategory: true,
-        searchQuery: '',
-      ));
+      emit(
+        currentLoaded.copyWith(
+          isSearching: true,
+          selectedType: category,
+          clearType: category == null,
+          clearSubCategory: true,
+          searchQuery: '',
+        ),
+      );
     } else {
       emit(const ExploreLoading());
     }
@@ -31,12 +34,14 @@ class ExploreCubit extends Cubit<ExploreState> {
     final result = await repo.getPlaces(category: category);
     result.fold(
       (failure) => emit(ExploreError(failure.message)),
-      (places) => emit(ExploreLoaded(
-        allPlaces: places,
-        displayedPlaces: places,
-        selectedType: category,
-        isSearching: false,
-      )),
+      (places) => emit(
+        ExploreLoaded(
+          allPlaces: places,
+          displayedPlaces: places,
+          selectedType: category,
+          isSearching: false,
+        ),
+      ),
     );
   }
 
@@ -51,15 +56,19 @@ class ExploreCubit extends Cubit<ExploreState> {
     final filtered = subCategory == null
         ? s.allPlaces
         : s.allPlaces
-            .where((p) =>
-                p.subCategory?.toLowerCase() == subCategory.toLowerCase())
-            .toList();
+              .where(
+                (p) =>
+                    p.subCategory?.toLowerCase() == subCategory.toLowerCase(),
+              )
+              .toList();
 
-    emit(s.copyWith(
-      displayedPlaces: filtered,
-      selectedSubCategory: subCategory,
-      clearSubCategory: subCategory == null,
-    ));
+    emit(
+      s.copyWith(
+        displayedPlaces: filtered,
+        selectedSubCategory: subCategory,
+        clearSubCategory: subCategory == null,
+      ),
+    );
   }
 
   void onSearchChanged(String query) {
@@ -83,14 +92,18 @@ class ExploreCubit extends Cubit<ExploreState> {
     final filtered = s.selectedType == null
         ? s.allPlaces
         : s.allPlaces
-            .where((p) =>
-                p.category.toLowerCase() == s.selectedType!.toLowerCase())
-            .toList();
-    emit(s.copyWith(
-      displayedPlaces: filtered,
-      searchQuery: '',
-      isSearching: false,
-    ));
+              .where(
+                (p) =>
+                    p.category.toLowerCase() == s.selectedType!.toLowerCase(),
+              )
+              .toList();
+    emit(
+      s.copyWith(
+        displayedPlaces: filtered,
+        searchQuery: '',
+        isSearching: false,
+      ),
+    );
   }
 
   Future<void> _performSearch(String query) async {
@@ -105,11 +118,13 @@ class ExploreCubit extends Cubit<ExploreState> {
           p.terminal.toLowerCase().contains(q);
     }).toList();
 
-    emit(s.copyWith(
-      displayedPlaces: filtered,
-      searchQuery: query,
-      isSearching: false,
-    ));
+    emit(
+      s.copyWith(
+        displayedPlaces: filtered,
+        searchQuery: query,
+        isSearching: false,
+      ),
+    );
   }
 
   Future<void> ratePlace({
@@ -120,8 +135,9 @@ class ExploreCubit extends Cubit<ExploreState> {
     final s = state;
     if (s is! ExploreLoaded) return;
 
-    emit(s.copyWith(
-        isRating: true, clearRatingError: true, ratingSuccess: false));
+    emit(
+      s.copyWith(isRating: true, clearRatingError: true, ratingSuccess: false),
+    );
 
     final result = await repo.ratePlace(
       id: place.id,

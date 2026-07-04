@@ -1,9 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/helpers/flight_status_helpers.dart';
+import '../../../core/utils/helpers/flight_time_helpers.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../../tracked_flight/ui/tracked_flight_screen.dart';
 
 import '../data/models/flight_model.dart';
 import '../logic/cubit/flights_cubit.dart';
@@ -18,7 +24,11 @@ class FlightDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocSelector<FlightsCubit, FlightsState, FlightModel>(
       selector: (state) {
-        final all = [...state.departures, ...state.arrivals, ...state.searchResults];
+        final all = [
+          ...state.departures,
+          ...state.arrivals,
+          ...state.searchResults,
+        ];
         return all.firstWhere((f) => f.id == flight.id, orElse: () => flight);
       },
       builder: (context, current) => _FlightDetailsView(flight: current),
@@ -44,32 +54,32 @@ class _FlightDetailsView extends StatelessWidget {
           _DetailAppBar(flight: flight, isTracking: isTracking),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(rw(16)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _StatusCard(flight: flight),
-                  const SizedBox(height: 16),
+                  verticalSpacing(16),
                   _RouteCard(flight: flight, colors: colors),
-                  const SizedBox(height: 16),
+                  verticalSpacing(16),
                   _ScheduleSection(
-                    title: 'Departure',
+                    title: 'flights.departure'.tr(),
                     icon: Icons.flight_takeoff_rounded,
                     schedule: flight.departure,
                     colors: colors,
                   ),
-                  const SizedBox(height: 12),
+                  verticalSpacing(12),
                   _ScheduleSection(
-                    title: 'Arrival',
+                    title: 'flights.arrival'.tr(),
                     icon: Icons.flight_land_rounded,
                     schedule: flight.arrival,
                     colors: colors,
                   ),
                   if (flight.updates.isNotEmpty) ...[
-                    const SizedBox(height: 16),
+                    verticalSpacing(16),
                     _UpdatesSection(updates: flight.updates, colors: colors),
                   ],
-                  const SizedBox(height: 100),
+                  verticalSpacing(100),
                 ],
               ),
             ),
@@ -97,19 +107,22 @@ class _DetailAppBar extends StatelessWidget {
       backgroundColor: AppColors.primary200,
       leading: GestureDetector(
         onTap: () => Navigator.pop(context),
-        child: const Padding(
-          padding: EdgeInsets.all(8),
+        child: Padding(
+          padding: EdgeInsets.all(rw(8)),
           child: CircleAvatar(
             backgroundColor: AppColors.primary300,
-            radius: 16,
-            child: Icon(Icons.arrow_back_ios_new_rounded,
-                color: AppColors.white, size: 14),
+            radius: rr(16),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.white,
+              size: rw(14),
+            ),
           ),
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: _AppBarBackground(flight: flight),
-        titlePadding: const EdgeInsets.fromLTRB(56, 0, 16, 14),
+        titlePadding: EdgeInsets.fromLTRB(rw(56), 0, rw(16), rh(14)),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,29 +160,26 @@ class _AppBarBackground extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Background pattern
           Positioned(
             right: -20,
             top: -20,
             child: Icon(
               Icons.flight_rounded,
-              size: 160,
+              size: rw(160),
               color: AppColors.primary300.withValues(alpha: 0.4),
             ),
           ),
-          // Content
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(rw(20)),
               child: Row(
                 children: [
-                  // Airline logo
                   Container(
-                    width: 64,
-                    height: 64,
+                    width: rw(64),
+                    height: rw(64),
                     decoration: BoxDecoration(
                       color: AppColors.white,
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(rr(14)),
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.black.withValues(alpha: 0.15),
@@ -179,20 +189,25 @@ class _AppBarBackground extends StatelessWidget {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(13),
+                      borderRadius: BorderRadius.circular(rr(13)),
                       child: flight.airline.logo.isNotEmpty
                           ? CachedNetworkImage(
                               imageUrl: flight.airline.logo,
                               fit: BoxFit.contain,
-                              errorWidget: (_, __, ___) => const Icon(
+                              errorWidget: (_, __, ___) => Icon(
                                 Icons.flight,
                                 color: AppColors.grey400,
+                                size: rw(28),
                               ),
                             )
-                          : const Icon(Icons.flight, color: AppColors.grey400),
+                          : Icon(
+                              Icons.flight,
+                              color: AppColors.grey400,
+                              size: rw(28),
+                            ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  horizontalSpacing(16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,15 +219,17 @@ class _AppBarBackground extends StatelessWidget {
                             color: AppColors.white,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        verticalSpacing(4),
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: rw(8),
+                                vertical: rh(3),
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.primary300,
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: BorderRadius.circular(rr(6)),
                               ),
                               child: Text(
                                 flight.flightNumber,
@@ -221,13 +238,15 @@ class _AppBarBackground extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            horizontalSpacing(8),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: rw(8),
+                                vertical: rh(3),
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.primary300,
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: BorderRadius.circular(rr(6)),
                               ),
                               child: Text(
                                 flight.type.toUpperCase(),
@@ -259,34 +278,38 @@ class _StatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = _statusColor(flight.status);
+    final color = flightStatusColor(flight.status);
     final label = flight.status.replaceAll('_', ' ');
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(16)),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(rr(14)),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: rw(44),
+            height: rw(44),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: Icon(_statusIcon(flight.status), color: color, size: 22),
+            child: Icon(
+              flightStatusIcon(flight.status),
+              color: color,
+              size: rw(22),
+            ),
           ),
-          const SizedBox(width: 14),
+          horizontalSpacing(14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Flight Status',
+                'flights.flight_status'.tr(),
                 style: AppTextStyles.font12Regular.copyWith(
                   color: color.withValues(alpha: 0.8),
                 ),
@@ -299,8 +322,8 @@ class _StatusCard extends StatelessWidget {
           ),
           const Spacer(),
           Container(
-            width: 10,
-            height: 10,
+            width: rw(10),
+            height: rw(10),
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
@@ -317,30 +340,6 @@ class _StatusCard extends StatelessWidget {
       ),
     );
   }
-
-  static Color _statusColor(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME': return AppColors.green200;
-      case 'DELAYED': return AppColors.amber200;
-      case 'CANCELLED': return AppColors.red200;
-      case 'BOARDING': return AppColors.blue200;
-      case 'DEPARTED': return AppColors.grey400;
-      case 'LANDED': return AppColors.success;
-      default: return AppColors.grey300;
-    }
-  }
-
-  static IconData _statusIcon(String s) {
-    switch (s.toUpperCase()) {
-      case 'ON_TIME': return Icons.check_circle_outline_rounded;
-      case 'DELAYED': return Icons.schedule_rounded;
-      case 'CANCELLED': return Icons.cancel_outlined;
-      case 'BOARDING': return Icons.door_back_door_outlined;
-      case 'DEPARTED': return Icons.flight_takeoff_rounded;
-      case 'LANDED': return Icons.flight_land_rounded;
-      default: return Icons.info_outline_rounded;
-    }
-  }
 }
 
 // ── Route Card ────────────────────────────────────────────────────────────────
@@ -356,10 +355,10 @@ class _RouteCard extends StatelessWidget {
     final arr = flight.arrival;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(rw(20)),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(rr(16)),
         border: Border.all(color: colors.border),
         boxShadow: [
           BoxShadow(
@@ -374,45 +373,47 @@ class _RouteCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // From
               _AirportBlock(
                 code: flight.route.fromCode,
-                time: _fmt(dep.estimatedTime ?? dep.scheduledTime),
-                label: dep.terminal != null ? 'Terminal ${dep.terminal}' : '',
+                time: formatHmOrDash(dep.estimatedTime ?? dep.scheduledTime),
+                label: dep.terminal != null
+                    ? '${'flights.terminal'.tr()} ${dep.terminal}'
+                    : '',
                 colors: colors,
                 align: CrossAxisAlignment.start,
               ),
-
-              // Flight path visualizer
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: EdgeInsets.only(top: rh(10)),
                   child: Column(
                     children: [
                       Row(
                         children: [
                           Expanded(child: _DashedLine()),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: EdgeInsets.symmetric(horizontal: rw(8)),
                             child: Container(
-                              width: 36,
-                              height: 36,
+                              width: rw(36),
+                              height: rw(36),
                               decoration: const BoxDecoration(
                                 color: AppColors.secondary200,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.flight_rounded,
-                                  color: AppColors.white, size: 18),
+                              child: Icon(
+                                Icons.flight_rounded,
+                                color: AppColors.white,
+                                size: rw(18),
+                              ),
                             ),
                           ),
                           Expanded(child: _DashedLine()),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      verticalSpacing(4),
                       Text(
                         flight.direction == 'departure'
-                            ? 'Departure'
-                            : 'Arrival',
+                            ? 'flights.departure'.tr()
+                            : 'flights.arrival'.tr(),
                         style: AppTextStyles.font12Regular.copyWith(
                           color: colors.textHint,
                         ),
@@ -422,43 +423,42 @@ class _RouteCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // To
               _AirportBlock(
                 code: flight.route.toCode,
-                time: _fmt(arr.estimatedTime ?? arr.scheduledTime),
-                label: arr.terminal != null ? 'Terminal ${arr.terminal}' : '',
+                time: formatHmOrDash(arr.estimatedTime ?? arr.scheduledTime),
+                label: arr.terminal != null
+                    ? '${'flights.terminal'.tr()} ${arr.terminal}'
+                    : '',
                 colors: colors,
                 align: CrossAxisAlignment.end,
               ),
             ],
           ),
 
-          const SizedBox(height: 16),
+          verticalSpacing(16),
           Divider(color: colors.divider),
-          const SizedBox(height: 12),
+          verticalSpacing(12),
 
-          // Gate row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _QuickInfo(
                 icon: Icons.door_front_door_outlined,
-                label: 'Dep. Gate',
+                label: 'flights.dep_gate'.tr(),
                 value: dep.gate ?? '—',
                 colors: colors,
               ),
               _Divider(),
               _QuickInfo(
                 icon: Icons.business_outlined,
-                label: 'Dep. Terminal',
+                label: 'flights.dep_terminal'.tr(),
                 value: dep.terminal ?? '—',
                 colors: colors,
               ),
               _Divider(),
               _QuickInfo(
                 icon: Icons.door_front_door_outlined,
-                label: 'Arr. Gate',
+                label: 'flights.arr_gate'.tr(),
                 value: arr.gate ?? '—',
                 colors: colors,
               ),
@@ -467,13 +467,6 @@ class _RouteCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _fmt(DateTime? dt) {
-    if (dt == null) return '—';
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    return '$h:$m';
   }
 }
 
@@ -497,16 +490,21 @@ class _AirportBlock extends StatelessWidget {
     return Column(
       crossAxisAlignment: align,
       children: [
-        Text(code,
-            style: AppTextStyles.font24Bold.copyWith(
-                color: AppColors.primary200)),
-        Text(time,
-            style: AppTextStyles.font16SemiBold.copyWith(
-                color: colors.textPrimary)),
+        Text(
+          code,
+          style: AppTextStyles.font24Bold.copyWith(color: AppColors.primary200),
+        ),
+        Text(
+          time,
+          style: AppTextStyles.font16SemiBold.copyWith(
+            color: colors.textPrimary,
+          ),
+        ),
         if (label.isNotEmpty)
-          Text(label,
-              style: AppTextStyles.font12Regular.copyWith(
-                  color: colors.textHint)),
+          Text(
+            label,
+            style: AppTextStyles.font12Regular.copyWith(color: colors.textHint),
+          ),
       ],
     );
   }
@@ -529,14 +527,16 @@ class _QuickInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, size: 18, color: AppColors.primary200),
-        const SizedBox(height: 4),
-        Text(value,
-            style: AppTextStyles.font14Bold.copyWith(
-                color: colors.textPrimary)),
-        Text(label,
-            style: AppTextStyles.font12Regular.copyWith(
-                color: colors.textHint)),
+        Icon(icon, size: rw(18), color: AppColors.primary200),
+        verticalSpacing(4),
+        Text(
+          value,
+          style: AppTextStyles.font14Bold.copyWith(color: colors.textPrimary),
+        ),
+        Text(
+          label,
+          style: AppTextStyles.font12Regular.copyWith(color: colors.textHint),
+        ),
       ],
     );
   }
@@ -564,7 +564,11 @@ class _DashedLine extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 40, color: context.customColors.divider);
+    return Container(
+      width: 1,
+      height: rh(40),
+      color: context.customColors.divider,
+    );
   }
 }
 
@@ -586,10 +590,10 @@ class _ScheduleSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(rw(16)),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(rr(14)),
         border: Border.all(color: colors.border),
       ),
       child: Column(
@@ -598,61 +602,64 @@ class _ScheduleSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 32,
-                height: 32,
+                width: rw(32),
+                height: rw(32),
                 decoration: const BoxDecoration(
                   color: AppColors.primary50,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 16, color: AppColors.primary200),
+                child: Icon(icon, size: rw(16), color: AppColors.primary200),
               ),
-              const SizedBox(width: 10),
-              Text(title,
-                  style: AppTextStyles.font16SemiBold.copyWith(
-                      color: colors.textPrimary)),
+              horizontalSpacing(10),
+              Text(
+                title,
+                style: AppTextStyles.font16SemiBold.copyWith(
+                  color: colors.textPrimary,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 14),
+          verticalSpacing(14),
           _TimeRow(
-            label: 'Scheduled',
+            label: 'flights.scheduled'.tr(),
             time: schedule.scheduledTime,
             colors: colors,
             isHighlighted: false,
           ),
           if (schedule.estimatedTime != null) ...[
-            const SizedBox(height: 8),
+            verticalSpacing(8),
             _TimeRow(
-              label: 'Estimated',
+              label: 'flights.estimated'.tr(),
               time: schedule.estimatedTime,
               colors: colors,
               isHighlighted: true,
             ),
           ],
           if (schedule.actualTime != null) ...[
-            const SizedBox(height: 8),
+            verticalSpacing(8),
             _TimeRow(
-              label: 'Actual',
+              label: 'flights.actual'.tr(),
               time: schedule.actualTime,
               colors: colors,
               isHighlighted: false,
             ),
           ],
           if (schedule.gate != null || schedule.terminal != null) ...[
-            const SizedBox(height: 12),
+            verticalSpacing(12),
             Divider(color: colors.divider),
-            const SizedBox(height: 10),
+            verticalSpacing(10),
             Row(
               children: [
                 if (schedule.gate != null)
                   _InfoTag(
-                    label: 'Gate ${schedule.gate}',
+                    label: '${'flights.gate'.tr()} ${schedule.gate}',
                     color: AppColors.secondary200,
                   ),
                 if (schedule.gate != null && schedule.terminal != null)
-                  const SizedBox(width: 8),
+                  horizontalSpacing(8),
                 if (schedule.terminal != null)
                   _InfoTag(
-                    label: 'Terminal ${schedule.terminal}',
+                    label: '${'flights.terminal'.tr()} ${schedule.terminal}',
                     color: AppColors.primary200,
                   ),
               ],
@@ -679,31 +686,24 @@ class _TimeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatted = _fmtFull(time);
+    final formatted = formatHmDate(time);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: AppTextStyles.font14Regular.copyWith(
-                color: colors.textSecondary)),
+        Text(
+          label,
+          style: AppTextStyles.font14Regular.copyWith(
+            color: colors.textSecondary,
+          ),
+        ),
         Text(
           formatted,
           style: isHighlighted
               ? AppTextStyles.font14Bold.copyWith(color: AppColors.primary200)
-              : AppTextStyles.font14Regular.copyWith(
-                  color: colors.textPrimary),
+              : AppTextStyles.font14Regular.copyWith(color: colors.textPrimary),
         ),
       ],
     );
-  }
-
-  String _fmtFull(DateTime? dt) {
-    if (dt == null) return '—';
-    final h = dt.hour.toString().padLeft(2, '0');
-    final m = dt.minute.toString().padLeft(2, '0');
-    final day = dt.day.toString().padLeft(2, '0');
-    final month = dt.month.toString().padLeft(2, '0');
-    return '$h:$m · $day/$month';
   }
 }
 
@@ -715,14 +715,16 @@ class _InfoTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: rw(12), vertical: rh(5)),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(rr(8)),
         border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
-      child: Text(label,
-          style: AppTextStyles.font12Medium.copyWith(color: color)),
+      child: Text(
+        label,
+        style: AppTextStyles.font12Medium.copyWith(color: color),
+      ),
     );
   }
 }
@@ -738,10 +740,10 @@ class _UpdatesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(rw(16)),
       decoration: BoxDecoration(
         color: AppColors.amber0,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(rr(14)),
         border: Border.all(color: AppColors.amber100),
       ),
       child: Column(
@@ -749,15 +751,21 @@ class _UpdatesSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.update_rounded,
-                  size: 18, color: AppColors.amber300),
-              const SizedBox(width: 8),
-              Text('Recent Updates',
-                  style: AppTextStyles.font14SemiBold.copyWith(
-                      color: AppColors.amber400)),
+              Icon(
+                Icons.update_rounded,
+                size: rw(18),
+                color: AppColors.amber300,
+              ),
+              horizontalSpacing(8),
+              Text(
+                'flights.recent_updates'.tr(),
+                style: AppTextStyles.font14SemiBold.copyWith(
+                  color: AppColors.amber400,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 12),
+          verticalSpacing(12),
           ...updates.map((u) => _UpdateTile(update: u, colors: colors)),
         ],
       ),
@@ -774,34 +782,37 @@ class _UpdateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final field = update.field.split('.').last;
+    final fieldLabel = '${field[0].toUpperCase()}${field.substring(1)} updated';
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: rh(8)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 6,
-            height: 6,
-            margin: const EdgeInsets.only(top: 5),
+            width: rw(6),
+            height: rw(6),
+            margin: EdgeInsets.only(top: rh(5)),
             decoration: const BoxDecoration(
               color: AppColors.amber300,
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 10),
+          horizontalSpacing(10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${field[0].toUpperCase()}${field.substring(1)} updated',
+                  fieldLabel,
                   style: AppTextStyles.font12Medium.copyWith(
-                      color: AppColors.amber400),
+                    color: AppColors.amber400,
+                  ),
                 ),
                 Text(
                   '${_trim(update.before)} → ${_trim(update.after)}',
                   style: AppTextStyles.font12Regular.copyWith(
-                      color: colors.textSecondary),
+                    color: colors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -837,7 +848,7 @@ class _TrackBar extends StatelessWidget {
     final colors = context.customColors;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 12, 20, bottom + 12),
+      padding: EdgeInsets.fromLTRB(rw(16), rh(12), rw(16), bottom + rh(12)),
       decoration: BoxDecoration(
         color: colors.surface,
         border: Border(top: BorderSide(color: colors.border)),
@@ -849,75 +860,96 @@ class _TrackBar extends StatelessWidget {
           ),
         ],
       ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 52,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: isTracking
-              ? _buildLoading()
-              : flight.isTracked
-                  ? _buildUntrack(context)
-                  : _buildTrack(context),
-        ),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: flight.isTracked
+            ? _TrackedButtons(
+                key: const ValueKey('tracked'),
+                flight: flight,
+                isLoading: isTracking,
+              )
+            : _TrackButton(
+                key: const ValueKey('untracked'),
+                flight: flight,
+                isLoading: isTracking,
+              ),
       ),
     );
   }
+}
 
-  Widget _buildLoading() {
-    return Builder(
-      builder: (context) => Container(
-      key: const ValueKey('loading'),
-      decoration: BoxDecoration(
-        color: context.customColors.surfaceVariant,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: const Center(
-        child: SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            color: AppColors.primary200,
+class _TrackButton extends StatelessWidget {
+  final FlightModel flight;
+  final bool isLoading;
+  const _TrackButton({
+    super.key,
+    required this.flight,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomTextButton(
+      text: 'flights.track_flight'.tr(),
+      isLoading: isLoading,
+      onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
+      prefixIcon: const Icon(Icons.bookmark_border_rounded),
+    );
+  }
+}
+
+class _TrackedButtons extends StatelessWidget {
+  final FlightModel flight;
+  final bool isLoading;
+  const _TrackedButtons({
+    super.key,
+    required this.flight,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: CustomTextButton.outlined(
+            text: 'flights.stop_tracking'.tr(),
+            isLoading: isLoading,
+            onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
+            foregroundColor: AppColors.red200,
+            borderColor: AppColors.red200,
+            prefixIcon: const Icon(Icons.bookmark_remove_rounded),
           ),
         ),
-      ),
-    ),
-    );
-  }
-
-  Widget _buildTrack(BuildContext context) {
-    return ElevatedButton.icon(
-      key: const ValueKey('track'),
-      onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary200,
-        foregroundColor: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        elevation: 0,
-      ),
-      icon: const Icon(Icons.bookmark_border_rounded, size: 20),
-      label: Text(
-        'Track this Flight',
-        style: AppTextStyles.font16SemiBold.copyWith(color: AppColors.white),
-      ),
-    );
-  }
-
-  Widget _buildUntrack(BuildContext context) {
-    return OutlinedButton.icon(
-      key: const ValueKey('untrack'),
-      onPressed: () => context.read<FlightsCubit>().toggleTrack(flight),
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.red200,
-        side: const BorderSide(color: AppColors.red200),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-      icon: const Icon(Icons.bookmark_remove_rounded, size: 20),
-      label: Text(
-        'Stop Tracking',
-        style: AppTextStyles.font16SemiBold.copyWith(color: AppColors.red200),
-      ),
+        horizontalSpacing(12),
+        Expanded(
+          child: CustomTextButton(
+            text: 'flights.view_tracked'.tr(),
+            onPressed: () => Navigator.of(context, rootNavigator: true).push(
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) =>
+                    TrackedFlightScreen(flight: flight),
+                transitionsBuilder: (_, animation, __, child) =>
+                    SlideTransition(
+                      position:
+                          Tween(
+                            begin: const Offset(1, 0),
+                            end: Offset.zero,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeInOutCubic,
+                            ),
+                          ),
+                      child: child,
+                    ),
+                transitionDuration: const Duration(milliseconds: 300),
+              ),
+            ),
+            prefixIcon: const Icon(Icons.track_changes_rounded),
+          ),
+        ),
+      ],
     );
   }
 }

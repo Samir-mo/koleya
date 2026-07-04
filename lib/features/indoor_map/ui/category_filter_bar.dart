@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/spacing.dart';
 
 class CategoryFilterBar extends StatelessWidget {
   final String? selectedCategory;
@@ -25,13 +27,13 @@ class CategoryFilterBar extends StatelessWidget {
     'LOUNGE': Icons.weekend_outlined,
   };
 
-  static const categoryLabels = {
-    null: 'All',
-    'SHOPS': 'SHOPS',
-    'RESTAURANTS': 'RESTAURANTS',
-    'SERVICES': 'SERVICES',
-    'ATM': 'ATM',
-    'LOUNGE': 'LOUNGE',
+  static Map<String?, String> _getCategoryLabels(BuildContext context) => {
+    null: 'indoor_map.category_all'.tr(),
+    'SHOPS': 'indoor_map.category_shops'.tr(),
+    'RESTAURANTS': 'indoor_map.category_restaurants'.tr(),
+    'SERVICES': 'indoor_map.category_services'.tr(),
+    'ATM': 'indoor_map.category_atm'.tr(),
+    'LOUNGE': 'indoor_map.category_lounge'.tr(),
   };
 
   const CategoryFilterBar({
@@ -42,13 +44,14 @@ class CategoryFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categoryLabels = _getCategoryLabels(context);
     return SizedBox(
-      height: 40.h,
+      height: rh(40),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: rw(16)),
         itemCount: categories.length,
-        separatorBuilder: (_, __) => SizedBox(width: 8.w),
+        separatorBuilder: (_, __) => SizedBox(width: rw(8)),
         itemBuilder: (context, index) {
           final cat = categories[index];
           final isSelected = cat == selectedCategory;
@@ -56,7 +59,7 @@ class CategoryFilterBar extends StatelessWidget {
             onTap: () => onCategoryChanged(isSelected ? null : cat),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              padding: EdgeInsets.symmetric(horizontal: rw(14)),
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.primary200 : Colors.white,
                 borderRadius: BorderRadius.circular(20.r),

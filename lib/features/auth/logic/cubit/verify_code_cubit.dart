@@ -8,18 +8,20 @@ class VerifyCodeCubit extends Cubit<VerifyCodeState> {
 
   VerifyCodeCubit({required this.repo}) : super(const VerifyCodeState());
 
-  Future<void> verifyCode({
-    required String email,
-    required String code,
-  }) async {
+  Future<void> verifyCode({required String email, required String code}) async {
     emit(state.copyWith(status: VerifyCodeStatus.loading, clearError: true));
     try {
       final resetToken = await repo.verifyResetCode(email: email, code: code);
-      emit(state.copyWith(
-          status: VerifyCodeStatus.success, resetToken: resetToken));
+      emit(
+        state.copyWith(
+          status: VerifyCodeStatus.success,
+          resetToken: resetToken,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-          status: VerifyCodeStatus.failure, error: _message(e)));
+      emit(
+        state.copyWith(status: VerifyCodeStatus.failure, error: _message(e)),
+      );
     }
   }
 

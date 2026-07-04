@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/spacing.dart';
 
 class CustomTabBar extends StatelessWidget {
   final TabController controller;
@@ -11,33 +13,33 @@ class CustomTabBar extends StatelessWidget {
     return Container(
       color: AppColors.primary200,
       child: Container(
-        margin: const EdgeInsets.fromLTRB(16, 2, 16, 14),
+        margin: EdgeInsets.fromLTRB(rw(16), rh(2), rw(16), rh(14)),
         decoration: BoxDecoration(
           color: AppColors.primary300,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(rr(12)),
         ),
         child: TabBar(
           controller: controller,
           dividerColor: Colors.transparent,
           indicator: BoxDecoration(
             color: AppColors.secondary200,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(rr(10)),
           ),
           labelStyle: AppTextStyles.font14SemiBold,
           unselectedLabelStyle: AppTextStyles.font14Regular,
           labelColor: AppColors.white,
           unselectedLabelColor: AppColors.primary50,
-          tabs: const [
+          tabs: [
             Tab(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 12),
-                  Icon(Icons.flight_takeoff_rounded, size: 16),
-                  SizedBox(width: 6),
-                  Text('Departure'),
-                  SizedBox(width: 12),
+                  SizedBox(width: rw(12)),
+                  const Icon(Icons.flight_takeoff_rounded, size: 16),
+                  SizedBox(width: rw(6)),
+                  Text('flights.departure'.tr()),
+                  SizedBox(width: rw(12)),
                 ],
               ),
             ),
@@ -46,9 +48,9 @@ class CustomTabBar extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.flight_land_rounded, size: 16),
-                  SizedBox(width: 6),
-                  Text('Arrival'),
+                  const Icon(Icons.flight_land_rounded, size: 16),
+                  SizedBox(width: rw(6)),
+                  Text('flights.arrival'.tr()),
                 ],
               ),
             ),

@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:gate_buddy/core/errors/error_handler.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
-import 'package:gate_buddy/core/shared/data/services_data_source.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/features/explore_places/data/repo/explore_places_repo.dart';
+import '../../../../core/errors/error_handler.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/shared/data/services_data_source.dart';
+import '../../../../core/shared/models/service_model.dart';
+import 'explore_places_repo.dart';
 
 class ExplorePlacesRepoImpl implements ExplorePlacesRepo {
   final ServicesDataSource dataSource;
@@ -37,8 +37,10 @@ class ExplorePlacesRepoImpl implements ExplorePlacesRepo {
     String? category,
   }) async {
     try {
-      final result =
-          await dataSource.searchServices(query: query, category: category);
+      final result = await dataSource.searchServices(
+        query: query,
+        category: category,
+      );
       return Right(result);
     } catch (e) {
       return Left(ErrorHandler.handleFailure(e));

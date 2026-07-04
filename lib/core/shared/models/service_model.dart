@@ -125,5 +125,13 @@ class ServiceModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name, category, subCategory, airport, terminal, rating];
+  List<Object?> get props => [
+    id,
+    name,
+    category,
+    subCategory,
+    airport,
+    terminal,
+    rating,
+  ];
 }

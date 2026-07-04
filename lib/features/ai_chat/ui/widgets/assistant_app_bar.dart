@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/spacing.dart';
 
 class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AssistantAppBar({super.key});
@@ -14,36 +16,36 @@ class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
       height: preferredSize.height + MediaQuery.of(context).padding.top,
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
-        left: 16,
-        right: 16,
+        left: rw(16),
+        right: rw(16),
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.primary200,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(rr(20))),
       ),
       child: Row(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: rw(40),
+            height: rh(40),
             decoration: BoxDecoration(
               color: AppColors.primary300,
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.secondary200, width: 1.5),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.smart_toy_rounded,
               color: AppColors.secondary200,
-              size: 22,
+              size: rr(22),
             ),
           ),
-          const SizedBox(width: 12),
+          horizontalSpacing(12),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'GateBuddy',
+                'ai_chat.assistant_name'.tr(),
                 style: AppTextStyles.font16Bold.copyWith(
                   color: AppColors.white,
                 ),
@@ -51,16 +53,16 @@ class AssistantAppBar extends StatelessWidget implements PreferredSizeWidget {
               Row(
                 children: [
                   Container(
-                    width: 7,
-                    height: 7,
+                    width: rw(7),
+                    height: rw(7),
                     decoration: const BoxDecoration(
                       color: AppColors.success,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  horizontalSpacing(5),
                   Text(
-                    'AI Assistant · Online',
+                    'ai_chat.online_status'.tr(),
                     style: AppTextStyles.font12Regular.copyWith(
                       color: AppColors.primary50,
                     ),

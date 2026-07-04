@@ -1,5 +1,5 @@
-﻿import 'package:gate_buddy/features/search/data/remote/search_remote_ds.dart';
-import 'package:gate_buddy/features/search/data/repo/search_repo.dart';
+﻿import '../remote/search_remote_ds.dart';
+import 'search_repo.dart';
 
 class SearchRepoImpl implements SearchRepo {
   final SearchRemoteDs remoteDs;

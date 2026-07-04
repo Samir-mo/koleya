@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../../core/shared/models/service_model.dart';
 
 abstract class ExploreState extends Equatable {
   const ExploreState();
@@ -18,8 +18,9 @@ class ExploreLoading extends ExploreState {
 class ExploreLoaded extends ExploreState {
   final List<ServiceModel> allPlaces;
   final List<ServiceModel> displayedPlaces;
-  final String? selectedType;         // null = All
-  final String? selectedSubCategory;  // only used when selectedType == 'FINANCIAL'
+  final String? selectedType; // null = All
+  final String?
+  selectedSubCategory; // only used when selectedType == 'FINANCIAL'
   final String searchQuery;
   final bool isSearching;
   final bool isRating;
@@ -74,16 +75,16 @@ class ExploreLoaded extends ExploreState {
 
   @override
   List<Object?> get props => [
-        allPlaces,
-        displayedPlaces,
-        selectedType,
-        selectedSubCategory,
-        searchQuery,
-        isSearching,
-        isRating,
-        ratingError,
-        ratingSuccess,
-      ];
+    allPlaces,
+    displayedPlaces,
+    selectedType,
+    selectedSubCategory,
+    searchQuery,
+    isSearching,
+    isRating,
+    ratingError,
+    ratingSuccess,
+  ];
 }
 
 class ExploreError extends ExploreState {

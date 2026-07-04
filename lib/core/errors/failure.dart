@@ -15,40 +15,35 @@ class ServerFailure extends Failure {
 }
 
 class CacheFailure extends Failure {
-  const CacheFailure({super.message = 'Failed to load cached data.'});
+  const CacheFailure({super.message = 'errors.connection_error'});
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure({
-    super.message = 'No internet connection. Please check your network.',
-  });
+  const NetworkFailure({super.message = 'errors.no_internet'});
 }
 
 class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({
-    super.message = 'Unauthorized. Please login again.',
+    super.message = 'errors.unauthorized',
     super.code = 401,
   });
 }
 
 class ForbiddenFailure extends Failure {
   const ForbiddenFailure({
-    super.message = 'Access forbidden.',
+    super.message = 'errors.forbidden',
     super.code = 403,
   });
 }
 
-class NotFoundException extends Failure {
-  const NotFoundException({
-    super.message = 'Resource not found.',
-    super.code = 404,
-  });
+class NotFoundFailure extends Failure {
+  const NotFoundFailure({super.message = 'errors.not_found', super.code = 404});
 }
 
 class ValidationFailure extends Failure {
   final Map<String, dynamic>? errors;
   const ValidationFailure({
-    super.message = 'Validation failed.',
+    super.message = 'errors.validation',
     this.errors,
     super.code = 422,
   });
@@ -58,25 +53,20 @@ class ValidationFailure extends Failure {
 }
 
 class ConflictFailure extends Failure {
-  const ConflictFailure({
-    super.message = 'Resource already exists.',
-    super.code = 409,
-  });
+  const ConflictFailure({super.message = 'errors.conflict', super.code = 409});
 }
 
 class TimeoutFailure extends Failure {
-  const TimeoutFailure({
-    super.message = 'Request timeout. Please try again.',
-  });
+  const TimeoutFailure({super.message = 'errors.timeout'});
 }
 
 class TooManyRequestsFailure extends Failure {
   const TooManyRequestsFailure({
-    super.message = 'Too many requests. Please slow down.',
+    super.message = 'errors.too_many_requests',
     super.code = 429,
   });
 }
 
 class UnknownFailure extends Failure {
-  const UnknownFailure({super.message = 'An unexpected error occurred.'});
+  const UnknownFailure({super.message = 'errors.unknown'});
 }

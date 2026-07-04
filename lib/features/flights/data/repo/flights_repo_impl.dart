@@ -1,3 +1,5 @@
+import '../../../../core/errors/error_handler.dart';
+
 import '../models/flight_model.dart';
 import '../remote/flights_remote_ds.dart';
 import 'flights_repo.dart';
@@ -8,24 +10,70 @@ class FlightsRepoImpl implements FlightsRepo {
   FlightsRepoImpl({required this.remoteDs});
 
   @override
-  Future<List<FlightModel>> getFlights({String? direction, String? status}) =>
-      remoteDs.getFlights(direction: direction, status: status);
+  Future<List<FlightModel>> getFlights({
+    String? direction,
+    String? status,
+  }) async {
+    try {
+      return await remoteDs.getFlights(direction: direction, status: status);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
 
   @override
-  Future<List<FlightModel>> getUpdatedFlights() =>
-      remoteDs.getUpdatedFlights();
+  Future<List<FlightModel>> getUpdatedFlights() async {
+    try {
+      return await remoteDs.getUpdatedFlights();
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
 
   @override
-  Future<List<FlightModel>> searchFlights(String query) =>
-      remoteDs.searchFlights(query);
+  Future<List<FlightModel>> searchFlights(String query) async {
+    try {
+      return await remoteDs.searchFlights(query);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
 
   @override
-  Future<FlightModel> getFlightById(String id) =>
-      remoteDs.getFlightById(id);
+  Future<FlightModel> getFlightById(String id) async {
+    try {
+      return await remoteDs.getFlightById(id);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
 
   @override
-  Future<void> trackFlight(String id) => remoteDs.trackFlight(id);
+  Future<void> trackFlight(String id) async {
+    try {
+      return await remoteDs.trackFlight(id);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
 
   @override
-  Future<void> untrackFlight(String id) => remoteDs.untrackFlight(id);
+  Future<void> untrackFlight(String id) async {
+    try {
+      return await remoteDs.untrackFlight(id);
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
+
+  @override
+  Future<FlightModel> scanBoardingPass(String rawBoardingPassData) async {
+    try {
+      return await remoteDs.scanBoardingPass(
+        rawBoardingPassData: rawBoardingPassData,
+      );
+    } catch (e) {
+      throw ErrorHandler.handleFailure(e);
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
 
 class ProfileAvatar extends StatelessWidget {
   final String? photoUrl;
@@ -43,7 +43,8 @@ class ProfileAvatar extends StatelessWidget {
             ? CachedNetworkImage(
                 imageUrl: photoUrl!,
                 fit: BoxFit.cover,
-                errorWidget: (_, __, ___) => _Initials(initials: _initials, radius: radius),
+                errorWidget: (_, __, ___) =>
+                    _Initials(initials: _initials, radius: radius),
               )
             : _Initials(initials: _initials, radius: radius),
       ),

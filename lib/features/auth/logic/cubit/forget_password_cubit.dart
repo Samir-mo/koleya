@@ -7,16 +7,22 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
   final AuthRepo repo;
 
   ForgetPasswordCubit({required this.repo})
-      : super(const ForgetPasswordState());
+    : super(const ForgetPasswordState());
 
   Future<void> sendCode(String email) async {
-    emit(state.copyWith(status: ForgetPasswordStatus.loading, clearError: true));
+    emit(
+      state.copyWith(status: ForgetPasswordStatus.loading, clearError: true),
+    );
     try {
       await repo.forgotPassword(email: email);
       emit(state.copyWith(status: ForgetPasswordStatus.success));
     } catch (e) {
-      emit(state.copyWith(
-          status: ForgetPasswordStatus.failure, error: _message(e)));
+      emit(
+        state.copyWith(
+          status: ForgetPasswordStatus.failure,
+          error: _message(e),
+        ),
+      );
     }
   }
 

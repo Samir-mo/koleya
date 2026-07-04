@@ -15,11 +15,10 @@ class ForgetPasswordState extends Equatable {
     ForgetPasswordStatus? status,
     String? error,
     bool clearError = false,
-  }) =>
-      ForgetPasswordState(
-        status: status ?? this.status,
-        error: clearError ? null : error ?? this.error,
-      );
+  }) => ForgetPasswordState(
+    status: status ?? this.status,
+    error: clearError ? null : error ?? this.error,
+  );
 
   bool get isLoading => status == ForgetPasswordStatus.loading;
 

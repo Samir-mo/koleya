@@ -1,5 +1,5 @@
-﻿import 'package:gate_buddy/features/notifications/data/remote/notifications_remote_ds.dart';
-import 'package:gate_buddy/features/notifications/data/repo/notifications_repo.dart';
+﻿import '../remote/notifications_remote_ds.dart';
+import 'notifications_repo.dart';
 
 class NotificationsRepoImpl implements NotificationsRepo {
   final NotificationsRemoteDs remoteDs;

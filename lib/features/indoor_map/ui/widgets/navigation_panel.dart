@@ -1,6 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../logic/cubit/indoor_map_state.dart';
 
 class NavigationPanel extends StatelessWidget {
   final IndoorMapLoaded state;
@@ -14,10 +18,9 @@ class NavigationPanel extends StatelessWidget {
     required this.onNextStep,
   });
 
-  // Use AppColors constants — not hardcoded values
-
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     final route = state.activeRoute;
     final dest = state.navigationDestination;
     final step = state.currentStep;
@@ -28,13 +31,13 @@ class NavigationPanel extends StatelessWidget {
         (route.polylinePoints.length - 1).clamp(1, double.infinity);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      margin: EdgeInsets.fromLTRB(rw(12), 0, rw(12), rh(12)),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(20)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha:0.14),
+            color: AppColors.black.withValues(alpha: 0.14),
             blurRadius: 20,
             offset: const Offset(0, -2),
           ),
@@ -43,31 +46,30 @@ class NavigationPanel extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ── Blue header ──────────────────────────────────────────────────
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-            decoration: const BoxDecoration(
+            padding: EdgeInsets.fromLTRB(rw(16), rh(14), rw(16), rh(12)),
+            decoration: BoxDecoration(
               color: AppColors.primary200,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(rr(20))),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.navigation_rounded,
                       color: AppColors.secondary200,
-                      size: 18,
+                      size: rr(18),
                     ),
-                    const SizedBox(width: 8),
+                    horizontalSpacing(8),
                     Expanded(
                       child: Text(
-                        'Navigating to ${dest.name}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                        'indoor_map.navigating_to'.tr(
+                          namedArgs: {'name': dest.name},
+                        ),
+                        style: AppTextStyles.font14Bold.copyWith(
+                          color: AppColors.white,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -76,98 +78,96 @@ class NavigationPanel extends StatelessWidget {
                     GestureDetector(
                       onTap: onCancel,
                       child: Container(
-                        padding: const EdgeInsets.all(5),
+                        padding: EdgeInsets.all(rr(5)),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha:0.15),
-                          borderRadius: BorderRadius.circular(8),
+                          color: AppColors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(rr(8)),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.close,
-                          color: Colors.white,
-                          size: 16,
+                          color: AppColors.white,
+                          size: rr(16),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                // Distance + time chips
+                verticalSpacing(10),
                 Row(
                   children: [
                     _MetaChip(
                       icon: Icons.straighten_rounded,
                       label: route.distanceLabel,
                     ),
-                    const SizedBox(width: 8),
+                    horizontalSpacing(8),
                     _MetaChip(
                       icon: Icons.directions_walk_rounded,
                       label: route.estimatedTimeLabel,
                     ),
                     const Spacer(),
                     Text(
-                      '${state.currentStepIndex + 1} / ${route.steps.length} steps',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha:0.7),
-                        fontSize: 11,
+                      'indoor_map.steps'.tr(
+                        namedArgs: {
+                          'current': '${state.currentStepIndex + 1}',
+                          'total': '${route.steps.length}',
+                        },
+                      ),
+                      style: AppTextStyles.font12Regular.copyWith(
+                        color: AppColors.white.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                // Progress bar
+                verticalSpacing(10),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(rr(4)),
                   child: LinearProgressIndicator(
                     value: progress.clamp(0.0, 1.0),
-                    backgroundColor: Colors.white.withValues(alpha:0.2),
+                    backgroundColor: AppColors.white.withValues(alpha: 0.2),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       AppColors.secondary200,
                     ),
-                    minHeight: 5,
+                    minHeight: rh(5),
                   ),
                 ),
               ],
             ),
           ),
 
-          // ── Current step ────────────────────────────────────────────────
           if (step != null)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
+              padding: EdgeInsets.fromLTRB(rw(16), rh(14), rw(16), rh(6)),
               child: Row(
                 children: [
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: rw(40),
+                    height: rh(40),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEFF4FF),
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.primary200.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(rr(12)),
                     ),
                     child: Icon(
                       _iconForStep(step.instruction),
                       color: AppColors.primary200,
-                      size: 20,
+                      size: rr(20),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  horizontalSpacing(12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           step.instruction,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: Color(0xFF1A1A2E),
+                          style: AppTextStyles.font14SemiBold.copyWith(
+                            color: context.customColors.textPrimary,
                           ),
                         ),
                         if (step.distanceMeters > 0)
                           Text(
                             '${step.distanceMeters.toStringAsFixed(0)}m',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade500,
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: context.customColors.textSecondary,
                             ),
                           ),
                       ],
@@ -177,33 +177,31 @@ class NavigationPanel extends StatelessWidget {
               ),
             ),
 
-          // ── All steps list ───────────────────────────────────────────────
           if (route.steps.length > 1)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
+              padding: EdgeInsets.fromLTRB(rw(16), rh(4), rw(16), rh(14)),
               child: Column(
                 children: [
-                  const Divider(height: 16),
+                  Divider(height: rh(16), color: context.customColors.divider),
                   ...route.steps.asMap().entries.map((e) {
                     final idx = e.key;
                     final s = e.value;
                     final isDone = idx < state.currentStepIndex;
                     final isCurrent = idx == state.currentStepIndex;
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                      padding: EdgeInsets.only(bottom: rh(8)),
                       child: Row(
                         children: [
-                          // Step indicator dot
                           Container(
-                            width: 20,
-                            height: 20,
+                            width: rw(20),
+                            height: rw(20),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: isDone
-                                  ? Colors.green.shade400
+                                  ? AppColors.green200
                                   : isCurrent
                                   ? AppColors.primary200
-                                  : Colors.grey.shade200,
+                                  : context.customColors.surfaceVariant,
                             ),
                             child: Icon(
                               isDone
@@ -211,23 +209,22 @@ class NavigationPanel extends StatelessWidget {
                                   : isCurrent
                                   ? Icons.radio_button_checked
                                   : Icons.circle,
-                              size: 12,
+                              size: rr(12),
                               color: isDone || isCurrent
-                                  ? Colors.white
-                                  : Colors.grey.shade400,
+                                  ? AppColors.white
+                                  : context.customColors.iconSecondary,
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          horizontalSpacing(10),
                           Expanded(
                             child: Text(
                               s.instruction,
-                              style: TextStyle(
-                                fontSize: 12,
+                              style: AppTextStyles.font12Regular.copyWith(
                                 color: isDone
-                                    ? Colors.grey.shade400
+                                    ? context.customColors.textDisabled
                                     : isCurrent
-                                    ? const Color(0xFF1A1A2E)
-                                    : Colors.grey.shade600,
+                                    ? context.customColors.textPrimary
+                                    : context.customColors.textSecondary,
                                 fontWeight: isCurrent
                                     ? FontWeight.w600
                                     : FontWeight.normal,
@@ -240,9 +237,8 @@ class NavigationPanel extends StatelessWidget {
                           if (s.distanceMeters > 0)
                             Text(
                               '${s.distanceMeters.toStringAsFixed(0)}m',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade400,
+                              style: AppTextStyles.font12Regular.copyWith(
+                                color: context.customColors.textDisabled,
                               ),
                             ),
                         ],
@@ -261,15 +257,12 @@ class NavigationPanel extends StatelessWidget {
     final lower = instruction.toLowerCase();
     if (lower.contains('left')) return Icons.turn_left_rounded;
     if (lower.contains('right')) return Icons.turn_right_rounded;
-    if (lower.contains('straight') || lower.contains('continue')) {
+    if (lower.contains('straight') || lower.contains('continue'))
       return Icons.straight_rounded;
-    }
-    if (lower.contains('destination') || lower.contains('arrived')) {
+    if (lower.contains('destination') || lower.contains('arrived'))
       return Icons.place_rounded;
-    }
-    if (lower.contains('head') || lower.contains('towards')) {
+    if (lower.contains('head') || lower.contains('towards'))
       return Icons.north_rounded;
-    }
     return Icons.directions_walk_rounded;
   }
 }
@@ -277,29 +270,24 @@ class NavigationPanel extends StatelessWidget {
 class _MetaChip extends StatelessWidget {
   final IconData icon;
   final String label;
-
   const _MetaChip({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha:0.15),
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(rr(8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Colors.white, size: 12),
-          const SizedBox(width: 4),
+          Icon(icon, color: AppColors.white, size: rr(12)),
+          horizontalSpacing(4),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.font12Bold.copyWith(color: AppColors.white),
           ),
         ],
       ),

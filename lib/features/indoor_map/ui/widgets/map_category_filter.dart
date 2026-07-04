@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../logic/cubit/indoor_map_state.dart';
 
 class MapCategoryFilter extends StatelessWidget {
   final MapCategory selected;
@@ -14,28 +17,29 @@ class MapCategoryFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return SizedBox(
-      height: 38,
+      height: rh(38),
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: rw(16)),
         children: MapCategory.values.map((cat) {
           final isActive = selected == cat;
           return Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(right: rw(8)),
             child: GestureDetector(
               onTap: () => onSelected(cat),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                  horizontal: rw(14),
+                  vertical: rh(8),
+                ),
                 decoration: BoxDecoration(
-                  color: isActive ? AppColors.primary200 : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  color: isActive ? AppColors.primary200 : colors.surface,
+                  borderRadius: BorderRadius.circular(rr(20)),
                   border: Border.all(
-                    color: isActive
-                        ? AppColors.primary200
-                        : const Color(0xFFE3E7F1),
+                    color: isActive ? AppColors.primary200 : colors.border,
                     width: 1.5,
                   ),
                   boxShadow: isActive
@@ -53,19 +57,16 @@ class MapCategoryFilter extends StatelessWidget {
                   children: [
                     Icon(
                       _iconForCategory(cat),
-                      size: 13,
+                      size: rr(13),
                       color: isActive
                           ? AppColors.secondary200
-                          : Colors.grey.shade600,
+                          : colors.iconSecondary,
                     ),
-                    const SizedBox(width: 5),
+                    horizontalSpacing(5),
                     Text(
                       cat.label,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            isActive ? Colors.white : Colors.grey.shade700,
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: isActive ? AppColors.white : colors.textPrimary,
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -80,12 +81,12 @@ class MapCategoryFilter extends StatelessWidget {
   }
 
   IconData _iconForCategory(MapCategory cat) => switch (cat) {
-        MapCategory.all => Icons.layers_outlined,
-        MapCategory.restaurants => Icons.restaurant_outlined,
-        MapCategory.shops => Icons.storefront_outlined,
-        MapCategory.vipServices => Icons.workspace_premium_outlined,
-        MapCategory.financial => Icons.account_balance_outlined,
-        MapCategory.counters => Icons.confirmation_number_outlined,
-        MapCategory.accessibility => Icons.accessibility_new_outlined,
-      };
+    MapCategory.all => Icons.layers_outlined,
+    MapCategory.restaurants => Icons.restaurant_outlined,
+    MapCategory.shops => Icons.storefront_outlined,
+    MapCategory.vipServices => Icons.workspace_premium_outlined,
+    MapCategory.financial => Icons.account_balance_outlined,
+    MapCategory.counters => Icons.confirmation_number_outlined,
+    MapCategory.accessibility => Icons.accessibility_new_outlined,
+  };
 }

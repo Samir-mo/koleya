@@ -1,4 +1,3 @@
-
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../config/app_config.dart';

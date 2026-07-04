@@ -1,26 +1,41 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/ai_chat/logic/cubit/ai_chat_cubit.dart';
-import 'package:gate_buddy/features/ai_chat/ui/ai_chat_screen.dart';
-import 'package:gate_buddy/features/explore_places/logic/explore_cubit.dart';
-import 'package:gate_buddy/features/explore_places/ui/explore_places_screen.dart';
-import 'package:gate_buddy/features/flights/ui/flights_screen.dart';
-import 'package:gate_buddy/features/home/logic/cubit/home_cubit.dart';
-import 'package:gate_buddy/features/home/ui/home_screen.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
-import 'package:gate_buddy/features/indoor_map/ui/indoor_map_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../ai_chat/logic/cubit/ai_chat_cubit.dart';
+import '../../ai_chat/ui/ai_chat_screen.dart';
+import '../../explore_places/logic/explore_cubit.dart';
+import '../../explore_places/ui/explore_places_screen.dart';
+import '../../flights/ui/flights_screen.dart';
+import '../../home/logic/cubit/home_cubit.dart';
+import '../../home/ui/home_screen.dart';
+import '../../indoor_map/logic/cubit/indoor_map_cubit.dart';
+import '../../indoor_map/ui/indoor_map_screen.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
 
+  static final GlobalKey<MainScaffoldState> scaffoldKey =
+      GlobalKey<MainScaffoldState>();
+
+  static void jumpToTab(int index) =>
+      scaffoldKey.currentState?._controller.jumpToTab(index);
+
+  // Tab indices for MainScaffold.jumpToTab(...)
+  static const int tabIndoorMap = 0;
+  static const int tabFlights = 1;
+  static const int tabHome = 2;
+  static const int tabExplore = 3;
+  static const int tabAssistant = 4;
+
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  State<MainScaffold> createState() => MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class MainScaffoldState extends State<MainScaffold> {
   late final PersistentTabController _controller;
   final ScrollController _homeScrollController = ScrollController();
   late final HomeCubit _homeCubit;
@@ -31,7 +46,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   void initState() {
     super.initState();
     _controller = PersistentTabController(initialIndex: initialIndex);
-    _homeCubit = HomeCubit()..loadDashboard();
+    _homeCubit = getIt<HomeCubit>()..loadDashboard();
   }
 
   @override
@@ -81,8 +96,8 @@ class _MainScaffoldState extends State<MainScaffold> {
     IconData inactiveIcon,
   ) {
     return PersistentBottomNavBarItem(
-      icon: Icon(activeIcon, size: 28),
-      inactiveIcon: Icon(inactiveIcon, size: 26),
+      icon: Icon(activeIcon, size: rr(28)),
+      inactiveIcon: Icon(inactiveIcon, size: rr(26)),
       activeColorPrimary: context.customColors.textSecondary,
       inactiveColorPrimary: context.customColors.textHint,
     );
@@ -101,9 +116,9 @@ class _MainScaffoldState extends State<MainScaffold> {
       stateManagement: true,
       hideNavigationBarWhenKeyboardAppears: true,
       decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(rr(10)),
         colorBehindNavBar: context.customColors.background,
-        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+        border: Border(top: BorderSide(color: context.customColors.border)),
       ),
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: false,

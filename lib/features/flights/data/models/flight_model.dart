@@ -158,15 +158,19 @@ class FlightModel extends Equatable {
           : const FlightRouteModel(),
       departure: json['departure'] is Map
           ? FlightScheduleModel.fromJson(
-              json['departure'] as Map<String, dynamic>)
+              json['departure'] as Map<String, dynamic>,
+            )
           : const FlightScheduleModel(),
       arrival: json['arrival'] is Map
           ? FlightScheduleModel.fromJson(
-              json['arrival'] as Map<String, dynamic>)
+              json['arrival'] as Map<String, dynamic>,
+            )
           : const FlightScheduleModel(),
-      updates: (json['updates'] as List<dynamic>?)
-              ?.map((e) =>
-                  FlightUpdateModel.fromJson(e as Map<String, dynamic>))
+      updates:
+          (json['updates'] as List<dynamic>?)
+              ?.map(
+                (e) => FlightUpdateModel.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
     );

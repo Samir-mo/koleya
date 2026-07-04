@@ -1,15 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/verify_code_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/verify_code_state.dart';
-import 'package:gate_buddy/features/auth/ui/reset_password_screen.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../logic/cubit/verify_code_cubit.dart';
+import '../logic/cubit/verify_code_state.dart';
+import 'reset_password_screen.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/auth_primary_button.dart';
 
 class GetCodeScreen extends StatelessWidget {
   final String email;
@@ -34,8 +36,10 @@ class _GetCodeView extends StatefulWidget {
 }
 
 class _GetCodeViewState extends State<_GetCodeView> {
-  final List<TextEditingController> _controllers =
-      List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
 
   @override
@@ -53,21 +57,13 @@ class _GetCodeViewState extends State<_GetCodeView> {
 
   void _onVerify() {
     if (_code.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please enter all 6 digits'),
-          backgroundColor: AppColors.amber200,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      context.showErrorSnackBar('auth.get_code.error'.tr());
       return;
     }
     context.read<VerifyCodeCubit>().verifyCode(
-          email: widget.email,
-          code: _code,
-        );
+      email: widget.email,
+      code: _code,
+    );
   }
 
   @override
@@ -84,7 +80,7 @@ class _GetCodeViewState extends State<_GetCodeView> {
           );
         } else if (state.status == VerifyCodeStatus.failure &&
             state.error != null) {
-          _showError(context, state.error!);
+          context.showErrorSnackBar(state.error!);
         }
       },
       child: Scaffold(
@@ -94,32 +90,32 @@ class _GetCodeViewState extends State<_GetCodeView> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const AuthHeader(
-                    title: 'Enter Reset Code',
-                    subtitle: 'Check your email for the 6-digit code',
+                  AuthHeader(
+                    title: 'auth.get_code.title'.tr(),
+                    subtitle: 'auth.get_code.subtitle'.tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(rw(24)),
                     child: Column(
                       children: [
-                        const SizedBox(height: 8),
+                        verticalSpacing(8),
                         _CodeIllustration(),
-                        const SizedBox(height: 24),
+                        verticalSpacing(24),
                         _EmailChip(email: widget.email),
-                        const SizedBox(height: 32),
+                        verticalSpacing(32),
                         _OtpRow(
                           controllers: _controllers,
                           focusNodes: _focusNodes,
                         ),
-                        const SizedBox(height: 12),
+                        verticalSpacing(12),
                         _ResendButton(email: widget.email),
-                        const SizedBox(height: 32),
+                        verticalSpacing(32),
                         AuthPrimaryButton(
-                          label: 'Verify Code',
+                          label: 'auth.get_code.button'.tr(),
                           isLoading: state.isLoading,
                           onPressed: _onVerify,
                         ),
-                        const SizedBox(height: 24),
+                        verticalSpacing(24),
                       ],
                     ),
                   ),
@@ -128,17 +124,6 @@ class _GetCodeViewState extends State<_GetCodeView> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.red200,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
@@ -154,17 +139,20 @@ class _OtpRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(6, (i) => _OtpBox(
-        controller: controllers[i],
-        focusNode: focusNodes[i],
-        onChanged: (v) {
-          if (v.length == 1 && i < 5) {
-            focusNodes[i + 1].requestFocus();
-          } else if (v.isEmpty && i > 0) {
-            focusNodes[i - 1].requestFocus();
-          }
-        },
-      )),
+      children: List.generate(
+        6,
+        (i) => _OtpBox(
+          controller: controllers[i],
+          focusNode: focusNodes[i],
+          onChanged: (v) {
+            if (v.length == 1 && i < 5) {
+              focusNodes[i + 1].requestFocus();
+            } else if (v.isEmpty && i > 0) {
+              focusNodes[i - 1].requestFocus();
+            }
+          },
+        ),
+      ),
     );
   }
 }
@@ -184,8 +172,8 @@ class _OtpBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.customColors;
     return SizedBox(
-      width: 48,
-      height: 56,
+      width: rw(48),
+      height: rh(56),
       child: TextField(
         controller: controller,
         focusNode: focusNode,
@@ -200,17 +188,16 @@ class _OtpBox extends StatelessWidget {
           filled: true,
           fillColor: colors.surface,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(rr(12)),
             borderSide: BorderSide(color: colors.border),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(rr(12)),
             borderSide: BorderSide(color: colors.border),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide:
-                const BorderSide(color: AppColors.primary200, width: 2),
+            borderRadius: BorderRadius.circular(rr(12)),
+            borderSide: const BorderSide(color: AppColors.primary200, width: 2),
           ),
         ),
       ),
@@ -223,15 +210,15 @@ class _CodeIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 100,
-        height: 100,
+        width: rw(100),
+        height: rw(100),
         decoration: const BoxDecoration(
           color: AppColors.primary50,
           shape: BoxShape.circle,
         ),
-        child: const Icon(
+        child: Icon(
           Icons.password_rounded,
-          size: 48,
+          size: rr(48),
           color: AppColors.primary200,
         ),
       ),
@@ -246,21 +233,21 @@ class _EmailChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(10)),
       decoration: BoxDecoration(
         color: AppColors.primary50,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(rr(10)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.email_outlined,
-              size: 16, color: AppColors.primary200),
-          const SizedBox(width: 8),
+          Icon(Icons.email_outlined, size: rr(16), color: AppColors.primary200),
+          horizontalSpacing(8),
           Text(
             email,
             style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.primary200),
+              color: AppColors.primary200,
+            ),
           ),
         ],
       ),
@@ -279,27 +266,21 @@ class _ResendButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Didn't receive the code? ",
+          'auth.get_code.resend_prompt'.tr(),
           style: AppTextStyles.font14Regular.copyWith(
-              color: colors.textSecondary),
+            color: colors.textSecondary,
+          ),
         ),
         GestureDetector(
           onTap: () {
             context.read<VerifyCodeCubit>().resendCode(email);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Code resent successfully'),
-                backgroundColor: AppColors.green200,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-            );
+            context.showSuccessSnackBar('auth.get_code.success'.tr());
           },
           child: Text(
-            'Resend',
+            'auth.get_code.resend_link'.tr(),
             style: AppTextStyles.font14SemiBold.copyWith(
-                color: AppColors.primary200),
+              color: AppColors.primary200,
+            ),
           ),
         ),
       ],

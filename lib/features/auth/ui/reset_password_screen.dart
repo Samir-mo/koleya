@@ -1,15 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/core/utils/validators.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_header.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_primary_button.dart';
-import 'package:gate_buddy/features/auth/ui/widgets/auth_text_field.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/utils/validators.dart';
+import '../logic/cubit/auth_cubit.dart';
+import '../logic/cubit/auth_state.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/auth_primary_button.dart';
+import 'widgets/auth_text_field.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   final String resetToken;
@@ -18,8 +20,8 @@ class ResetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AuthCubit(repo: getIt()),
+    return BlocProvider.value(
+      value: getIt<AuthCubit>(),
       child: _ResetPasswordView(resetToken: resetToken),
     );
   }
@@ -48,10 +50,10 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
   void _onReset() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthCubit>().resetPassword(
-          resetToken: widget.resetToken,
-          password: _passwordController.text,
-          passwordConfirm: _confirmController.text,
-        );
+      resetToken: widget.resetToken,
+      password: _passwordController.text,
+      passwordConfirm: _confirmController.text,
+    );
   }
 
   @override
@@ -61,7 +63,7 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
         if (state.status == AuthStatus.authenticated) {
           context.pushNamedAndRemoveAll(Routes.mainScaffold);
         } else if (state.status == AuthStatus.error && state.error != null) {
-          _showError(context, state.error!);
+          context.showErrorSnackBar(state.error!);
         }
       },
       child: Scaffold(
@@ -71,44 +73,46 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const AuthHeader(
-                    title: 'Reset Password',
-                    subtitle: 'Create a new secure password',
+                  AuthHeader(
+                    title: 'auth.reset_password.title'.tr(),
+                    subtitle: 'auth.reset_password.subtitle'.tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(rw(24)),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
-                          const SizedBox(height: 8),
+                          verticalSpacing(8),
                           _LockIllustration(),
-                          const SizedBox(height: 32),
+                          verticalSpacing(32),
                           AuthTextField(
                             controller: _passwordController,
-                            label: 'New Password',
+                            label: 'auth.reset_password.new_password'.tr(),
                             prefixIcon: Icons.lock_outline_rounded,
                             isPassword: true,
                             validator: Validators.password,
                           ),
-                          const SizedBox(height: 16),
+                          verticalSpacing(16),
                           AuthTextField(
                             controller: _confirmController,
-                            label: 'Confirm New Password',
+                            label: 'auth.reset_password.confirm_password'.tr(),
                             prefixIcon: Icons.lock_outline_rounded,
                             isPassword: true,
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (_) => _onReset(),
                             validator: (v) => Validators.confirmPassword(
-                                v, _passwordController.text),
+                              v,
+                              _passwordController.text,
+                            ),
                           ),
-                          const SizedBox(height: 28),
+                          verticalSpacing(28),
                           AuthPrimaryButton(
-                            label: 'Reset Password',
+                            label: 'auth.reset_password.button'.tr(),
                             isLoading: state.isLoading,
                             onPressed: _onReset,
                           ),
-                          const SizedBox(height: 24),
+                          verticalSpacing(24),
                         ],
                       ),
                     ),
@@ -121,17 +125,6 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
       ),
     );
   }
-
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.red200,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
 }
 
 class _LockIllustration extends StatelessWidget {
@@ -139,15 +132,15 @@ class _LockIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 100,
-        height: 100,
+        width: rw(100),
+        height: rw(100),
         decoration: const BoxDecoration(
           color: AppColors.primary50,
           shape: BoxShape.circle,
         ),
-        child: const Icon(
+        child: Icon(
           Icons.lock_reset_rounded,
-          size: 48,
+          size: rr(48),
           color: AppColors.primary200,
         ),
       ),

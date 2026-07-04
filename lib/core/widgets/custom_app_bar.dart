@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_text_styles.dart';
+import '../utils/spacing.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -17,8 +18,8 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
-      height: 100,
+      padding: EdgeInsets.only(top: rh(32), left: rw(16), right: rw(16)),
+      height: rh(100),
       width: double.infinity,
       color: AppColors.primary200,
       child: Stack(

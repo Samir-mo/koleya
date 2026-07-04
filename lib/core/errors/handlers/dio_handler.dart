@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../exceptions.dart';
 
@@ -19,11 +20,25 @@ class DioHandler {
         return NetworkException();
 
       case DioExceptionType.badResponse:
-        return _mapByCode(e.response?.statusCode, e.message ?? 'Server error.');
+        final message = _extractMessage(e.response);
+        return _mapByCode(e.response?.statusCode, message);
 
       default:
-        return ServerException(message: e.message ?? 'Unknown error.');
+        return ServerException(message: e.message ?? 'errors.unknown'.tr());
     }
+  }
+
+  /// Extracts error message from JSend response format or falls back to generic.
+  /// Expects: { "status": "fail", "message": "...", "statusCode": N }
+  static String _extractMessage(final Response? response) {
+    if (response?.data is Map<String, dynamic>) {
+      final data = response!.data as Map<String, dynamic>;
+      // JSend format: { "message": "..." }
+      if (data.containsKey('message') && data['message'] is String) {
+        return data['message'] as String;
+      }
+    }
+    return response?.statusMessage ?? 'errors.server_error'.tr();
   }
 
   static AppException _mapByCode(final int? code, final String message) {

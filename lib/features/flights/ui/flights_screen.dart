@@ -1,12 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/di/dependency_injection.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/custom_tab_bar.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/flight_list.dart';
-import 'package:gate_buddy/features/flights/ui/widgets/search_field.dart';
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import 'widgets/custom_tab_bar.dart';
+import 'widgets/flight_list.dart';
+import 'widgets/search_field.dart';
 
 import '../logic/cubit/flights_cubit.dart';
 import '../logic/cubit/flights_state.dart';
@@ -79,7 +81,7 @@ class _FlightsViewState extends State<_FlightsView>
                   return FlightList(
                     flights: state.searchResults,
                     status: state.status,
-                    emptyMessage: 'No results for "${state.query}"',
+                    emptyMessage: 'flights.empty_search'.tr(),
                   );
                 }
                 return TabBarView(
@@ -88,12 +90,12 @@ class _FlightsViewState extends State<_FlightsView>
                     FlightList(
                       flights: state.departures,
                       status: state.status,
-                      emptyMessage: 'No departure flights available',
+                      emptyMessage: 'flights.empty_departures'.tr(),
                     ),
                     FlightList(
                       flights: state.arrivals,
                       status: state.status,
-                      emptyMessage: 'No arrival flights available',
+                      emptyMessage: 'flights.empty_arrivals'.tr(),
                     ),
                   ],
                 );
@@ -128,20 +130,19 @@ class _FlightsAppBar extends StatelessWidget {
       padding: EdgeInsets.only(top: top),
       child: Column(
         children: [
-          // Title row
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(14)),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.flight_takeoff_rounded,
                   color: AppColors.secondary200,
-                  size: 24,
+                  size: rw(24),
                 ),
-                const SizedBox(width: 10),
+                horizontalSpacing(10),
                 Expanded(
                   child: Text(
-                    'Flights',
+                    'flights.title'.tr(),
                     style: AppTextStyles.font20Bold.copyWith(
                       color: AppColors.white,
                     ),
@@ -155,21 +156,19 @@ class _FlightsAppBar extends StatelessWidget {
                       showSearch ? Icons.close_rounded : Icons.search_rounded,
                       key: ValueKey(showSearch),
                       color: AppColors.white,
-                      size: 26,
+                      size: rw(26),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-
-          // Search bar (animated)
           AnimatedSize(
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeOut,
             child: showSearch
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                    padding: EdgeInsets.fromLTRB(rw(16), 0, rw(16), rh(14)),
                     child: SearchField(controller: searchController),
                   )
                 : const SizedBox.shrink(),

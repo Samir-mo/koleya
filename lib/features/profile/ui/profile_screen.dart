@@ -1,17 +1,22 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/router/routes.dart';
-import 'package:gate_buddy/core/settings/cubit/app_settings_cubit.dart';
-import 'package:gate_buddy/core/settings/cubit/app_settings_state.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
-import 'package:gate_buddy/features/auth/data/models/user_model.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:gate_buddy/features/auth/logic/cubit/auth_state.dart';
-import 'package:gate_buddy/features/profile/ui/widgets/edit_profile_sheet.dart';
-import 'package:gate_buddy/features/profile/ui/widgets/profile_avatar.dart';
-import 'package:gate_buddy/features/profile/ui/widgets/profile_section.dart';
+import '../../../core/router/routes.dart';
+import '../../../core/settings/cubit/app_settings_cubit.dart';
+import '../../../core/settings/cubit/app_settings_state.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/extensions/context_ext.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/ui/dialogs/app_dialogs.dart';
+import '../../auth/data/models/user_model.dart';
+import '../../auth/logic/cubit/auth_cubit.dart';
+import '../../auth/logic/cubit/auth_state.dart';
+import '../../on_boarding/ui/onboarding_screen.dart';
+import 'widgets/edit_profile_sheet.dart';
+import 'widgets/profile_app_bar.dart';
+import 'widgets/profile_avatar.dart';
+import 'widgets/profile_section.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -22,8 +27,17 @@ class ProfileScreen extends StatelessWidget {
       builder: (context, authState) {
         final user = authState.user;
 
+        // While the cubit is resolving the stored token, show nothing to avoid
+        // flashing the unauthenticated view momentarily.
+        if (authState.status == AuthStatus.loading ||
+            authState.status == AuthStatus.initial) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
         if (!authState.isAuthenticated || user == null) {
-          return _UnauthenticatedView();
+          return OnboardingScreen();
         }
 
         return _ProfileView(user: user);
@@ -31,75 +45,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-// ── Unauthenticated ───────────────────────────────────────────────────────────
-
-class _UnauthenticatedView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.customColors;
-    final top = MediaQuery.of(context).padding.top;
-
-    return Scaffold(
-      backgroundColor: colors.background,
-      body: Column(
-        children: [
-          _ProfileAppBar(title: 'Profile', top: top, showEdit: false),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary50,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.person_off_outlined,
-                        color: AppColors.primary200, size: 40),
-                  ),
-                  const SizedBox(height: 20),
-                  Text('You\'re not logged in',
-                      style: AppTextStyles.font18Bold.copyWith(
-                          color: AppColors.primary200)),
-                  const SizedBox(height: 8),
-                  Text('Log in to manage your profile and preferences',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.font14Regular.copyWith(
-                          color: colors.textSecondary)),
-                  const SizedBox(height: 32),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, Routes.login),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary200,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
-                        ),
-                        child: Text('Log In',
-                            style: AppTextStyles.font16SemiBold.copyWith(
-                                color: AppColors.white)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Authenticated ─────────────────────────────────────────────────────────────
 
 class _ProfileView extends StatelessWidget {
   final UserModel user;
@@ -120,86 +65,14 @@ class _ProfileView extends StatelessWidget {
     );
   }
 
-  void _showLogoutDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you want to log out?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              context.read<AuthCubit>().logout();
-            },
-            child: Text('Log Out',
-                style: AppTextStyles.font14SemiBold.copyWith(
-                    color: AppColors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDeleteDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Account'),
-        content: const Text(
-          'This action is irreversible. All your data will be permanently deleted.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.red200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              context.read<AuthCubit>().deleteAccount();
-            },
-            child: Text('Delete',
-                style: AppTextStyles.font14SemiBold.copyWith(
-                    color: AppColors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final colors = context.customColors;
-    final top = MediaQuery.of(context).padding.top;
-
     return Scaffold(
-      backgroundColor: colors.background,
       body: CustomScrollView(
         slivers: [
-          // ── App Bar ──────────────────────────────────────────────────────
           SliverToBoxAdapter(
-            child: _ProfileAppBar(
-              title: 'My Profile',
-              top: top,
+            child: ProfileAppBar(
+              title: 'profile.title'.tr(),
               showEdit: true,
               onEdit: () => _showEditSheet(context),
             ),
@@ -207,97 +80,76 @@ class _ProfileView extends StatelessWidget {
 
           // ── Header Card ──────────────────────────────────────────────────
           SliverToBoxAdapter(
-            child: _HeaderCard(user: user, onEdit: () => _showEditSheet(context)),
+            child: _HeaderCard(
+              user: user,
+              onEdit: () => _showEditSheet(context),
+            ),
           ),
 
           // ── Sections ─────────────────────────────────────────────────────
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            padding: EdgeInsets.fromLTRB(rw(16), 0, rw(16), rh(24)),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
+                verticalSpacing(20),
                 // Account
                 ProfileSection(
-                  title: 'Account',
+                  title: 'profile.account'.tr(),
                   children: [
                     ProfileTile(
                       icon: Icons.person_outline_rounded,
-                      label: 'Edit Name',
+                      label: 'profile.edit_name'.tr(),
                       value: user.name,
                       iconColor: AppColors.primary200,
                       onTap: () => _showEditSheet(context),
                     ),
                     ProfileTile(
                       icon: Icons.email_outlined,
-                      label: 'Email',
+                      label: 'profile.email'.tr(),
                       value: user.email,
                       iconColor: AppColors.blue200,
                     ),
                     ProfileTile(
                       icon: Icons.lock_outline_rounded,
-                      label: 'Change Password',
+                      label: 'profile.change_password'.tr(),
                       iconColor: AppColors.amber200,
-                      onTap: () =>
-                          Navigator.pushNamed(context, Routes.forgetPassword),
+                      onTap: () => context.pushNamed(Routes.forgetPassword),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                verticalSpacing(20),
 
                 // Preferences
                 _PreferencesSection(),
-                const SizedBox(height: 20),
-
-                // Tracked Flights shortcut
-                ProfileSection(
-                  title: 'Activity',
-                  children: [
-                    ProfileTile(
-                      icon: Icons.bookmark_outline_rounded,
-                      label: 'Tracked Flights',
-                      iconColor: AppColors.secondary200,
-                      onTap: () =>
-                          Navigator.pushNamed(context, Routes.trackedFlight),
-                    ),
-                    ProfileTile(
-                      icon: Icons.notifications_outlined,
-                      label: 'Notifications',
-                      iconColor: AppColors.green200,
-                      onTap: () =>
-                          Navigator.pushNamed(context, Routes.notifications),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
+                verticalSpacing(20),
 
                 // Support
                 ProfileSection(
-                  title: 'Support',
+                  title: 'profile.support'.tr(),
                   children: [
                     ProfileTile(
                       icon: Icons.info_outline_rounded,
-                      label: 'About GateBuddy',
+                      label: 'profile.about'.tr(),
                       iconColor: AppColors.primary200,
                       onTap: () => _showAboutDialog(context),
                     ),
                     ProfileTile(
                       icon: Icons.privacy_tip_outlined,
-                      label: 'Privacy Policy',
+                      label: 'profile.privacy_policy'.tr(),
                       iconColor: AppColors.grey400,
                     ),
                     ProfileTile(
                       icon: Icons.description_outlined,
-                      label: 'Terms of Service',
+                      label: 'profile.terms_of_service'.tr(),
                       iconColor: AppColors.grey400,
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                verticalSpacing(20),
 
-                // Actions
-                _LogoutButton(onTap: () => _showLogoutDialog(context)),
-                const SizedBox(height: 12),
-                _DeleteButton(onTap: () => _showDeleteDialog(context)),
-                const SizedBox(height: 32),
+                // ── Account actions ───────────────────────────────────────
+                _AccountActionsSection(context: context),
+                verticalSpacing(16),
               ]),
             ),
           ),
@@ -307,100 +159,10 @@ class _ProfileView extends StatelessWidget {
   }
 
   void _showAboutDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.secondary200,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.flight_rounded,
-                  color: AppColors.white, size: 20),
-            ),
-            const SizedBox(width: 10),
-            const Text('GateBuddy'),
-          ],
-        ),
-        content: Text(
-          'GateBuddy is your AI-powered airport companion — helping you track flights, navigate terminals, and get real-time updates.\n\nVersion 1.0.0',
-          style: AppTextStyles.font14Regular,
-        ),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () => Navigator.pop(context),
-            child: Text('Close',
-                style: AppTextStyles.font14SemiBold.copyWith(
-                    color: AppColors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Sub-widgets ───────────────────────────────────────────────────────────────
-
-class _ProfileAppBar extends StatelessWidget {
-  final String title;
-  final double top;
-  final bool showEdit;
-  final VoidCallback? onEdit;
-
-  const _ProfileAppBar({
-    required this.title,
-    required this.top,
-    required this.showEdit,
-    this.onEdit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.primary200,
-      padding: EdgeInsets.fromLTRB(20, top + 14, 20, 14),
-      child: Row(
-        children: [
-          Text(title,
-              style: AppTextStyles.font20Bold.copyWith(
-                  color: AppColors.white)),
-          const Spacer(),
-          if (showEdit)
-            GestureDetector(
-              onTap: onEdit,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary300,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.edit_outlined,
-                        size: 14, color: AppColors.secondary200),
-                    const SizedBox(width: 4),
-                    Text('Edit',
-                        style: AppTextStyles.font12Medium.copyWith(
-                            color: AppColors.secondary200)),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
+    AppDialogs.showInfo(
+      context,
+      title: 'profile.about_title'.tr(),
+      message: 'profile.about_message'.tr(),
     );
   }
 }
@@ -415,59 +177,58 @@ class _HeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [AppColors.primary200, AppColors.primary300],
         ),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+          bottomLeft: Radius.circular(rr(32)),
+          bottomRight: Radius.circular(rr(32)),
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+      padding: EdgeInsets.fromLTRB(rw(24), rh(8), rw(24), rh(32)),
       child: Column(
         children: [
           Stack(
             children: [
-              ProfileAvatar(
-                photoUrl: user.photo,
-                name: user.name,
-                radius: 48,
-              ),
+              ProfileAvatar(photoUrl: user.photo, name: user.name, radius: 48),
               Positioned(
                 bottom: 0,
                 right: 0,
                 child: GestureDetector(
                   onTap: onEdit,
                   child: Container(
-                    width: 30,
-                    height: 30,
+                    width: rw(30),
+                    height: rw(30),
                     decoration: const BoxDecoration(
                       color: AppColors.secondary200,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.edit_rounded,
-                        size: 14, color: AppColors.white),
+                    child: Icon(
+                      Icons.edit_rounded,
+                      size: rr(14),
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          verticalSpacing(14),
           Text(
             user.name,
-            style:
-                AppTextStyles.font20Bold.copyWith(color: AppColors.white),
+            style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
           ),
-          const SizedBox(height: 4),
+          verticalSpacing(4),
           Text(
             user.email,
             style: AppTextStyles.font14Regular.copyWith(
-                color: AppColors.primary50),
+              color: AppColors.primary50,
+            ),
           ),
-          const SizedBox(height: 16),
+          verticalSpacing(16),
           _StatsRow(),
         ],
       ),
@@ -479,20 +240,31 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: rw(20), vertical: rh(12)),
       decoration: BoxDecoration(
         color: AppColors.primary300,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(rr(14)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _StatItem(label: 'Tracked', value: '—', icon: Icons.bookmark_rounded),
+          _StatItem(
+            label: 'profile.stat_tracked'.tr(),
+            value: '—',
+            icon: Icons.bookmark_rounded,
+          ),
           _VerticalDivider(),
-          _StatItem(label: 'Flights', value: '—', icon: Icons.flight_rounded),
+          _StatItem(
+            label: 'profile.stat_flights'.tr(),
+            value: '—',
+            icon: Icons.flight_rounded,
+          ),
           _VerticalDivider(),
-          _StatItem(label: 'Alerts', value: '—',
-              icon: Icons.notifications_rounded),
+          _StatItem(
+            label: 'profile.stat_alerts'.tr(),
+            value: '—',
+            icon: Icons.notifications_rounded,
+          ),
         ],
       ),
     );
@@ -514,14 +286,18 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: AppColors.secondary200, size: 18),
-        const SizedBox(height: 4),
-        Text(value,
-            style: AppTextStyles.font16Bold.copyWith(
-                color: AppColors.white)),
-        Text(label,
-            style: AppTextStyles.font12Regular.copyWith(
-                color: AppColors.primary50)),
+        Icon(icon, color: AppColors.secondary200, size: rr(18)),
+        verticalSpacing(4),
+        Text(
+          value,
+          style: AppTextStyles.font16Bold.copyWith(color: AppColors.white),
+        ),
+        Text(
+          label,
+          style: AppTextStyles.font12Regular.copyWith(
+            color: AppColors.primary50,
+          ),
+        ),
       ],
     );
   }
@@ -530,11 +306,21 @@ class _StatItem extends StatelessWidget {
 class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 40, color: AppColors.primary200);
+    return Container(width: 1, height: rh(40), color: AppColors.primary200);
   }
 }
 
 class _PreferencesSection extends StatelessWidget {
+  String _getLanguageName(String languageCode) {
+    return switch (languageCode) {
+      'en' => 'profile.language_english'.tr(),
+      'ar' => 'profile.language_arabic'.tr(),
+      'es' => 'Español',
+      'ru' => 'Русский',
+      _ => 'profile.language_english'.tr(),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsCubit, AppSettingsState>(
@@ -543,13 +329,11 @@ class _PreferencesSection extends StatelessWidget {
         final isDark = settings.themeMode == ThemeMode.dark;
 
         return ProfileSection(
-          title: 'Preferences',
+          title: 'profile.preferences'.tr(),
           children: [
             ProfileTile(
-              icon: isDark
-                  ? Icons.dark_mode_rounded
-                  : Icons.light_mode_rounded,
-              label: 'Dark Mode',
+              icon: isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+              label: 'profile.dark_mode'.tr(),
               iconColor: isDark ? AppColors.grey700 : AppColors.amber200,
               trailing: Switch(
                 value: isDark,
@@ -560,12 +344,13 @@ class _PreferencesSection extends StatelessWidget {
             ),
             ProfileTile(
               icon: Icons.language_rounded,
-              label: 'Language',
-              value: settings.isArabic ? 'Arabic' : 'English',
+              label: 'profile.language'.tr(),
+              value: _getLanguageName(settings.locale.languageCode),
               iconColor: AppColors.blue200,
-              trailing: _LanguageToggle(
-                isArabic: settings.isArabic,
-                onToggle: () => cubit.toggleLocale(context),
+              trailing: _LanguageSelector(
+                currentLocale: settings.locale,
+                onLanguageSelected: (locale) =>
+                    cubit.updateLocale(context, locale),
               ),
             ),
           ],
@@ -575,80 +360,215 @@ class _PreferencesSection extends StatelessWidget {
   }
 }
 
-class _LanguageToggle extends StatelessWidget {
-  final bool isArabic;
-  final VoidCallback onToggle;
+class _LanguageSelector extends StatelessWidget {
+  final Locale currentLocale;
+  final Function(Locale) onLanguageSelected;
 
-  const _LanguageToggle({required this.isArabic, required this.onToggle});
+  const _LanguageSelector({
+    required this.currentLocale,
+    required this.onLanguageSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onToggle,
+      onTap: () => _showLanguageModal(context),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(5)),
         decoration: BoxDecoration(
           color: AppColors.primary50,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(rr(8)),
         ),
         child: Text(
-          isArabic ? 'AR → EN' : 'EN → AR',
+          currentLocale.languageCode.toUpperCase(),
           style: AppTextStyles.font12Medium.copyWith(
-              color: AppColors.primary200),
+            color: AppColors.primary200,
+          ),
         ),
+      ),
+    );
+  }
+
+  void _showLanguageModal(BuildContext context) {
+    final languages = [
+      {'code': 'en', 'name': 'English'},
+      {'code': 'ar', 'name': 'العربية'},
+      {'code': 'es', 'name': 'Español'},
+      {'code': 'ru', 'name': 'Русский'},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: context.customColors.surface,
+      builder: (context) {
+        final colors = context.customColors;
+        return Padding(
+          padding: EdgeInsets.all(rw(16)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'profile.language'.tr(),
+                style: AppTextStyles.font16Bold.copyWith(
+                  color: colors.textPrimary,
+                ),
+              ),
+              verticalSpacing(16),
+              ...languages.map((lang) {
+                final isSelected = currentLocale.languageCode == lang['code'];
+                return GestureDetector(
+                  onTap: () {
+                    onLanguageSelected(Locale(lang['code']!));
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: rw(16),
+                      vertical: rh(14),
+                    ),
+                    margin: EdgeInsets.only(bottom: rh(8)),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primary200.withValues(alpha: 0.1)
+                          : colors.surface,
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primary200
+                            : colors.border,
+                      ),
+                      borderRadius: BorderRadius.circular(rr(12)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          lang['name']!,
+                          style: AppTextStyles.font14SemiBold.copyWith(
+                            color: isSelected
+                                ? AppColors.primary200
+                                : colors.textPrimary,
+                          ),
+                        ),
+                        if (isSelected)
+                          Icon(
+                            Icons.check_rounded,
+                            color: AppColors.primary200,
+                            size: rw(20),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              verticalSpacing(8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ── Account Actions Section ───────────────────────────────────────────────────
+
+class _AccountActionsSection extends StatelessWidget {
+  final BuildContext context;
+  const _AccountActionsSection({required this.context});
+
+  @override
+  Widget build(BuildContext ctx) {
+    final colors = ctx.customColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(16)),
+        border: Border.all(color: colors.border),
+      ),
+      child: Column(
+        children: [
+          _ActionTile(
+            icon: Icons.logout_rounded,
+            label: 'profile.logout'.tr(),
+            color: AppColors.amber200,
+            onTap: () => AppDialogs.showConfirm(
+              context,
+              title: 'profile.logout_confirmation_title'.tr(),
+              message: 'profile.logout_confirmation_message'.tr(),
+              confirmText: 'profile.logout'.tr(),
+              onConfirm: () => context.read<AuthCubit>().logout(),
+            ),
+          ),
+          Divider(height: 1, color: colors.border),
+          _ActionTile(
+            icon: Icons.delete_forever_rounded,
+            label: 'profile.delete_account'.tr(),
+            color: AppColors.red200,
+            onTap: () => AppDialogs.showConfirm(
+              context,
+              title: 'profile.delete_account_confirmation_title'.tr(),
+              message: 'profile.delete_account_confirmation_message'.tr(),
+              confirmText: 'profile.delete_account'.tr(),
+              onConfirm: () => context.read<AuthCubit>().deleteAccount(),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _LogoutButton extends StatelessWidget {
+class _ActionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
   final VoidCallback onTap;
-  const _LogoutButton({required this.onTap});
+
+  const _ActionTile({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52,
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary200,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-          elevation: 0,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(rr(16)),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(16)),
+          child: Row(
+            children: [
+              Container(
+                width: rw(38),
+                height: rw(38),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(rr(10)),
+                ),
+                child: Icon(icon, color: color, size: rr(18)),
+              ),
+              horizontalSpacing(14),
+              Expanded(
+                child: Text(
+                  label,
+                  style: AppTextStyles.font14SemiBold.copyWith(color: color),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: rr(14),
+                color: color.withValues(alpha: 0.5),
+              ),
+            ],
+          ),
         ),
-        icon: const Icon(Icons.logout_rounded,
-            color: AppColors.white, size: 18),
-        label: Text('Log Out',
-            style: AppTextStyles.font16SemiBold.copyWith(
-                color: AppColors.white)),
-      ),
-    );
-  }
-}
-
-class _DeleteButton extends StatelessWidget {
-  final VoidCallback onTap;
-  const _DeleteButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52,
-      child: OutlinedButton.icon(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.red200,
-          side: const BorderSide(color: AppColors.red200),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-        ),
-        icon: const Icon(Icons.delete_outline_rounded, size: 18),
-        label: Text('Delete Account',
-            style: AppTextStyles.font16SemiBold.copyWith(
-                color: AppColors.red200)),
       ),
     );
   }

@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
-import 'package:gate_buddy/core/utils/extensions/context_ext.dart';
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
+import '../../../../core/utils/helpers/flight_time_helpers.dart';
+import '../../../../core/widgets/flight_status_badge.dart';
 import '../../data/models/flight_model.dart';
 import '../../logic/cubit/flights_cubit.dart';
 
@@ -23,10 +27,10 @@ class FlightCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: rh(12)),
         decoration: BoxDecoration(
           color: colors.surface,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(rr(14)),
           border: Border.all(color: colors.border),
           boxShadow: [
             BoxShadow(
@@ -40,24 +44,24 @@ class FlightCard extends StatelessWidget {
           children: [
             // ── Status bar ──────────────────────────────────────────────────
             Container(
-              height: 5,
+              height: rh(5),
               decoration: BoxDecoration(
-                color: _statusColor(flight.status),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(14),
+                color: flightStatusColor(flight.status),
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(rr(14)),
                 ),
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(rw(14)),
               child: Column(
                 children: [
                   // ── Row 1: Airline + track button ────────────────────────
                   Row(
                     children: [
                       _AirlineLogo(logoUrl: flight.airline.logo),
-                      const SizedBox(width: 10),
+                      SizedBox(width: rw(10)),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,21 +83,21 @@ class FlightCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      _StatusBadge(status: flight.status),
-                      const SizedBox(width: 8),
-                      _TrackButton(
-                        flight: flight,
-                        isLoading: isTracking,
+                      FlightStatusBadge(
+                        status: flight.status,
+                        showBorder: false,
                       ),
+                      SizedBox(width: rw(8)),
+                      _TrackButton(flight: flight, isLoading: isTracking),
                     ],
                   ),
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: rh(14)),
 
                   // ── Row 2: Route ─────────────────────────────────────────
                   _RouteRow(flight: flight, colors: colors),
 
-                  const SizedBox(height: 12),
+                  SizedBox(height: rh(12)),
 
                   // ── Row 3: Gate / Terminal / Type ────────────────────────
                   Row(
@@ -104,7 +108,7 @@ class FlightCard extends StatelessWidget {
                             'Gate ${flight.departure.gate ?? flight.arrival.gate ?? '—'}',
                         colors: colors,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: rw(8)),
                       _InfoChip(
                         icon: Icons.business_outlined,
                         label:
@@ -113,13 +117,13 @@ class FlightCard extends StatelessWidget {
                       ),
                       const Spacer(),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: rw(8),
+                          vertical: rh(3),
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.primary50,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(rr(6)),
                         ),
                         child: Text(
                           flight.type.toUpperCase(),
@@ -134,7 +138,7 @@ class FlightCard extends StatelessWidget {
 
                   // ── Updates badge ────────────────────────────────────────
                   if (flight.updates.isNotEmpty) ...[
-                    const SizedBox(height: 10),
+                    SizedBox(height: rh(10)),
                     _UpdatesBadge(update: flight.updates.first),
                   ],
                 ],
@@ -144,25 +148,6 @@ class FlightCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  static Color _statusColor(String status) {
-    switch (status.toUpperCase()) {
-      case 'ON_TIME':
-        return AppColors.green200;
-      case 'DELAYED':
-        return AppColors.amber200;
-      case 'CANCELLED':
-        return AppColors.red200;
-      case 'BOARDING':
-        return AppColors.blue200;
-      case 'DEPARTED':
-        return AppColors.grey400;
-      case 'LANDED':
-        return AppColors.success;
-      default:
-        return AppColors.grey300;
-    }
   }
 }
 
@@ -200,42 +185,6 @@ class _AirlineLogo extends StatelessWidget {
   }
 }
 
-// ── Status Badge ─────────────────────────────────────────────────────────────
-
-class _StatusBadge extends StatelessWidget {
-  final String status;
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = FlightCard._statusColor(status);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            _label(status),
-            style: AppTextStyles.font12Bold.copyWith(color: color),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _label(String s) => s.replaceAll('_', ' ');
-}
-
 // ── Track Button ─────────────────────────────────────────────────────────────
 
 class _TrackButton extends StatelessWidget {
@@ -254,9 +203,7 @@ class _TrackButton extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: flight.isTracked
-              ? AppColors.primary200
-              : AppColors.primary50,
+          color: flight.isTracked ? AppColors.primary200 : AppColors.primary50,
           shape: BoxShape.circle,
         ),
         child: isLoading
@@ -283,12 +230,6 @@ class _TrackButton extends StatelessWidget {
 
 // ── Route Row ────────────────────────────────────────────────────────────────
 
-String _formatTime(DateTime dt) {
-  final h = dt.hour.toString().padLeft(2, '0');
-  final m = dt.minute.toString().padLeft(2, '0');
-  return '$h:$m';
-}
-
 class _RouteRow extends StatelessWidget {
   final FlightModel flight;
   final dynamic colors;
@@ -296,17 +237,17 @@ class _RouteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final depTime = flight.departure.estimatedTime ??
-        flight.departure.scheduledTime;
-    final arrTime = flight.arrival.estimatedTime ??
-        flight.arrival.scheduledTime;
+    final depTime =
+        flight.departure.estimatedTime ?? flight.departure.scheduledTime;
+    final arrTime =
+        flight.arrival.estimatedTime ?? flight.arrival.scheduledTime;
 
     return Row(
       children: [
         // From
         _TimeBlock(
           code: flight.route.fromCode,
-          time: depTime != null ? _formatTime(depTime) : '—',
+          time: depTime != null ? formatHm(depTime) : '—',
           label: 'Departure',
           colors: colors,
           align: CrossAxisAlignment.start,
@@ -318,31 +259,23 @@ class _RouteRow extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      height: 1,
-                      color: AppColors.grey200,
-                    ),
-                  ),
+                  Expanded(child: Container(height: 1, color: colors.border)),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    padding: EdgeInsets.symmetric(horizontal: rw(6)),
                     child: Icon(
                       Icons.flight,
-                      size: 16,
+                      size: rw(16),
                       color: AppColors.secondary200,
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      height: 1,
-                      color: AppColors.grey200,
-                    ),
-                  ),
+                  Expanded(child: Container(height: 1, color: colors.border)),
                 ],
               ),
               const SizedBox(height: 2),
               Text(
-                flight.direction == 'departure' ? 'Departure' : 'Arrival',
+                flight.direction == 'departure'
+                    ? 'flights.departure'.tr()
+                    : 'flights.arrival'.tr(),
                 style: AppTextStyles.font12Regular.copyWith(
                   color: colors.textHint,
                 ),
@@ -354,7 +287,7 @@ class _RouteRow extends StatelessWidget {
         // To
         _TimeBlock(
           code: flight.route.toCode,
-          time: arrTime != null ? _formatTime(arrTime) : '—',
+          time: arrTime != null ? formatHm(arrTime) : '—',
           label: 'Arrival',
           colors: colors,
           align: CrossAxisAlignment.end,
@@ -386,9 +319,7 @@ class _TimeBlock extends StatelessWidget {
       children: [
         Text(
           code,
-          style: AppTextStyles.font18Bold.copyWith(
-            color: AppColors.primary200,
-          ),
+          style: AppTextStyles.font18Bold.copyWith(color: AppColors.primary200),
         ),
         Text(
           time,
@@ -407,15 +338,19 @@ class _InfoChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final dynamic colors;
-  const _InfoChip({required this.icon, required this.label, required this.colors});
+  const _InfoChip({
+    required this.icon,
+    required this.label,
+    required this.colors,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: rw(8), vertical: rh(4)),
       decoration: BoxDecoration(
         color: colors.surfaceVariant,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(rr(8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -444,10 +379,10 @@ class _UpdatesBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(6)),
       decoration: BoxDecoration(
         color: AppColors.amber0,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(rr(8)),
         border: Border.all(color: AppColors.amber100),
       ),
       child: Row(

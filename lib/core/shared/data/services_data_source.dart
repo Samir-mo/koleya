@@ -1,7 +1,7 @@
-import 'package:gate_buddy/core/api/api_consumer.dart';
-import 'package:gate_buddy/core/api/api_endpoints.dart';
-import 'package:gate_buddy/core/errors/error_handler.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../api/api_consumer.dart';
+import '../../api/api_endpoints.dart';
+import '../../errors/error_handler.dart';
+import '../models/service_model.dart';
 
 /// Single source of truth for all /services API calls.
 /// Both ExplorePlaces and IndoorMap features delegate to this class.

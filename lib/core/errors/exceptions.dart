@@ -6,7 +6,8 @@ abstract class AppException implements Exception {
   AppException({required this.message, this.statusCode});
 
   @override
-  String toString() => message;
+  String toString() =>
+      statusCode != null ? '$message (HTTP $statusCode)' : message;
 }
 
 class ServerException extends AppException {
@@ -18,59 +19,57 @@ class CacheException extends AppException {
 }
 
 class NetworkException extends AppException {
-  NetworkException({
-    super.message = 'No internet connection. Please check your network.',
-  });
+  NetworkException({super.message = 'errors.no_internet'});
 }
 
 class UnauthorizedException extends AppException {
   UnauthorizedException({
-    super.message = 'Unauthorized access. Please login again.',
+    super.message = 'errors.unauthorized',
     super.statusCode = 401,
   });
 }
 
 class ForbiddenException extends AppException {
   ForbiddenException({
-    super.message = 'Access forbidden.',
+    super.message = 'errors.forbidden',
     super.statusCode = 403,
   });
 }
 
 class NotFoundException extends AppException {
   NotFoundException({
-    super.message = 'Resource not found.',
+    super.message = 'errors.not_found',
     super.statusCode = 404,
   });
 }
 
 class TimeoutException extends AppException {
-  TimeoutException({super.message = 'Request timeout. Please try again.'});
+  TimeoutException({super.message = 'errors.timeout'});
 }
 
 class ValidationException extends AppException {
   final Map<String, dynamic>? errors;
   ValidationException({
-    super.message = 'Validation failed.',
+    super.message = 'errors.validation',
     this.errors,
     super.statusCode = 422,
   });
 }
 
 class ParseException extends AppException {
-  ParseException({super.message = 'Failed to parse response data.'});
+  ParseException({super.message = 'errors.parse_error'});
 }
 
 class ConflictException extends AppException {
   ConflictException({
-    super.message = 'Resource already exists.',
+    super.message = 'errors.conflict',
     super.statusCode = 409,
   });
 }
 
 class TooManyRequestsException extends AppException {
   TooManyRequestsException({
-    super.message = 'Too many requests. Please slow down.',
+    super.message = 'errors.too_many_requests',
     super.statusCode = 429,
   });
 }

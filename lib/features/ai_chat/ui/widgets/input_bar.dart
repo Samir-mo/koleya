@@ -1,6 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/core/themes/app_text_styles.dart';
+
+import '../../../../core/themes/app_colors.dart';
+import '../../../../core/themes/app_text_styles.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
+import '../../../../core/utils/spacing.dart';
 
 class InputBar extends StatefulWidget {
   final TextEditingController controller;
@@ -42,16 +46,17 @@ class InputBarState extends State<InputBar> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
     return Container(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 10,
-        bottom: MediaQuery.of(context).padding.bottom + 10,
+        left: rw(16),
+        right: rw(16),
+        top: rh(10),
+        bottom: MediaQuery.of(context).padding.bottom + rh(10),
       ),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.grey100)),
+        color: colors.background,
+        border: Border(top: BorderSide(color: colors.border)),
         boxShadow: [
           BoxShadow(
             color: AppColors.black.withValues(alpha: 0.04),
@@ -67,9 +72,9 @@ class InputBarState extends State<InputBar> {
             child: Container(
               constraints: const BoxConstraints(maxHeight: 120),
               decoration: BoxDecoration(
-                color: AppColors.grey50,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppColors.grey100),
+                color: colors.surface,
+                borderRadius: BorderRadius.circular(rr(24)),
+                border: Border.all(color: colors.border),
               ),
               child: TextField(
                 controller: widget.controller,
@@ -78,37 +83,37 @@ class InputBarState extends State<InputBar> {
                 keyboardType: TextInputType.multiline,
                 textInputAction: TextInputAction.newline,
                 style: AppTextStyles.font14Regular.copyWith(
-                  color: AppColors.grey700,
+                  color: colors.textPrimary,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Ask GateBuddy anything...',
+                  hintText: 'ai_chat.input_hint'.tr(),
                   hintStyle: AppTextStyles.font14Regular.copyWith(
-                    color: AppColors.grey400,
+                    color: colors.textHint,
                   ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: rw(16),
+                    vertical: rh(10),
                   ),
                   filled: false,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          horizontalSpacing(10),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: 44,
-            height: 44,
+            width: rw(44),
+            height: rw(44),
             decoration: BoxDecoration(
-              color: _hasText ? AppColors.primary200 : AppColors.grey200,
+              color: _hasText ? AppColors.primary200 : colors.border,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               onPressed: _hasText ? widget.onSend : null,
-              icon: const Icon(Icons.send_rounded, size: 20),
+              icon: Icon(Icons.send_rounded, size: rr(20)),
               color: AppColors.white,
               padding: EdgeInsets.zero,
             ),

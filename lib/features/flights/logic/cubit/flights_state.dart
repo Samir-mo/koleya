@@ -44,20 +44,22 @@ class FlightsState extends Equatable {
       searchResults: searchResults ?? this.searchResults,
       query: query ?? this.query,
       isSearching: isSearching ?? this.isSearching,
-      trackingFlightId: clearTracking ? null : (trackingFlightId ?? this.trackingFlightId),
+      trackingFlightId: clearTracking
+          ? null
+          : (trackingFlightId ?? this.trackingFlightId),
       error: clearError ? null : (error ?? this.error),
     );
   }
 
   @override
   List<Object?> get props => [
-        status,
-        departures,
-        arrivals,
-        searchResults,
-        query,
-        isSearching,
-        trackingFlightId,
-        error,
-      ];
+    status,
+    departures,
+    arrivals,
+    searchResults,
+    query,
+    isSearching,
+    trackingFlightId,
+    error,
+  ];
 }

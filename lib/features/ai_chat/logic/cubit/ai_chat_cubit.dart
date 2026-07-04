@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gate_buddy/core/errors/failure.dart';
+import '../../../../core/errors/failure.dart';
 
 import '../../../../core/shared/models/assistant_message.dart';
 import '../../data/repo/ai_chat_repo.dart';

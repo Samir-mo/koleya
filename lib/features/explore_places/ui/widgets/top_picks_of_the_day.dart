@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:gate_buddy/features/explore_places/ui/widgets/pick_thumbnail.dart';
+import '../../../../core/utils/spacing.dart';
+import 'pick_thumbnail.dart';
 
 class TopPicksOfTheDay extends StatelessWidget {
   const TopPicksOfTheDay({super.key});
@@ -18,9 +20,9 @@ class TopPicksOfTheDay extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _SectionHeader(),
-        const SizedBox(height: 12),
+        verticalSpacing(12),
         SizedBox(
-          height: 75,
+          height: rh(75),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: imagePaths.length,
@@ -39,14 +41,14 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
-        Text('⭐', style: TextStyle(fontSize: 18)),
-        SizedBox(width: 6),
+        Text('⭐', style: TextStyle(fontSize: rf(18))),
+        SizedBox(width: rw(6)),
         Text(
-          'Top Picks of the Day',
+          'explore_places.top_picks'.tr(),
           style: TextStyle(
-            fontSize: 16,
+            fontSize: rf(16),
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),

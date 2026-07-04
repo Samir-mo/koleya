@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:latlong2/latlong.dart';
 
-import 'package:gate_buddy/core/shared/models/service_model.dart';
+import '../../../core/shared/models/service_model.dart';
 
 import '../domain/airport_waypoints.dart';
 
@@ -44,11 +44,7 @@ class IndoorRoutingService {
 
   // ─── Path selection based on destination zone ─────────────────────────────
 
-  static List<LatLng> _selectPath(
-    LatLng from,
-    LatLng to,
-    ServiceModel dest,
-  ) {
+  static List<LatLng> _selectPath(LatLng from, LatLng to, ServiceModel dest) {
     final zone = dest.zone;
     final category = dest.category.toUpperCase();
 

@@ -1,14 +1,19 @@
-﻿import 'package:gate_buddy/core/api/api_consumer.dart';
-import 'package:gate_buddy/core/api/api_endpoints.dart';
+import '../../../../core/api/api_consumer.dart';
+import '../../../../core/api/api_endpoints.dart';
+import '../../../../core/data/base_remote_ds.dart';
 
-class ProfileRemoteDs {
+class ProfileRemoteDs with BaseRemoteDs {
   final ApiConsumer api;
   ProfileRemoteDs({required this.api});
 
-  Future<dynamic> getMe() => api.get(ApiEndpoints.getProfile);
+  Future<dynamic> getMe() => execute(() => api.get(ApiEndpoints.getProfile));
+
   Future<dynamic> updateMe(Map<String, dynamic> data) =>
-      api.patch(ApiEndpoints.updateMe, body: data);
+      execute(() => api.patch(ApiEndpoints.updateMe, body: data));
+
   Future<dynamic> updateMyPassword(Map<String, dynamic> data) =>
-      api.patch(ApiEndpoints.updateMyPassword, body: data);
-  Future<dynamic> deleteMe() => api.delete(ApiEndpoints.deleteMe);
+      execute(() => api.patch(ApiEndpoints.updateMyPassword, body: data));
+
+  Future<dynamic> deleteMe() =>
+      execute(() => api.delete(ApiEndpoints.deleteMe));
 }

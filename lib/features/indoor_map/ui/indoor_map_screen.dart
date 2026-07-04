@@ -1,10 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gate_buddy/core/shared/models/service_model.dart';
-import 'package:gate_buddy/core/themes/app_colors.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_cubit.dart';
-import 'package:gate_buddy/features/indoor_map/logic/cubit/indoor_map_state.dart';
+import '../../../core/shared/models/service_model.dart';
+import '../../../core/themes/app_colors.dart';
+import '../../../core/themes/app_text_styles.dart';
+import '../../../core/utils/spacing.dart';
+import '../../../core/widgets/custom_text_button.dart';
+import '../logic/cubit/indoor_map_cubit.dart';
+import '../logic/cubit/indoor_map_state.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'widgets/map_category_filter.dart';
@@ -48,31 +52,29 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     if (points.isEmpty) return;
     final bounds = LatLngBounds.fromPoints(points);
     _mapController.fitCamera(
-      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(60)),
+      CameraFit.bounds(bounds: bounds, padding: EdgeInsets.all(rw(60))),
     );
   }
 
-  // ─── Marker appearance by category ───────────────────────────────────────
-
   Color _markerColor(String category) => switch (category.toUpperCase()) {
-        'RESTAURANTS' => const Color(0xFFEA580C),
-        'SHOPS' => const Color(0xFF7C3AED),
-        'VIP_SERVICES' => AppColors.secondary200,
-        'FINANCIAL' => const Color(0xFF059669),
-        'COUNTERS' => const Color(0xFF0284C7),
-        'ACCESSIBILITY' => const Color(0xFF0891B2),
-        _ => AppColors.primary200,
-      };
+    'RESTAURANTS' => AppColors.primary200,
+    'SHOPS' => AppColors.primary300,
+    'VIP_SERVICES' => AppColors.secondary200,
+    'FINANCIAL' => const Color(0xFF059669),
+    'COUNTERS' => const Color(0xFF0284C7),
+    'ACCESSIBILITY' => const Color(0xFF0891B2),
+    _ => AppColors.primary200,
+  };
 
   IconData _markerIcon(String category) => switch (category.toUpperCase()) {
-        'RESTAURANTS' => Icons.restaurant_rounded,
-        'SHOPS' => Icons.storefront_rounded,
-        'VIP_SERVICES' => Icons.workspace_premium_rounded,
-        'FINANCIAL' => Icons.account_balance_rounded,
-        'COUNTERS' => Icons.confirmation_number_rounded,
-        'ACCESSIBILITY' => Icons.accessibility_new_rounded,
-        _ => Icons.place_rounded,
-      };
+    'RESTAURANTS' => Icons.restaurant_rounded,
+    'SHOPS' => Icons.storefront_rounded,
+    'VIP_SERVICES' => Icons.workspace_premium_rounded,
+    'FINANCIAL' => Icons.account_balance_rounded,
+    'COUNTERS' => Icons.confirmation_number_rounded,
+    'ACCESSIBILITY' => Icons.accessibility_new_rounded,
+    _ => Icons.place_rounded,
+  };
 
   Marker _buildServiceMarker(
     ServiceModel service,
@@ -82,8 +84,8 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     final color = _markerColor(service.category);
     return Marker(
       point: LatLng(service.latitude, service.longitude),
-      width: isSelected ? 52 : 40,
-      height: isSelected ? 62 : 50,
+      width: isSelected ? rw(52) : rw(40),
+      height: isSelected ? rh(62) : rh(50),
       child: GestureDetector(
         onTap: onTap,
         child: Column(
@@ -91,10 +93,10 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: isSelected ? 44 : 34,
-              height: isSelected ? 44 : 34,
+              width: isSelected ? rw(44) : rw(34),
+              height: isSelected ? rw(44) : rw(34),
               decoration: BoxDecoration(
-                color: isSelected ? color : Colors.white,
+                color: isSelected ? color : AppColors.white,
                 shape: BoxShape.circle,
                 border: Border.all(color: color, width: isSelected ? 0 : 2.5),
                 boxShadow: [
@@ -107,16 +109,16 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
               ),
               child: Icon(
                 _markerIcon(service.category),
-                size: isSelected ? 22 : 17,
-                color: isSelected ? Colors.white : color,
+                size: isSelected ? rr(22) : rr(17),
+                color: isSelected ? AppColors.white : color,
               ),
             ),
             Container(
               width: 2,
-              height: isSelected ? 10 : 8,
+              height: isSelected ? rh(10) : rh(8),
               decoration: BoxDecoration(
                 color: color,
-                borderRadius: BorderRadius.circular(1),
+                borderRadius: BorderRadius.circular(rr(1)),
               ),
             ),
           ],
@@ -153,19 +155,20 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                       _buildMap(context, state),
                       if (state is IndoorMapLoaded && !state.isNavigating)
                         Positioned(
-                          top: 12,
+                          top: rh(12),
                           left: 0,
                           right: 0,
                           child: MapCategoryFilter(
                             selected: state.selectedCategory,
-                            onSelected: (cat) =>
-                                context.read<IndoorMapCubit>().filterByCategory(cat),
+                            onSelected: (cat) => context
+                                .read<IndoorMapCubit>()
+                                .filterByCategory(cat),
                           ),
                         ),
                       if (state is IndoorMapLoaded && !state.isNavigating)
                         Positioned(
-                          bottom: 14,
-                          left: 12,
+                          bottom: rh(14),
+                          left: rw(12),
                           child: _buildLegend(),
                         ),
                       Positioned(
@@ -185,39 +188,38 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     );
   }
 
-  // ─── App bar ──────────────────────────────────────────────────────────────
-
   Widget _buildAppBar(BuildContext context, IndoorMapState state) {
     final isNav = state is IndoorMapLoaded && state.isNavigating;
     return Container(
-      height: 56,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: rh(56),
+      padding: EdgeInsets.symmetric(horizontal: rw(16)),
       color: AppColors.primary200,
       child: Row(
         children: [
-          const SizedBox(width: 4),
+          horizontalSpacing(4),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Indoor Map',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 17,
+                Text(
+                  'indoor_map.title'.tr(),
+                  style: AppTextStyles.font16Bold.copyWith(
+                    color: AppColors.white,
                     letterSpacing: 0.2,
                   ),
                 ),
                 if (state is IndoorMapLoaded)
                   Text(
                     isNav
-                        ? 'Navigation active'
-                        : '${state.filteredServices.length} services nearby',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
-                      fontSize: 11,
+                        ? 'indoor_map.navigation_active'.tr()
+                        : 'indoor_map.services_nearby'.tr(
+                            namedArgs: {
+                              'count': '${state.filteredServices.length}',
+                            },
+                          ),
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.white.withValues(alpha: 0.7),
                     ),
                   ),
               ],
@@ -226,15 +228,15 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
           GestureDetector(
             onTap: () => _mapController.move(_airportCenter, _defaultZoom),
             child: Container(
-              padding: const EdgeInsets.all(9),
+              padding: EdgeInsets.all(rr(9)),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(11),
+                color: AppColors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(rr(11)),
               ),
               child: Icon(
                 Icons.my_location_rounded,
                 color: AppColors.secondary200,
-                size: 18,
+                size: rr(18),
               ),
             ),
           ),
@@ -242,8 +244,6 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
       ),
     );
   }
-
-  // ─── Map ──────────────────────────────────────────────────────────────────
 
   Widget _buildMap(BuildContext context, IndoorMapState state) {
     final loaded = state is IndoorMapLoaded ? state : null;
@@ -267,7 +267,6 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
           userAgentPackageName: 'com.gate_buddy.app',
         ),
 
-        // Route polyline layers
         if (loaded?.activeRoute != null)
           PolylineLayer(
             polylines: [
@@ -293,7 +292,6 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
             ],
           ),
 
-        // Service markers
         if (loaded != null)
           MarkerLayer(
             markers: loaded.filteredServices.map((service) {
@@ -306,11 +304,9 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
             }).toList(),
           ),
 
-        // User position
         if (loaded != null)
           MarkerLayer(markers: [buildUserMarker(loaded.userPosition)]),
 
-        // Destination pin
         if (loaded?.navigationDestination != null)
           MarkerLayer(
             markers: [
@@ -319,29 +315,38 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
                   loaded!.navigationDestination!.latitude,
                   loaded.navigationDestination!.longitude,
                 ),
-                width: 44,
-                height: 54,
+                width: rw(44),
+                height: rh(54),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 36,
-                      height: 36,
+                      width: rw(36),
+                      height: rw(36),
                       decoration: BoxDecoration(
                         color: AppColors.secondary200,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.secondary200.withValues(alpha: 0.45),
+                            color: AppColors.secondary200.withValues(
+                              alpha: 0.45,
+                            ),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
                         ],
                       ),
-                      child: const Icon(Icons.place_rounded,
-                          color: Colors.white, size: 20),
+                      child: Icon(
+                        Icons.place_rounded,
+                        color: AppColors.white,
+                        size: rr(20),
+                      ),
                     ),
-                    Container(width: 2, height: 10, color: AppColors.secondary200),
+                    Container(
+                      width: 2,
+                      height: rh(10),
+                      color: AppColors.secondary200,
+                    ),
                   ],
                 ),
               ),
@@ -351,34 +356,36 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
     );
   }
 
-  // ─── Bottom area ──────────────────────────────────────────────────────────
-
   Widget _buildBottomArea(BuildContext context, IndoorMapState state) {
     if (state is IndoorMapLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(child: CircularProgressIndicator(color: Colors.white)),
+      return Padding(
+        padding: EdgeInsets.all(rr(24)),
+        child: const Center(
+          child: CircularProgressIndicator(color: AppColors.white),
+        ),
       );
     }
 
     if (state is IndoorMapError) {
       return Container(
-        margin: const EdgeInsets.all(12),
-        padding: const EdgeInsets.all(16),
+        margin: EdgeInsets.all(rw(12)),
+        padding: EdgeInsets.all(rw(16)),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(rr(16)),
         ),
         child: Row(
           children: [
             Icon(Icons.error_outline, color: AppColors.red200),
-            const SizedBox(width: 10),
+            horizontalSpacing(10),
             Expanded(
-                child: Text(state.message,
-                    style: const TextStyle(fontSize: 13))),
-            TextButton(
+              child: Text(state.message, style: AppTextStyles.font12Regular),
+            ),
+            CustomTextButton.text(
+              text: 'errors.error_screen_button'.tr(),
               onPressed: () => context.read<IndoorMapCubit>().retry(),
-              child: const Text('Retry'),
+              size: CustomButtonSize.small,
+              isFullWidth: false,
             ),
           ],
         ),
@@ -399,32 +406,31 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
       return ServiceDetailSheet(
         service: state.selectedService!,
         onClose: () => context.read<IndoorMapCubit>().clearSelection(),
-        onNavigate: () =>
-            context.read<IndoorMapCubit>().startNavigation(state.selectedService!),
+        onNavigate: () => context.read<IndoorMapCubit>().startNavigation(
+          state.selectedService!,
+        ),
       );
     }
 
     return const SizedBox.shrink();
   }
 
-  // ─── Legend ───────────────────────────────────────────────────────────────
-
   Widget _buildLegend() {
     final items = [
-      ('Dining', const Color(0xFFEA580C)),
-      ('Shops', const Color(0xFF7C3AED)),
-      ('VIP', AppColors.secondary200),
-      ('Finance', const Color(0xFF059669)),
-      ('Counters', const Color(0xFF0284C7)),
+      ('indoor_map.legend_dining'.tr(), const Color(0xFFEA580C)),
+      ('indoor_map.legend_shops'.tr(), const Color(0xFF7C3AED)),
+      ('indoor_map.legend_vip'.tr(), AppColors.secondary200),
+      ('indoor_map.legend_finance'.tr(), const Color(0xFF059669)),
+      ('indoor_map.legend_counters'.tr(), const Color(0xFF0284C7)),
     ];
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: rw(10), vertical: rh(8)),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.95),
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.white.withValues(alpha: 0.95),
+        borderRadius: BorderRadius.circular(rr(12)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: AppColors.black.withValues(alpha: 0.1),
             blurRadius: 8,
           ),
         ],
@@ -435,22 +441,22 @@ class _IndoorMapViewState extends State<_IndoorMapView> {
         children: items
             .map(
               (item) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
+                padding: EdgeInsets.only(bottom: rh(4)),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 8,
-                      height: 8,
+                      width: rw(8),
+                      height: rw(8),
                       decoration: BoxDecoration(
-                          color: item.$2, shape: BoxShape.circle),
+                        color: item.$2,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                    const SizedBox(width: 6),
+                    horizontalSpacing(6),
                     Text(
                       item.$1,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                      style: AppTextStyles.font12Medium.copyWith(
                         color: AppColors.primary200,
                       ),
                     ),

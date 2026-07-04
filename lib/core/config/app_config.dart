@@ -29,8 +29,7 @@ class AppConfig {
   static const String developerGithub = 'https://github.com/mustafaelbaz5';
   static const String developerProfile =
       'https://mustafa-portfolio-eight.vercel.app/';
-  static const String developerLinkedIn =
-      '';
+  static const String developerLinkedIn = '';
   static const String developerEmail = '';
 
   // API

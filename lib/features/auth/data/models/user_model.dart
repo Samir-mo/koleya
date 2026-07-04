@@ -34,28 +34,26 @@ class UserModel extends Equatable {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json['_id'] as String? ?? json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        email: json['email'] as String? ?? '',
-        photo: json['photo'] as String?,
-        preferences: json['preferences'] is Map
-            ? UserPreferences.fromJson(
-                json['preferences'] as Map<String, dynamic>)
-            : const UserPreferences(),
-      );
+    id: json['_id'] as String? ?? json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    photo: json['photo'] as String?,
+    preferences: json['preferences'] is Map
+        ? UserPreferences.fromJson(json['preferences'] as Map<String, dynamic>)
+        : const UserPreferences(),
+  );
 
   UserModel copyWith({
     String? name,
     String? photo,
     UserPreferences? preferences,
-  }) =>
-      UserModel(
-        id: id,
-        name: name ?? this.name,
-        email: email,
-        photo: photo ?? this.photo,
-        preferences: preferences ?? this.preferences,
-      );
+  }) => UserModel(
+    id: id,
+    name: name ?? this.name,
+    email: email,
+    photo: photo ?? this.photo,
+    preferences: preferences ?? this.preferences,
+  );
 
   @override
   List<Object?> get props => [id, name, email, photo, preferences];

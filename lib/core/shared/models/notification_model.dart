@@ -2,8 +2,8 @@ class NotificationModel {
   final int id;
   final String title;
   final String body;
-  final String? type;       // نوع التنبيه (رحلة – خدمة – عام)
-  final String? createdAt;  // وقت الإشعار
+  final String? type; // نوع التنبيه (رحلة – خدمة – عام)
+  final String? createdAt; // وقت الإشعار
 
   NotificationModel({
     required this.id,
@@ -24,10 +24,10 @@ class NotificationModel {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "body": body,
-        if (type != null) "type": type,
-        if (createdAt != null) "created_at": createdAt,
-      };
+    "id": id,
+    "title": title,
+    "body": body,
+    if (type != null) "type": type,
+    if (createdAt != null) "created_at": createdAt,
+  };
 }
