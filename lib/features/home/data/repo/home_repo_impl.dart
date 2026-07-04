@@ -12,12 +12,14 @@ class HomeRepoImpl implements HomeRepo {
   Future<HomeModel> getHomeData() => remoteDs.getHomeData();
 
   @override
-  Future<List<FlightUpdateModel>> getFlightUpdates(String flightId) async {
-    final raw = await remoteDs.getFlightUpdates(flightId);
+  Future<List<FlightModel>> getFlightUpdates() async {
+    final raw = await remoteDs.getFlightUpdates();
     final data = raw is Map ? (raw['data'] ?? raw) : raw;
-    final list = data is List ? data : (data['updates'] as List? ?? []);
+    final list = data is Map
+        ? (data['flights'] as List? ?? [])
+        : (data is List ? data : []);
     return list
-        .map((e) => FlightUpdateModel.fromJson(e as Map<String, dynamic>))
+        .map((e) => FlightModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
 }

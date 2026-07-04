@@ -9,19 +9,14 @@ class HomeState extends Equatable {
   final HomeModel? data;
   final String? error;
 
-  // Flight-updates load has its own status/error so it can't clobber the
-  // main dashboard status when the two loads race (see HomeCubit.refresh).
-  final HomeStatus flightUpdatesStatus;
-  final List<FlightUpdateModel> flightUpdates;
-  final String? flightUpdatesError;
+  // Recently updated flights; fetched separately from the main dashboard.
+  final List<FlightModel> updatedFlights;
 
   const HomeState({
     this.status = HomeStatus.initial,
     this.data,
     this.error,
-    this.flightUpdatesStatus = HomeStatus.initial,
-    this.flightUpdates = const [],
-    this.flightUpdatesError,
+    this.updatedFlights = const [],
   });
 
   bool get isLoading => status == HomeStatus.loading;
@@ -33,28 +28,14 @@ class HomeState extends Equatable {
     HomeModel? data,
     String? error,
     bool clearError = false,
-    HomeStatus? flightUpdatesStatus,
-    List<FlightUpdateModel>? flightUpdates,
-    String? flightUpdatesError,
-    bool clearFlightUpdatesError = false,
+    List<FlightModel>? updatedFlights,
   }) => HomeState(
     status: status ?? this.status,
     data: data ?? this.data,
     error: clearError ? null : error ?? this.error,
-    flightUpdatesStatus: flightUpdatesStatus ?? this.flightUpdatesStatus,
-    flightUpdates: flightUpdates ?? this.flightUpdates,
-    flightUpdatesError: clearFlightUpdatesError
-        ? null
-        : flightUpdatesError ?? this.flightUpdatesError,
+    updatedFlights: updatedFlights ?? this.updatedFlights,
   );
 
   @override
-  List<Object?> get props => [
-    status,
-    data,
-    error,
-    flightUpdatesStatus,
-    flightUpdates,
-    flightUpdatesError,
-  ];
+  List<Object?> get props => [status, data, error, updatedFlights];
 }

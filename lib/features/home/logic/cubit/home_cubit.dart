@@ -14,8 +14,8 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final data = await repo.getHomeData();
       emit(state.copyWith(status: HomeStatus.success, data: data));
-      final flightId = data.userTrack?.flight.id;
-      if (flightId != null && flightId.isNotEmpty) loadFlightUpdates(flightId);
+      // Load recently updated flights in parallel
+      loadUpdatedFlights();
     } on AppException catch (e) {
       emit(state.copyWith(status: HomeStatus.failure, error: e.message));
     } catch (e) {
@@ -23,38 +23,14 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  /// Loads live field-change updates for the tracked flight [flightId] —
-  /// supplemental to the dashboard, so it's tracked via its own status/error
-  /// and never overwrites `status`.
-  Future<void> loadFlightUpdates(String flightId) async {
-    emit(
-      state.copyWith(
-        flightUpdatesStatus: HomeStatus.loading,
-        clearFlightUpdatesError: true,
-      ),
-    );
+  /// Loads recently updated flights from `/flights/updated` endpoint.
+  /// Non-fatal if it fails since it's supplemental to the dashboard.
+  Future<void> loadUpdatedFlights() async {
     try {
-      final updates = await repo.getFlightUpdates(flightId);
-      emit(
-        state.copyWith(
-          flightUpdatesStatus: HomeStatus.success,
-          flightUpdates: updates,
-        ),
-      );
-    } on AppException catch (e) {
-      emit(
-        state.copyWith(
-          flightUpdatesStatus: HomeStatus.failure,
-          flightUpdatesError: e.message,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          flightUpdatesStatus: HomeStatus.failure,
-          flightUpdatesError: e.toString(),
-        ),
-      );
+      final flights = await repo.getFlightUpdates();
+      if (!isClosed) emit(state.copyWith(updatedFlights: flights));
+    } catch (_) {
+      // Non-fatal — updated flights are supplemental
     }
   }
 

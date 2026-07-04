@@ -5,9 +5,11 @@ import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../core/utils/extensions/context_ext.dart';
 import '../../../../core/utils/spacing.dart';
+import '../../../../core/widgets/flight_status_badge.dart';
 import '../../data/models/home_model.dart';
 import '../../logic/cubit/home_cubit.dart';
 import '../../logic/cubit/home_state.dart';
+import '../../../flights/data/models/flight_model.dart';
 import 'airport_services_grid.dart';
 import 'featured_services_section.dart';
 import 'flight_update_entry_card.dart';
@@ -41,28 +43,28 @@ class HomeLoadedView extends StatelessWidget {
             verticalSpacing(16),
             BlocBuilder<HomeCubit, HomeState>(
               buildWhen: (prev, curr) =>
-                  prev.flightUpdates != curr.flightUpdates,
+                  prev.updatedFlights != curr.updatedFlights,
               builder: (context, state) {
-                final updates = state.flightUpdates;
+                final flights = state.updatedFlights;
                 return HomeSection(
                   header: HomeSectionHeader(
                     title: 'home.flight_updates'.tr(),
-                    actionLabel: updates.isNotEmpty
+                    actionLabel: flights.isNotEmpty
                         ? 'home.view_all'.tr()
                         : null,
-                    onAction: updates.isNotEmpty
+                    onAction: flights.isNotEmpty
                         ? () => MainScaffold.jumpToTab(MainScaffold.tabFlights)
                         : null,
                   ),
-                  child: updates.isEmpty
+                  child: flights.isEmpty
                       ? const _EmptyFlightUpdates()
                       : Column(
-                          children: updates
+                          children: flights
                               .take(3)
                               .map(
-                                (u) => Padding(
+                                (f) => Padding(
                                   padding: EdgeInsets.only(bottom: rh(10)),
-                                  child: FlightUpdateEntryCard(update: u),
+                                  child: _UpdatedFlightCard(flight: f),
                                 ),
                               )
                               .toList(),
@@ -101,6 +103,119 @@ class HomeLoadedView extends StatelessWidget {
             ),
 
             verticalSpacing(40),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UpdatedFlightCard extends StatelessWidget {
+  final FlightModel flight;
+  const _UpdatedFlightCard({required this.flight});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.customColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(rr(14)),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withValues(alpha: 0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: rw(4),
+              decoration: BoxDecoration(
+                color: colors.warning,
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(14),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: rw(14),
+                  vertical: rh(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Flight header: number + route + status
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${flight.airline.name} ${flight.flightNumber}',
+                                style: AppTextStyles.font12Medium.copyWith(
+                                  color: colors.textPrimary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              verticalSpacing(2),
+                              Row(
+                                children: [
+                                  Text(
+                                    flight.route.fromCode,
+                                    style: AppTextStyles.font12Regular.copyWith(
+                                      color: colors.textSecondary,
+                                    ),
+                                  ),
+                                  horizontalSpacing(4),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: rw(10),
+                                    color: colors.textHint,
+                                  ),
+                                  horizontalSpacing(4),
+                                  Text(
+                                    flight.route.toCode,
+                                    style: AppTextStyles.font12Regular.copyWith(
+                                      color: colors.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        horizontalSpacing(8),
+                        FlightStatusBadge(
+                          status: flight.status,
+                          showBorder: false,
+                        ),
+                      ],
+                    ),
+                    // Top updates (max 2)
+                    if (flight.updates.isNotEmpty) ...[
+                      verticalSpacing(10),
+                      ...flight.updates.take(2).map(
+                            (u) => Padding(
+                              padding: EdgeInsets.only(bottom: rh(6)),
+                              child: FlightUpdateEntryCard(update: u),
+                            ),
+                          ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
