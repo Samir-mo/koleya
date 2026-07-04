@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../core/utils/extensions/context_ext.dart';
@@ -17,7 +18,6 @@ import 'home_section.dart';
 import 'scan_boarding_pass_card.dart';
 import 'tracked_flight_card.dart';
 import 'tracked_flights_section.dart';
-import '../../../main_navigation/ui/main_scaffold.dart';
 
 class HomeLoadedView extends StatelessWidget {
   final HomeModel data;
@@ -53,7 +53,8 @@ class HomeLoadedView extends StatelessWidget {
                         ? 'home.view_all'.tr()
                         : null,
                     onAction: flights.isNotEmpty
-                        ? () => MainScaffold.jumpToTab(MainScaffold.tabFlights)
+                        ? () => Navigator.of(context, rootNavigator: true)
+                            .pushNamed(Routes.flightUpdates)
                         : null,
                   ),
                   child: flights.isEmpty

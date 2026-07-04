@@ -22,4 +22,6 @@ class Routes {
   static const String assistant = '/assistant';
   static const String servicesCategory = '/servicesCategory';
   static const String boardingPassScan = '/boardingPassScan';
+  static const String flightUpdates = '/flightUpdates';
+  static const String flightDetail = '/flightDetail';
 }

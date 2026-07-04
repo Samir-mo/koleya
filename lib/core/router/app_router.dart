@@ -21,6 +21,8 @@ import '../../features/services_category/logic/cubit/services_category_cubit.dar
 import '../../features/services_category/ui/services_category_screen.dart';
 import '../../features/tracked_flight/ui/tracked_flight_screen.dart';
 import '../../features/tracked_flight/ui/tracked_flights_list_screen.dart';
+import '../../features/flight_updates/ui/screens/flight_updates_list_screen.dart';
+import '../../features/flight_updates/ui/screens/flight_detail_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -99,6 +101,18 @@ class AppRouter {
             create: (_) => getIt<BoardingPassScanCubit>(),
             child: const BoardingPassScannerScreen(),
           ),
+          settings,
+        );
+
+      case Routes.flightUpdates:
+        return _buildRoute(
+          const FlightUpdatesListScreen(),
+          settings,
+        );
+
+      case Routes.flightDetail:
+        return _buildRoute(
+          FlightDetailScreen(flightId: args?['id'] as String? ?? ''),
           settings,
         );
 

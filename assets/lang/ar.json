@@ -315,6 +315,27 @@
         "scan_boarding_pass_title": "مسح بطاقة الصعود",
         "scan_boarding_pass_subtitle": "وجّه الكاميرا نحو بطاقة صعودك لتتبع رحلتك فوراً"
     },
+    "flight_updates": {
+        "list_title": "تحديثات الرحلات",
+        "list_subtitle": "الرحلات المحدثة مؤخراً",
+        "empty_title": "لا توجد تحديثات متاحة",
+        "empty_body": "تحقق قريباً من أجل تغييرات الرحلات",
+        "error_title": "تعذر تحميل التحديثات",
+        "recent_changes": "التغييرات الأخيرة",
+        "and_more": "و {} آخرين",
+        "no_changes": "لا توجد تغييرات حديثة",
+        "departure": "المغادرة",
+        "arrival": "الوصول",
+        "updates_history": "سجل التحديثات",
+        "departure_info": "معلومات المغادرة",
+        "arrival_info": "معلومات الوصول",
+        "scheduled": "المجدول",
+        "estimated": "المتوقع",
+        "actual": "الفعلي",
+        "gate": "البوابة",
+        "terminal": "المحطة",
+        "no_updates_yet": "لا توجد تحديثات حتى الآن"
+    },
     "services": {
         "coming_soon": "الخدمات — قريباً",
         "accessibility_coming_soon": "إمكانية الوصول والمساعدة — قريباً",

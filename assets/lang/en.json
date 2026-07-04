@@ -315,6 +315,27 @@
         "scan_boarding_pass_title": "Scan Boarding Pass",
         "scan_boarding_pass_subtitle": "Point your camera at your boarding pass to track your flight instantly"
     },
+    "flight_updates": {
+        "list_title": "Flight Updates",
+        "list_subtitle": "Recently updated flights",
+        "empty_title": "No updates available",
+        "empty_body": "Check back soon for flight changes",
+        "error_title": "Couldn't load updates",
+        "recent_changes": "Recent Changes",
+        "and_more": "and {} more",
+        "no_changes": "No recent changes",
+        "departure": "Departure",
+        "arrival": "Arrival",
+        "updates_history": "Update History",
+        "departure_info": "Departure Information",
+        "arrival_info": "Arrival Information",
+        "scheduled": "Scheduled",
+        "estimated": "Estimated",
+        "actual": "Actual",
+        "gate": "Gate",
+        "terminal": "Terminal",
+        "no_updates_yet": "No updates yet"
+    },
     "services": {
         "coming_soon": "Services — coming soon",
         "accessibility_coming_soon": "Accessibility & Assistance — coming soon",

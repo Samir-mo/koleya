@@ -44,6 +44,10 @@ import '../../features/tracked_flight/data/remote/tracked_flight_remote_ds.dart'
 import '../../features/tracked_flight/data/repo/tracked_flight_repo.dart';
 import '../../features/tracked_flight/data/repo/tracked_flight_repo_impl.dart';
 import '../../features/tracked_flight/logic/cubit/tracked_flight_cubit.dart';
+import '../../features/flight_updates/data/remote/flight_updates_remote_ds.dart';
+import '../../features/flight_updates/data/repo/flight_updates_repo.dart';
+import '../../features/flight_updates/data/repo/flight_updates_repo_impl.dart';
+import '../../features/flight_updates/logic/cubit/flight_updates_list_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -173,5 +177,16 @@ Future<void> setUpDependencies() async {
   );
   getIt.registerFactory(
     () => TrackedFlightCubit(repo: getIt<TrackedFlightRepo>()),
+  );
+
+  // ── Flight Updates ────────────────────────────────────────────────────────
+  getIt.registerLazySingleton(
+    () => FlightUpdatesRemoteDs(api: getIt<ApiConsumer>()),
+  );
+  getIt.registerLazySingleton<FlightUpdatesRepo>(
+    () => FlightUpdatesRepoImpl(remoteDs: getIt<FlightUpdatesRemoteDs>()),
+  );
+  getIt.registerFactory(
+    () => FlightUpdatesListCubit(repo: getIt<FlightUpdatesRepo>()),
   );
 }
