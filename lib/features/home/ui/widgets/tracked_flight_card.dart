@@ -169,40 +169,20 @@ class TrackedFlightCard extends StatelessWidget {
 
           Divider(height: 1, color: context.customColors.border),
 
-          // ── Action buttons ────────────────────────────────────────────────
+          // ── Action button ──────────────────────────────────────────────
           Padding(
             padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(12)),
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomTextButton(
-                    text: 'home.view_details'.tr(),
-                    onPressed: () => Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pushNamed(Routes.trackedFlight),
-                    size: CustomButtonSize.small,
-                    prefixIcon: const Icon(Icons.open_in_new_rounded),
-                    textStyle: AppTextStyles.font14SemiBold,
-                    borderRadius: rr(10),
-                  ),
-                ),
-                horizontalSpacing(10),
-                Expanded(
-                  child: CustomTextButton.outlined(
-                    text: 'home.explore_destination'.tr(),
-                    onPressed: () => Navigator.pushNamed(
-                      context,
-                      Routes.explorePlacesScreen,
-                    ),
-                    size: CustomButtonSize.small,
-                    prefixIcon: const Icon(Icons.explore_rounded),
-                    textStyle: AppTextStyles.font14SemiBold,
-                    borderColor: AppColors.primary200.withValues(alpha: 0.5),
-                    borderRadius: rr(10),
-                  ),
-                ),
-              ],
+            child: CustomTextButton(
+              text: 'home.view_details'.tr(),
+              onPressed: () => Navigator.of(
+                context,
+                rootNavigator: true,
+              ).pushNamed(Routes.trackedFlight),
+              isFullWidth: true,
+              size: CustomButtonSize.small,
+              prefixIcon: const Icon(Icons.open_in_new_rounded),
+              textStyle: AppTextStyles.font14SemiBold,
+              borderRadius: rr(10),
             ),
           ),
         ],

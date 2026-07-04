@@ -18,7 +18,6 @@ import 'flight_update_entry_card.dart';
 import 'home_section.dart';
 import 'scan_boarding_pass_card.dart';
 import 'tracked_flight_card.dart';
-import 'tracked_flights_section.dart';
 
 class HomeLoadedView extends StatelessWidget {
   final HomeModel data;
@@ -87,10 +86,6 @@ class HomeLoadedView extends StatelessWidget {
                 child: TrackedFlightCard(track: data.userTrack!),
               ),
             ],
-
-            // ── Tracked flights list ──────────────────────────────────────
-            verticalSpacing(24),
-            const TrackedFlightsSection(),
 
             // ── Airport services grid ─────────────────────────────────────
             verticalSpacing(24),
