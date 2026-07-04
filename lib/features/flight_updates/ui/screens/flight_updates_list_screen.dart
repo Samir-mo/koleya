@@ -146,7 +146,7 @@ class _ViewState extends State<_View> {
                   onTap: () => Navigator.of(context, rootNavigator: true)
                       .pushNamed(
                     Routes.flightDetail,
-                    arguments: {'id': flight.id},
+                    arguments: {'id': flight.id, 'flight': flight},
                   ),
                 );
               },

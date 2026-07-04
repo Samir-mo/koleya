@@ -112,7 +112,10 @@ class AppRouter {
 
       case Routes.flightDetail:
         return _buildRoute(
-          FlightDetailScreen(flightId: args?['id'] as String? ?? ''),
+          FlightDetailScreen(
+            flightId: args?['id'] as String? ?? '',
+            flight: args?['flight'] as FlightModel?,
+          ),
           settings,
         );
 

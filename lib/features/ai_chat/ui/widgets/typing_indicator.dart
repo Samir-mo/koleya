@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/themes/app_colors.dart';
+import '../../../../core/utils/extensions/context_ext.dart';
 import '../../../../core/utils/spacing.dart';
 
 class TypingIndicator extends StatefulWidget {
@@ -30,6 +31,8 @@ class TypingIndicatorState extends State<TypingIndicator>
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.customColors;
+
     return Padding(
       padding: EdgeInsets.only(bottom: rh(12)),
       child: Row(
@@ -44,7 +47,7 @@ class TypingIndicatorState extends State<TypingIndicator>
             ),
             child: Icon(
               Icons.smart_toy_rounded,
-              color: AppColors.secondary200,
+              color: AppColors.white,
               size: rr(16),
             ),
           ),
@@ -52,14 +55,14 @@ class TypingIndicatorState extends State<TypingIndicator>
           Container(
             padding: EdgeInsets.symmetric(horizontal: rw(16), vertical: rh(12)),
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: colors.surface,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(rr(16)),
                 topRight: Radius.circular(rr(16)),
                 bottomRight: Radius.circular(rr(16)),
                 bottomLeft: Radius.circular(rr(4)),
               ),
-              border: Border.all(color: AppColors.grey100),
+              border: Border.all(color: colors.border),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

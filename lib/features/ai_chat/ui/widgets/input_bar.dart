@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../core/utils/extensions/context_ext.dart';
@@ -54,7 +55,7 @@ class InputBarState extends State<InputBar> {
         bottom: MediaQuery.of(context).padding.bottom + rh(10),
       ),
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: colors.background,
         border: Border(top: BorderSide(color: colors.border)),
         boxShadow: [
           BoxShadow(
@@ -71,9 +72,9 @@ class InputBarState extends State<InputBar> {
             child: Container(
               constraints: const BoxConstraints(maxHeight: 120),
               decoration: BoxDecoration(
-                color: AppColors.grey50,
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(rr(24)),
-                border: Border.all(color: AppColors.grey100),
+                border: Border.all(color: colors.border),
               ),
               child: TextField(
                 controller: widget.controller,
@@ -82,12 +83,12 @@ class InputBarState extends State<InputBar> {
                 keyboardType: TextInputType.multiline,
                 textInputAction: TextInputAction.newline,
                 style: AppTextStyles.font14Regular.copyWith(
-                  color: AppColors.grey700,
+                  color: colors.textPrimary,
                 ),
                 decoration: InputDecoration(
                   hintText: 'ai_chat.input_hint'.tr(),
                   hintStyle: AppTextStyles.font14Regular.copyWith(
-                    color: AppColors.grey400,
+                    color: colors.textHint,
                   ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -107,7 +108,7 @@ class InputBarState extends State<InputBar> {
             width: rw(44),
             height: rw(44),
             decoration: BoxDecoration(
-              color: _hasText ? AppColors.primary200 : AppColors.grey200,
+              color: _hasText ? AppColors.primary200 : colors.border,
               shape: BoxShape.circle,
             ),
             child: IconButton(

@@ -1,5 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_text_styles.dart';
 import '../../../../core/utils/extensions/context_ext.dart';
@@ -41,37 +41,6 @@ class ProfileAppBar extends StatelessWidget {
             style: AppTextStyles.font20Bold.copyWith(color: AppColors.white),
           ),
           const Spacer(),
-          if (showEdit)
-            GestureDetector(
-              onTap: onEdit,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: rw(12),
-                  vertical: rh(6),
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary300,
-                  borderRadius: BorderRadius.circular(rr(20)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.edit_outlined,
-                      size: rr(14),
-                      color: AppColors.secondary200,
-                    ),
-                    horizontalSpacing(4),
-                    Text(
-                      'profile.edit_button'.tr(),
-                      style: AppTextStyles.font12Medium.copyWith(
-                        color: AppColors.secondary200,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
         ],
       ),
     );
